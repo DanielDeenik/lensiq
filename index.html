@@ -100,6 +100,21 @@ section{margin-bottom:60px}
 .matrix .mc.plat.on::after{background:var(--cat-plat)}
 .matrix .mc.dom.on::after{background:var(--cat-dom)}
 .matrix .rdot{width:8px;height:8px;border-radius:50%;flex:none}
+.fit-ta{width:100%;min-height:130px;padding:12px 14px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit;font-size:14px;resize:vertical}
+.fit-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:center}
+.fit-btn{padding:10px 18px;border-radius:8px;background:var(--lemon);color:var(--ink);font-weight:700;font-size:14px;cursor:pointer;font-family:inherit;border:1px solid var(--ink)}
+.fit-btn:disabled{opacity:0.6;cursor:wait}
+.fit-email{flex:1;min-width:220px;padding:10px 14px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit;font-size:14px}
+#specfile{font-size:12.5px;color:var(--muted);max-width:100%}
+#fitres[hidden]{display:none}
+.fit-score{display:flex;align-items:baseline;gap:14px;margin:18px 0 8px;flex-wrap:wrap}
+.fit-score .n{font-family:'Manrope',sans-serif;font-size:44px;font-weight:800;color:var(--ink);line-height:1}
+.fit-score .s{font-size:14.5px;max-width:58ch;color:var(--body)}
+.match-block{margin-top:12px}
+.match-block h4{font-size:12px;font-family:'IBM Plex Mono',monospace;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+.match-chips{display:flex;flex-wrap:wrap;gap:6px}
+.mchip{background:var(--good-soft);color:var(--good);border-radius:6px;padding:3px 9px;font-size:12.5px;font-weight:500}
+.mchip.miss{background:var(--chip);color:var(--muted);font-weight:400}
 .graph-card{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:14px}
 #graph{width:100%;height:460px;display:block;border-radius:8px;cursor:pointer}
 .legend{display:flex;gap:18px;flex-wrap:wrap;padding:10px 6px 2px;font-size:13px;color:var(--body)}
@@ -175,6 +190,7 @@ footer strong{color:#FFFFFF}
     <a href="#analytics">Analytics</a>
     <a href="#graphsec">Experience</a>
     <a href="#writing">Writing</a>
+    <a href="#fit">Fit check</a>
     <a href="#faq">Ask</a>
     <a href="#contact">Contact</a>
   </nav>
@@ -385,6 +401,35 @@ footer strong{color:#FFFFFF}
 </div>
 
 <div class="wrap" style="padding-top:56px">
+
+<section id="fit">
+  <p class="eyebrow">Fit check</p>
+  <h2>Paste a job spec, see the match</h2>
+  <div class="ll"></div>
+  <div class="ask">
+    <p style="margin:0 0 10px;font-size:15px">Paste the role description, or upload it as a .txt or .md file. The analysis runs in your browser against Dan's published profile only, nothing is stored unless you choose to send it.</p>
+    <textarea class="fit-ta" id="specin" maxlength="20000" placeholder="Paste the job spec here, requirements and all..."></textarea>
+    <div class="fit-row">
+      <button class="fit-btn" id="fitbtn" type="button">Analyze fit</button>
+      <input type="file" id="specfile" accept=".txt,.md,text/plain">
+    </div>
+    <div id="fitres" hidden>
+      <div class="fit-score"><span class="n" id="fitpct"></span><span class="s" id="fitsum"></span></div>
+      <div class="chart-card" style="margin-top:10px">
+        <h3>Spec emphasis vs Dan's depth</h3>
+        <div class="radar-wrap arcwrap" id="fitradar"></div>
+        <div class="mini-legend"><span><i style="background:#F5D843;border:1px solid #15171B"></i>Dan's depth, from the experience graph</span><span><i style="background:#15171B"></i>This spec's emphasis</span></div>
+        <p class="chart-note">Spec emphasis is the share of recognized requirements per area in the pasted text. Dan's depth is connection density in the experience graph, normalized. Both are computed live in your browser.</p>
+      </div>
+      <div id="fitmatch"></div>
+      <div class="fit-row" style="margin-top:14px">
+        <input class="fit-email" id="fitemail" type="email" maxlength="200" placeholder="Your email for Dan's direct take (optional)">
+        <button class="fit-btn" id="fitsend" type="button">Send to Dan</button>
+      </div>
+      <p class="note" id="fitsent"></p>
+    </div>
+  </div>
+</section>
 
 <section id="faq">
   <p class="eyebrow">For recruiters</p>
@@ -950,6 +995,169 @@ const G = (function(){
       b.addEventListener("click", function(){
         car.scrollBy({ left: stepW() * Number(b.dataset.dir), behavior: "smooth" });
       });
+    });
+  });
+})();
+
+// ---------- Fit check: job spec vs profile, computed in the browser ----------
+(function(){
+  const ta = document.getElementById("specin");
+  if (!ta) return;
+  const css2 = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const AREAS = [
+    {key: "SimCorp Dimension", nodes: ["scd"]},
+    {key: "Front Office & IBOR", nodes: ["fo", "ibor"]},
+    {key: "Connectivity & Trading", nodes: ["fix", "bbg", "arena", "trading"]},
+    {key: "ESG & Regulatory", nodes: ["esg", "credit"]},
+    {key: "Data & Engineering", nodes: ["py"]},
+    {key: "Alternatives & Wealth", nodes: ["alts", "wealth", "aladdin"]}
+  ];
+  // Extra profile vocabulary on top of the graph keyword lists (term to graph node).
+  const EXTRA = {"oracle": "py", "postgres": "py", "react": "py", "supabase": "py", "snowflake": "py", "azure devops": "py",
+    "data extractor": "scd", "asset manager": "scd", "iap": "scd", "collateral": "scd", "reconciliation": "scd",
+    "pricing": "scd", "market data": "scd", "mutual fund": "scd", "private debt": "alts", "adroit": "fix", "axioma": "fix",
+    "regulatory reporting": "esg", "solvency": "esg", "treasury": "arena", "business analyst": "fo", "prompt": "agentstack",
+    "rag": "agentstack", "genai": "agentstack", "gen ai": "agentstack", "artificial intelligence": "agentstack"};
+  // Commonly requested platforms and skills that are NOT in Dan's published profile.
+  const OUTSIDE = ["murex", "calypso", "temenos", "charles river", "avaloq", "t24", "geneva", "investran", "broadridge",
+    "ss&c", "simcorp coric", "java", "c#", ".net", "kotlin", "c++", "scala", "cobol", "abap", "sap", "tableau",
+    "power bi", "qlik", "matlab", "kyc", "aml", "transfer agency", "salesforce", "dynamics 365"];
+  const byId = {}; G.N.forEach(n => byId[n.id] = n);
+  const edgeCount = id => G.E.filter(e => e[0] === id || e[1] === id).length;
+  function analyze(){
+    const raw = ta.value.trim();
+    const res = document.getElementById("fitres");
+    if (!raw){ res.hidden = true; return; }
+    const t = " " + raw.toLowerCase().replace(/[\n\r\t]/g, " ") + " ";
+    const nodeHits = {}, matchedTerms = new Set();
+    G.N.forEach(function(n){
+      if (n.id === "dan" || n.cat === "eng") return;
+      n.kw.forEach(function(k){ if (t.includes(k)){ nodeHits[n.id] = (nodeHits[n.id] || 0) + 1; matchedTerms.add(k.trim()); } });
+    });
+    Object.keys(EXTRA).forEach(function(k){
+      if (t.includes(k)){ const id = EXTRA[k]; nodeHits[id] = (nodeHits[id] || 0) + 1; matchedTerms.add(k); }
+    });
+    const outsideHits = OUTSIDE.filter(k => t.includes(k));
+    const specArea = AREAS.map(a => a.nodes.reduce((s, id) => s + (nodeHits[id] || 0), 0));
+    const danArea = AREAS.map(a => a.nodes.reduce((s, id) => s + edgeCount(id), 0));
+    const maxS = Math.max.apply(null, specArea.concat([1]));
+    const maxD = Math.max.apply(null, danArea);
+    const rec = matchedTerms.size, out = outsideHits.length;
+    const pctEl = document.getElementById("fitpct"), sumEl = document.getElementById("fitsum");
+    if (rec + out === 0){
+      res.hidden = false;
+      pctEl.textContent = "?";
+      sumEl.textContent = "No recognizable platform, domain or tooling requirements found in this text. Paste the full requirements section of the spec.";
+      document.getElementById("fitradar").innerHTML = "";
+      document.getElementById("fitmatch").innerHTML = "";
+      return;
+    }
+    const score = Math.round(100 * rec / (rec + out));
+    pctEl.textContent = score + "%";
+    const topAreas = AREAS.map((a, i) => ({k: a.key, v: specArea[i]})).filter(x => x.v > 0).sort((a, b) => b.v - a.v).slice(0, 3).map(x => x.k);
+    sumEl.textContent = "Dan's published profile covers " + rec + " of the " + (rec + out) + " requirements recognized in this spec." +
+      (topAreas.length ? " The spec leans on " + topAreas.join(", ") + "." : "") +
+      (out ? " Items outside the published profile are listed below, ask Dan directly, adjacent experience often transfers." : " No recognized requirement falls outside the profile.");
+    drawFit(AREAS.map(a => a.key), specArea.map(v => v / maxS), danArea.map(v => v / maxD));
+    const mEl = document.getElementById("fitmatch");
+    mEl.innerHTML = "";
+    function block(title, items, cls){
+      if (!items.length) return;
+      const b = document.createElement("div"); b.className = "match-block";
+      const hh = document.createElement("h4"); hh.textContent = title; b.appendChild(hh);
+      const w = document.createElement("div"); w.className = "match-chips";
+      items.forEach(function(x){ const c = document.createElement("span"); c.className = "mchip" + (cls ? " " + cls : ""); c.textContent = x; w.appendChild(c); });
+      b.appendChild(w); mEl.appendChild(b);
+    }
+    block("Matched in Dan's profile", Array.from(matchedTerms).sort().slice(0, 24), "");
+    block("In the spec, outside the published profile", outsideHits, "miss");
+    // light the experience graph
+    const ids = Object.keys(nodeHits).sort((a, b) => nodeHits[b] - nodeHits[a]);
+    if (window.qaHighlight && ids.length) window.qaHighlight(null, ids.slice(0, 8));
+    res.hidden = false;
+    window.__fitScore = score;
+  }
+  function drawFit(labels, spec, dan){
+    const el = document.getElementById("fitradar");
+    el.innerHTML = "";
+    const NS = "http://www.w3.org/2000/svg";
+    const W = 680, H = 380, cx = W/2, cy = H/2 + 4, R = 122, n = labels.length;
+    const ink = css2("--ink"), line = css2("--line"), lemon = css2("--lemon"), body = css2("--body");
+    const pt = (i, r) => { const a = -Math.PI/2 + (i / n) * Math.PI * 2; return [cx + Math.cos(a) * r, cy + Math.sin(a) * r]; };
+    const svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+    for (let g = 1; g <= 4; g++){
+      const ring = document.createElementNS(NS, "polygon");
+      ring.setAttribute("points", labels.map((_, i) => pt(i, R * g / 4).join(",")).join(" "));
+      ring.setAttribute("fill", "none"); ring.setAttribute("stroke", line);
+      svg.appendChild(ring);
+    }
+    labels.forEach(function(_, i){
+      const [x, y] = pt(i, R);
+      const sp = document.createElementNS(NS, "line");
+      sp.setAttribute("x1", cx); sp.setAttribute("y1", cy); sp.setAttribute("x2", x); sp.setAttribute("y2", y);
+      sp.setAttribute("stroke", line); svg.appendChild(sp);
+    });
+    function poly(vals, fill, fo, stroke, dash){
+      const p = document.createElementNS(NS, "polygon");
+      p.setAttribute("points", vals.map((v, i) => pt(i, R * Math.max(v, 0.04)).join(",")).join(" "));
+      p.setAttribute("fill", fill); p.setAttribute("fill-opacity", fo);
+      p.setAttribute("stroke", stroke); p.setAttribute("stroke-width", "2");
+      if (dash) p.setAttribute("stroke-dasharray", "5 4");
+      p.setAttribute("stroke-linejoin", "round");
+      svg.appendChild(p);
+    }
+    poly(dan, lemon, "0.45", ink, false);
+    poly(spec, ink, "0.08", ink, true);
+    spec.forEach(function(v, i){
+      const [x, y] = pt(i, R * Math.max(v, 0.04));
+      const d = document.createElementNS(NS, "circle");
+      d.setAttribute("cx", x); d.setAttribute("cy", y); d.setAttribute("r", "4"); d.setAttribute("fill", ink);
+      svg.appendChild(d);
+    });
+    labels.forEach(function(lb, i){
+      const c = Math.cos(-Math.PI/2 + (i / n) * Math.PI * 2);
+      const [lx, ly] = pt(i, R + 22);
+      const tx = document.createElementNS(NS, "text");
+      tx.setAttribute("x", lx); tx.setAttribute("y", ly + 4);
+      tx.setAttribute("text-anchor", Math.abs(c) < 0.35 ? "middle" : (c > 0 ? "start" : "end"));
+      tx.setAttribute("font-family", "'IBM Plex Sans', sans-serif");
+      tx.setAttribute("font-size", "13"); tx.setAttribute("fill", body);
+      tx.textContent = lb;
+      svg.appendChild(tx);
+    });
+    el.appendChild(svg);
+  }
+  document.getElementById("fitbtn").addEventListener("click", analyze);
+  document.getElementById("specfile").addEventListener("change", function(ev){
+    const f = ev.target.files && ev.target.files[0];
+    if (!f) return;
+    const r = new FileReader();
+    r.onload = function(){ ta.value = String(r.result).slice(0, 20000); analyze(); };
+    r.readAsText(f);
+  });
+  const send = document.getElementById("fitsend");
+  send.addEventListener("click", function(){
+    const sent = document.getElementById("fitsent");
+    const email = document.getElementById("fitemail").value.trim();
+    const spec = ta.value.trim();
+    if (!spec) return;
+    send.disabled = true;
+    sent.textContent = "Sending...";
+    const prefix = "Job spec fit check" + (typeof window.__fitScore === "number" ? " (" + window.__fitScore + "% profile coverage)" : "") + ": ";
+    const q = (prefix + spec).slice(0, 295);
+    fetch("https://hvitxwhfdhsdwhgllaqf.supabase.co/functions/v1/site", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({question: q, email: email})
+    }).then(function(r){
+      sent.textContent = (r.ok || r.status === 202)
+        ? (email ? "Sent. Dan replies to your email within one business day." : "Sent to Dan. Leave your email above and send again to get his reply directly.")
+        : "Could not send right now. Email deenikdaniel@gmail.com with the spec instead.";
+      send.disabled = false;
+    }).catch(function(){
+      sent.textContent = "Sending is not available in this view. Email the spec to deenikdaniel@gmail.com and Dan will reply directly.";
+      send.disabled = false;
     });
   });
 })();
