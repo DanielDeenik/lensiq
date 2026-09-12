@@ -141,13 +141,17 @@ section{margin-bottom:60px}
 .popout .pclose{position:absolute;top:10px;right:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:4px 12px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit}
 .popout .pclose:hover{background:var(--lemon);border-color:var(--ink)}
 .pophint{font-size:12.5px;color:var(--accent-ink);font-weight:600;margin:0 0 10px}
-.ana-grid{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:20px;align-items:start}
+.ana-grid{display:grid;grid-template-columns:340px minmax(0,1fr);gap:20px;align-items:start}
 .side-panel{position:sticky;top:88px;background:var(--paper);border:1px solid var(--line);border-top:4px solid var(--lemon);border-radius:12px;padding:18px 20px;font-size:14px;line-height:1.55;color:var(--body);min-height:220px}
 .side-panel .sp-empty{color:var(--muted);font-size:13.5px}
 .side-panel .pk{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent-ink);margin-bottom:4px}
 .side-panel .pt{font-family:'Manrope',sans-serif;font-weight:800;font-size:17px;color:var(--ink);line-height:1.25}
 .side-panel .pb{margin-top:8px}
 .side-panel .px{margin-top:10px;padding-top:10px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+.side-panel .sp-rows{margin-top:10px}
+.side-panel .sp-row{padding:9px 0;border-top:1px solid var(--line)}
+.side-panel .sp-lab{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent-ink);margin-bottom:3px}
+.side-panel .sp-val{font-size:13.5px;color:var(--body);line-height:1.5}
 .side-panel.flash{animation:spflash 0.5s ease-out}
 @keyframes spflash{0%{border-color:var(--hl);box-shadow:0 0 0 4px var(--lemon-soft);transform:translateY(-2px)}100%{border-color:var(--line);box-shadow:none;transform:none}}
 @media (max-width:900px){
@@ -220,9 +224,9 @@ footer strong{color:#FFFFFF}
 <div class="topbar">
   <div class="brand"><i></i>LensIQ</div>
   <nav>
+    <a href="#fit">Fit check</a>
     <a href="#analytics">Analytics</a>
     <a href="#graphsec">Experience</a>
-    <a href="#fit">Fit check</a>
     <a href="#writing">Writing</a>
     <a href="#faq">Ask</a>
     <a href="#contact">Contact</a>
@@ -270,11 +274,46 @@ footer strong{color:#FFFFFF}
   </div>
 </section>
 
+<section id="fit">
+  <p class="eyebrow">Fit check</p>
+  <h2>Is Dan a fit? Paste the job spec.</h2>
+  <div class="ll"></div>
+  <div class="ask">
+    <p style="margin:0 0 10px;font-size:15px">Paste the role description, or upload it as a .txt or .md file. The instant analysis below runs in your browser against Dan's published profile; the full assessment is produced by Dan's scheduled review agent and delivered by email when you send it in. Nothing is stored unless you choose to send.</p>
+    <textarea class="fit-ta" id="specin" maxlength="20000" placeholder="Paste the job spec here, requirements and all..."></textarea>
+    <div class="fit-row">
+      <button class="fit-btn" id="fitbtn" type="button">Analyze fit</button>
+      <input type="file" id="specfile" accept=".txt,.md,text/plain">
+    </div>
+    <div id="fitres" hidden>
+      <div class="fit-score"><span class="n" id="fitpct"></span><span class="s" id="fitsum"></span></div>
+      <div class="chart-card" style="margin-top:10px">
+        <h3>Spec emphasis vs Dan's depth</h3>
+        <div class="radar-wrap arcwrap" id="fitradar"></div>
+        <div class="mini-legend"><span><i style="background:#F5D843;border:1px solid #15171B"></i>Dan's depth, from the experience graph</span><span><i style="background:#15171B"></i>This spec's emphasis</span></div>
+        <p class="chart-note">Spec emphasis is the share of recognized requirements per area in the pasted text. Dan's depth is connection density in the experience graph, normalized. Both are computed live in your browser.</p>
+      </div>
+      <div id="fitmatch"></div>
+      <div class="match-block" id="fitexpowrap" hidden><h4>Where the exposure comes from</h4><p class="pophint">Click any line for the projects behind it.</p><div id="fitexpo"></div></div>
+      <div class="fit-row" style="margin-top:14px">
+        <input class="fit-email" id="fitemail" type="email" maxlength="200" placeholder="Your email for Dan's direct take (optional)">
+        <button class="fit-btn" id="fitsend" type="button">Send to Dan</button>
+      </div>
+      <p class="note" id="fitsent"></p>
+    </div>
+  </div>
+</section>
+
+
+
 <section id="analytics">
   <p class="eyebrow">Analytics</p>
   <h2>The story in charts</h2>
   <div class="ll"></div>
   <div class="ana-grid">
+  <aside class="side-panel" id="anapanel">
+    <div class="sp-empty">Click any block, bar or dot in the chart and the full detail opens here.</div>
+  </aside>
   <div class="carousel-wrap">
     <div class="carousel">
       <div class="chart-card">
@@ -320,9 +359,6 @@ footer strong{color:#FFFFFF}
       <div class="cbtns"><button class="cbtn" type="button" data-dir="-1">Prev</button><button class="cbtn" type="button" data-dir="1">Next</button></div>
     </div>
   </div>
-  <aside class="side-panel" id="anapanel">
-    <div class="sp-empty">Click any block, bar or dot in the chart and its detail opens here.</div>
-  </aside>
   </div>
 </section>
 
@@ -390,36 +426,6 @@ footer strong{color:#FFFFFF}
       <h3>Equity Analyst and Trader, GTC Derivatives · Netto Invest</h3>
       <div class="org">South Africa</div>
       <p>JSE Registered Securities Trader. Built asset management capability and an in-house long and long/short equity investment model.</p>
-    </div>
-  </div>
-</section>
-
-<section id="fit">
-  <p class="eyebrow">Fit check</p>
-  <h2>Is Dan a fit? Paste the job spec.</h2>
-  <div class="ll"></div>
-  <div class="ask">
-    <p style="margin:0 0 10px;font-size:15px">Paste the role description, or upload it as a .txt or .md file. The instant analysis below runs in your browser against Dan's published profile; the full assessment is produced by Dan's scheduled review agent and delivered by email when you send it in. Nothing is stored unless you choose to send.</p>
-    <textarea class="fit-ta" id="specin" maxlength="20000" placeholder="Paste the job spec here, requirements and all..."></textarea>
-    <div class="fit-row">
-      <button class="fit-btn" id="fitbtn" type="button">Analyze fit</button>
-      <input type="file" id="specfile" accept=".txt,.md,text/plain">
-    </div>
-    <div id="fitres" hidden>
-      <div class="fit-score"><span class="n" id="fitpct"></span><span class="s" id="fitsum"></span></div>
-      <div class="chart-card" style="margin-top:10px">
-        <h3>Spec emphasis vs Dan's depth</h3>
-        <div class="radar-wrap arcwrap" id="fitradar"></div>
-        <div class="mini-legend"><span><i style="background:#F5D843;border:1px solid #15171B"></i>Dan's depth, from the experience graph</span><span><i style="background:#15171B"></i>This spec's emphasis</span></div>
-        <p class="chart-note">Spec emphasis is the share of recognized requirements per area in the pasted text. Dan's depth is connection density in the experience graph, normalized. Both are computed live in your browser.</p>
-      </div>
-      <div id="fitmatch"></div>
-      <div class="match-block" id="fitexpowrap" hidden><h4>Where the exposure comes from</h4><p class="pophint">Click any line for the projects behind it.</p><div id="fitexpo"></div></div>
-      <div class="fit-row" style="margin-top:14px">
-        <input class="fit-email" id="fitemail" type="email" maxlength="200" placeholder="Your email for Dan's direct take (optional)">
-        <button class="fit-btn" id="fitsend" type="button">Send to Dan</button>
-      </div>
-      <p class="note" id="fitsent"></p>
     </div>
   </div>
 </section>
@@ -819,15 +825,28 @@ const G = (function(){
   const byId2 = {}; G.N.forEach(n => byId2[n.id] = n);
   const YRDATES = {nicola: "2026 to now", bnp: "2024 to 2026", bng: "2021 to 2024", athora: "2021 to 2024", asr: "2021 to 2022",
     pggm: "2020 to 2021", shell: "2020 to 2021", caceis: "2020 to 2021", achmea: "2020 to 2021", fis: "2015 to 2020", gtc: "2012 to 2015"};
-  function showDetail(title, body, extra, kicker){
+  // Capability areas, shared by the sankey and the detail panel.
+  const AREA_OF = {scd: "SimCorp Dimension", fo: "Front Office & IBOR", ibor: "Front Office & IBOR",
+    fix: "Connectivity & Trading", bbg: "Connectivity & Trading", arena: "Connectivity & Trading", trading: "Connectivity & Trading",
+    esg: "ESG & Regulatory", credit: "ESG & Regulatory", py: "Data & Engineering",
+    alts: "Alternatives & Wealth", wealth: "Alternatives & Wealth", aladdin: "Alternatives & Wealth"};
+  function showDetail(kicker, title, rows, note){
     if (!anadetail) return;
     anadetail.hidden = false;
     anadetail.textContent = "";
     if (kicker){ const k = document.createElement("div"); k.className = "pk"; k.textContent = kicker; anadetail.appendChild(k); }
     const t = document.createElement("div"); t.className = "pt"; t.textContent = title;
     anadetail.appendChild(t);
-    if (body){ const b = document.createElement("div"); b.className = "pb"; b.textContent = body; anadetail.appendChild(b); }
-    if (extra){ const c = document.createElement("div"); c.className = "px"; c.textContent = extra; anadetail.appendChild(c); }
+    const wrap = document.createElement("div"); wrap.className = "sp-rows";
+    (rows || []).forEach(function(r){
+      if (!r || !r[1]) return;
+      const row = document.createElement("div"); row.className = "sp-row";
+      const lab = document.createElement("div"); lab.className = "sp-lab"; lab.textContent = r[0];
+      const val = document.createElement("div"); val.className = "sp-val"; val.textContent = r[1];
+      row.appendChild(lab); row.appendChild(val); wrap.appendChild(row);
+    });
+    anadetail.appendChild(wrap);
+    if (note){ const c = document.createElement("div"); c.className = "px"; c.textContent = note; anadetail.appendChild(c); }
     anadetail.classList.remove("flash");
     void anadetail.offsetWidth;
     anadetail.classList.add("flash");
@@ -849,8 +868,18 @@ const G = (function(){
   function engDetail(label, dates){
     const ids = IDMAP[label] || [];
     const facts = ids.map(id => byId2[id] ? byId2[id].fact : "").filter(Boolean).join(" ");
-    const nb = neighborsOf(ids).map(id => byId2[id].label);
-    showDetail(label + " · " + dates, facts, nb.length ? "Touched: " + nb.join(", ") : "", "Engagement");
+    const nb = neighborsOf(ids).filter(id => byId2[id]);
+    const plats = nb.filter(id => byId2[id].cat === "plat").map(id => byId2[id].label);
+    const doms = nb.filter(id => byId2[id].cat === "dom").map(id => byId2[id].label);
+    const areas = [];
+    nb.forEach(function(id){ const a = AREA_OF[id]; if (a && areas.indexOf(a) === -1) areas.push(a); });
+    const rows = [["Dates", dates]];
+    if (ids.length > 1) rows.push(["Clients in this engagement", ids.map(i => byId2[i].label).join(", ")]);
+    rows.push(["What Dan did", facts]);
+    if (plats.length) rows.push(["Platforms", plats.join(", ")]);
+    if (doms.length) rows.push(["Domains", doms.join(", ")]);
+    if (areas.length) rows.push(["Capability areas", areas.join(", ")]);
+    showDetail("Engagement", label, rows, "Platforms and domains are read live from the experience graph, not typed per chart.");
     if (window.qaHighlight && ids.length) window.qaHighlight(null, ids);
   }
 
@@ -1122,8 +1151,14 @@ const G = (function(){
         if (on){
           cell.title = r.label + ": " + c.label;
           cell.addEventListener("click", function(){
-            const dates = YRDATES[r.id] ? " · " + YRDATES[r.id] : "";
-            showDetail(r.label + " × " + c.label + dates, byId2[r.id].fact, byId2[c.id].label + ": " + byId2[c.id].fact, "Coverage");
+            const others = rows.filter(x => x.id !== r.id && has[x.id + "|" + c.id]).map(x => x.label);
+            const rws = [];
+            if (YRDATES[r.id]) rws.push(["Dates", YRDATES[r.id]]);
+            rws.push([r.label, byId2[r.id].fact]);
+            rws.push([c.label, byId2[c.id].fact]);
+            if (AREA_OF[c.id]) rws.push(["Capability area", AREA_OF[c.id]]);
+            if (others.length) rws.push(["Also touched " + c.label, others.join(", ")]);
+            showDetail("Coverage", r.label + " × " + c.label, rws, "");
           });
         }
         host.appendChild(cell);
@@ -1136,10 +1171,6 @@ const G = (function(){
     const el = document.getElementById("sankey");
     if (!el) return;
     const NS = "http://www.w3.org/2000/svg";
-    const AREA_OF = {scd: "SimCorp Dimension", fo: "Front Office & IBOR", ibor: "Front Office & IBOR",
-      fix: "Connectivity & Trading", bbg: "Connectivity & Trading", arena: "Connectivity & Trading", trading: "Connectivity & Trading",
-      esg: "ESG & Regulatory", credit: "ESG & Regulatory", py: "Data & Engineering",
-      alts: "Alternatives & Wealth", wealth: "Alternatives & Wealth", aladdin: "Alternatives & Wealth"};
     const AREA_COLOR = {"SimCorp Dimension": "#1E7A4E", "Front Office & IBOR": "#7A4FA0", "Connectivity & Trading": "#3D6FA8",
       "ESG & Regulatory": "#A08200", "Data & Engineering": "#6E7480", "Alternatives & Wealth": "#B85030", "AI & Products": "#F5D843"};
     const AREA_ORDER = ["SimCorp Dimension", "Front Office & IBOR", "Connectivity & Trading", "ESG & Regulatory", "Data & Engineering", "Alternatives & Wealth", "AI & Products"];
@@ -1211,7 +1242,9 @@ const G = (function(){
       svg.appendChild(t);
       function open(){
         if (L.ai){
-          showDetail("AI & own products", L.ids.map(id => byId2[id].fact).join(" "), "Dan's own IP, built alongside the consulting work.", "Own builds");
+          const rws = [["Years", (Math.round(L.yrs * 10) / 10) + " years, run alongside the consulting work"]];
+          L.ids.forEach(function(id){ rws.push([byId2[id].label, byId2[id].fact]); });
+          showDetail("Own builds", "AI & own products", rws, "Dan's own IP. The assistant answering on this site is part of it.");
           if (window.qaHighlight) window.qaHighlight(null, L.ids);
         } else {
           const d1 = Math.floor(L.tl.a), d2 = L.tl.now ? "now" : String(Math.round(L.tl.b));
@@ -1231,9 +1264,13 @@ const G = (function(){
       t.textContent = R.label + " (" + (Math.round(R.w * 10) / 10) + "y)";
       svg.appendChild(t);
       function open(){
-        const feeders = LEFT.filter(L => L.links.some(kk => kk.area === R.label)).map(L => L.label);
-        showDetail(R.label + " · " + (Math.round(R.w * 10) / 10) + " weighted years", "Fed by: " + feeders.join(", ") + ".",
-          "Weighted years split engagement time equally across the areas each engagement touched.", "Capability area");
+        const feeders = LEFT.filter(L => L.links.some(kk => kk.area === R.label))
+          .map(L => L.label + " (" + (Math.round(L.links.filter(kk => kk.area === R.label)[0].w * 10) / 10) + "y)");
+        const covers = Object.keys(AREA_OF).filter(id => AREA_OF[id] === R.label && byId2[id]).map(id => byId2[id].label);
+        const rws = [["Weighted years", (Math.round(R.w * 10) / 10) + " of " + (Math.round(total * 10) / 10) + " total"],
+                     ["Fed by", feeders.join(", ")]];
+        if (covers.length) rws.push(["What sits in this area", covers.join(", ")]);
+        showDetail("Capability area", R.label, rws, "Weighted years split each engagement's time equally across the areas it touched.");
       }
       rect.addEventListener("click", open);
       t.addEventListener("click", open);

@@ -21,7 +21,7 @@ const FILE = 'file://' + path.resolve(__dirname, '..', 'index.html');
 
   const order = await page.evaluate(() =>
     Array.from(document.querySelectorAll('section')).map(s => s.id).filter(Boolean));
-  add('section order: analytics before fit', order.indexOf('analytics') < order.indexOf('fit'), order.join(' > '));
+  add('section order: fit before analytics', order.indexOf('fit') < order.indexOf('analytics'), order.join(' > '));
 
   add('sankey rendered', await page.evaluate(() => !!document.querySelector('#sankey svg path')));
   add('gantt rendered', await page.evaluate(() => document.querySelectorAll('#gantt .grow').length > 0));
@@ -37,7 +37,7 @@ const FILE = 'file://' + path.resolve(__dirname, '..', 'index.html');
     if (!r.length) return false;
     r[0].dispatchEvent(new MouseEvent('click', { bubbles: true }));
     const p = document.getElementById('anapanel');
-    return !p.hidden && p.textContent.trim().length > 20 && !p.querySelector('.sp-empty');
+    return !p.hidden && p.querySelectorAll('.sp-row').length >= 2 && !p.querySelector('.sp-empty');
   }));
 
   // fit check must score a spec and show provenance

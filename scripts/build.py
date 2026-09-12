@@ -75,8 +75,8 @@ def build():
             sys.exit("BUILD FAILED: expected %s in output" % must)
     if "const FACTS" in out:
         sys.exit("BUILD FAILED: offline FACTS block leaked into the hosted build")
-    if out.index('<section id="analytics">') > out.index('<section id="fit">'):
-        sys.exit("BUILD FAILED: analytics must come before the fit check")
+    if out.index('<section id="fit">') > out.index('<section id="analytics">'):
+        sys.exit("BUILD FAILED: the fit check must come before the analytics section")
 
     return out
 

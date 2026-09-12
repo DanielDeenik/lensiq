@@ -49,7 +49,7 @@ transforms and then refuses to emit anything that fails its own assertions:
 
 Guards that fail the build: a missing or duplicated anchor, a leaked offline
 `FACTS` block, a missing `#analytics` / `#anapanel` / `#sankey` / `#fit` /
-`#qemail`, or the fit check appearing before the analytics section.
+`#qemail`, or the analytics section appearing before the fit check.
 
 ## The tests
 
