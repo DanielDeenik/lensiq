@@ -141,6 +141,19 @@ section{margin-bottom:60px}
 .popout .pclose{position:absolute;top:10px;right:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:4px 12px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit}
 .popout .pclose:hover{background:var(--lemon);border-color:var(--ink)}
 .pophint{font-size:12.5px;color:var(--accent-ink);font-weight:600;margin:0 0 10px}
+.ana-grid{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:20px;align-items:start}
+.side-panel{position:sticky;top:88px;background:var(--paper);border:1px solid var(--line);border-top:4px solid var(--lemon);border-radius:12px;padding:18px 20px;font-size:14px;line-height:1.55;color:var(--body);min-height:220px}
+.side-panel .sp-empty{color:var(--muted);font-size:13.5px}
+.side-panel .pk{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent-ink);margin-bottom:4px}
+.side-panel .pt{font-family:'Manrope',sans-serif;font-weight:800;font-size:17px;color:var(--ink);line-height:1.25}
+.side-panel .pb{margin-top:8px}
+.side-panel .px{margin-top:10px;padding-top:10px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+.side-panel.flash{animation:spflash 0.5s ease-out}
+@keyframes spflash{0%{border-color:var(--hl);box-shadow:0 0 0 4px var(--lemon-soft);transform:translateY(-2px)}100%{border-color:var(--line);box-shadow:none;transform:none}}
+@media (max-width:900px){
+  .ana-grid{grid-template-columns:minmax(0,1fr)}
+  .side-panel{position:static;min-height:0}
+}
 @media (max-width:620px){
   .popout{left:16px!important;right:16px;top:auto!important;bottom:16px;width:auto}
 }
@@ -207,9 +220,9 @@ footer strong{color:#FFFFFF}
 <div class="topbar">
   <div class="brand"><i></i>LensIQ</div>
   <nav>
-    <a href="#fit">Fit check</a>
-    <a href="#graphsec">Experience</a>
     <a href="#analytics">Analytics</a>
+    <a href="#graphsec">Experience</a>
+    <a href="#fit">Fit check</a>
     <a href="#writing">Writing</a>
     <a href="#faq">Ask</a>
     <a href="#contact">Contact</a>
@@ -257,33 +270,59 @@ footer strong{color:#FFFFFF}
   </div>
 </section>
 
-<section id="fit">
-  <p class="eyebrow">Fit check</p>
-  <h2>Is Dan a fit? Paste the job spec.</h2>
+<section id="analytics">
+  <p class="eyebrow">Analytics</p>
+  <h2>The story in charts</h2>
   <div class="ll"></div>
-  <div class="ask">
-    <p style="margin:0 0 10px;font-size:15px">Paste the role description, or upload it as a .txt or .md file. The instant analysis below runs in your browser against Dan's published profile; the full assessment is produced by Dan's scheduled review agent and delivered by email when you send it in. Nothing is stored unless you choose to send.</p>
-    <textarea class="fit-ta" id="specin" maxlength="20000" placeholder="Paste the job spec here, requirements and all..."></textarea>
-    <div class="fit-row">
-      <button class="fit-btn" id="fitbtn" type="button">Analyze fit</button>
-      <input type="file" id="specfile" accept=".txt,.md,text/plain">
-    </div>
-    <div id="fitres" hidden>
-      <div class="fit-score"><span class="n" id="fitpct"></span><span class="s" id="fitsum"></span></div>
-      <div class="chart-card" style="margin-top:10px">
-        <h3>Spec emphasis vs Dan's depth</h3>
-        <div class="radar-wrap arcwrap" id="fitradar"></div>
-        <div class="mini-legend"><span><i style="background:#F5D843;border:1px solid #15171B"></i>Dan's depth, from the experience graph</span><span><i style="background:#15171B"></i>This spec's emphasis</span></div>
-        <p class="chart-note">Spec emphasis is the share of recognized requirements per area in the pasted text. Dan's depth is connection density in the experience graph, normalized. Both are computed live in your browser.</p>
+  <div class="ana-grid">
+  <div class="carousel-wrap">
+    <div class="carousel">
+      <div class="chart-card">
+        <h3>Where the years went</h3>
+        <p class="takeaway">Thirteen years that start in trading and Front Arena connectivity, then consolidate into SimCorp Dimension front office work from 2020 on, with an AI and product layer now compounding on top.</p>
+        <div class="radar-wrap arcwrap" id="sankey"></div>
+        <p class="chart-note">Flow width = engagement years, split across the capability areas each engagement touched, drawn from the experience graph and engagement dates. Click any block for the detail.</p>
       </div>
-      <div id="fitmatch"></div>
-      <div class="match-block" id="fitexpowrap" hidden><h4>Where the exposure comes from</h4><p class="pophint">Click any line for the projects behind it.</p><div id="fitexpo"></div></div>
-      <div class="fit-row" style="margin-top:14px">
-        <input class="fit-email" id="fitemail" type="email" maxlength="200" placeholder="Your email for Dan's direct take (optional)">
-        <button class="fit-btn" id="fitsend" type="button">Send to Dan</button>
+      <div class="chart-card">
+        <h3>Engagement timeline</h3>
+        <p class="takeaway">Eight engagements back to back since 2012, no gaps. Click a bar for the project detail.</p>
+        <div id="gantt"></div>
+        <p class="chart-note">Computed from the engagement dates below. The lemon bar is the current engagement.</p>
       </div>
-      <p class="note" id="fitsent"></p>
+      <div class="chart-card">
+        <h3>Career arc, share of focus</h3>
+        <p class="takeaway">The toolkit shifted three times, the direction never did.</p>
+        <div class="arcwrap"><div class="radar-wrap" id="arc"></div><div class="arc-tip" id="arctip"></div></div>
+        <div class="mini-legend" id="arclegend"></div>
+        <p class="chart-note">From equity trading to Front Arena engineering to SimCorp Dimension delivery, with an AI and product layer compounding since 2023. Share of focus per year, approximated from engagement dates.</p>
+      </div>
+      <div class="chart-card">
+        <h3>Coverage map, engagements and builds</h3>
+        <p class="takeaway">Depth where it matters: SimCorp Dimension and the front office dominate the map. Click a dot for the detail.</p>
+        <div class="matrix-scroll"><div class="matrix" id="matrix"></div></div>
+        <p class="chart-note">Every engagement and own build mapped to the platforms (green dots) and domains (purple dots) it touched. Drawn live from the experience graph.</p>
+      </div>
+      <div class="chart-card">
+        <h3>Platform exposure, years</h3>
+        <p class="takeaway">Seven years of connectivity, six of Front Arena, five and a half of SimCorp Dimension.</p>
+        <div class="radar-wrap" id="platradar"></div>
+        <p class="chart-note">Years hands-on, computed from engagement dates; overlapping platform work counts toward each platform.</p>
+      </div>
+      <div class="chart-card">
+        <h3>Domain coverage, connections</h3>
+        <p class="takeaway">The front office is the center of gravity.</p>
+        <div class="radar-wrap" id="domradar"></div>
+        <p class="chart-note">Counted live from the experience graph: engagements and own builds linked to each domain.</p>
+      </div>
     </div>
+    <div class="cnav">
+      <div class="cdots"></div>
+      <div class="cbtns"><button class="cbtn" type="button" data-dir="-1">Prev</button><button class="cbtn" type="button" data-dir="1">Next</button></div>
+    </div>
+  </div>
+  <aside class="side-panel" id="anapanel">
+    <div class="sp-empty">Click any block, bar or dot in the chart and its detail opens here.</div>
+  </aside>
   </div>
 </section>
 
@@ -355,63 +394,35 @@ footer strong{color:#FFFFFF}
   </div>
 </section>
 
-<section id="analytics">
-  <p class="eyebrow">Analytics</p>
-  <h2>The story in charts</h2>
+<section id="fit">
+  <p class="eyebrow">Fit check</p>
+  <h2>Is Dan a fit? Paste the job spec.</h2>
   <div class="ll"></div>
-  <div class="carousel-wrap">
-    <div class="carousel">
-      <div class="chart-card">
-        <h3>Where the years went</h3>
-        <p class="takeaway">Thirteen years that start in trading and Front Arena connectivity, then consolidate into SimCorp Dimension front office work from 2020 on, with an AI and product layer now compounding on top.</p>
-        <div class="radar-wrap arcwrap" id="sankey"></div>
-        <p class="chart-note">Flow width = engagement years, split across the capability areas each engagement touched, drawn from the experience graph and engagement dates. Click any block for the detail.</p>
-      </div>
-      <div class="chart-card">
-        <h3>Engagement timeline</h3>
-        <p class="takeaway">Eight engagements back to back since 2012, no gaps. Click a bar for the project detail.</p>
-        <div id="gantt"></div>
-        <p class="chart-note">Computed from the engagement dates below. The lemon bar is the current engagement.</p>
-      </div>
-      <div class="chart-card">
-        <h3>Career arc, share of focus</h3>
-        <p class="takeaway">The toolkit shifted three times, the direction never did.</p>
-        <div class="arcwrap"><div class="radar-wrap" id="arc"></div><div class="arc-tip" id="arctip"></div></div>
-        <div class="mini-legend" id="arclegend"></div>
-        <p class="chart-note">From equity trading to Front Arena engineering to SimCorp Dimension delivery, with an AI and product layer compounding since 2023. Share of focus per year, approximated from engagement dates.</p>
-      </div>
-      <div class="chart-card">
-        <h3>Coverage map, engagements and builds</h3>
-        <p class="takeaway">Depth where it matters: SimCorp Dimension and the front office dominate the map. Click a dot for the detail.</p>
-        <div class="matrix-scroll"><div class="matrix" id="matrix"></div></div>
-        <p class="chart-note">Every engagement and own build mapped to the platforms (green dots) and domains (purple dots) it touched. Drawn live from the experience graph.</p>
-      </div>
-      <div class="chart-card">
-        <h3>Platform exposure, years</h3>
-        <p class="takeaway">Seven years of connectivity, six of Front Arena, five and a half of SimCorp Dimension.</p>
-        <div class="radar-wrap" id="platradar"></div>
-        <p class="chart-note">Years hands-on, computed from engagement dates; overlapping platform work counts toward each platform.</p>
-      </div>
-      <div class="chart-card">
-        <h3>Domain coverage, connections</h3>
-        <p class="takeaway">The front office is the center of gravity.</p>
-        <div class="radar-wrap" id="domradar"></div>
-        <p class="chart-note">Counted live from the experience graph: engagements and own builds linked to each domain.</p>
-      </div>
+  <div class="ask">
+    <p style="margin:0 0 10px;font-size:15px">Paste the role description, or upload it as a .txt or .md file. The instant analysis below runs in your browser against Dan's published profile; the full assessment is produced by Dan's scheduled review agent and delivered by email when you send it in. Nothing is stored unless you choose to send.</p>
+    <textarea class="fit-ta" id="specin" maxlength="20000" placeholder="Paste the job spec here, requirements and all..."></textarea>
+    <div class="fit-row">
+      <button class="fit-btn" id="fitbtn" type="button">Analyze fit</button>
+      <input type="file" id="specfile" accept=".txt,.md,text/plain">
     </div>
-    <div class="cnav">
-      <div class="cdots"></div>
-      <div class="cbtns"><button class="cbtn" type="button" data-dir="-1">Prev</button><button class="cbtn" type="button" data-dir="1">Next</button></div>
+    <div id="fitres" hidden>
+      <div class="fit-score"><span class="n" id="fitpct"></span><span class="s" id="fitsum"></span></div>
+      <div class="chart-card" style="margin-top:10px">
+        <h3>Spec emphasis vs Dan's depth</h3>
+        <div class="radar-wrap arcwrap" id="fitradar"></div>
+        <div class="mini-legend"><span><i style="background:#F5D843;border:1px solid #15171B"></i>Dan's depth, from the experience graph</span><span><i style="background:#15171B"></i>This spec's emphasis</span></div>
+        <p class="chart-note">Spec emphasis is the share of recognized requirements per area in the pasted text. Dan's depth is connection density in the experience graph, normalized. Both are computed live in your browser.</p>
+      </div>
+      <div id="fitmatch"></div>
+      <div class="match-block" id="fitexpowrap" hidden><h4>Where the exposure comes from</h4><p class="pophint">Click any line for the projects behind it.</p><div id="fitexpo"></div></div>
+      <div class="fit-row" style="margin-top:14px">
+        <input class="fit-email" id="fitemail" type="email" maxlength="200" placeholder="Your email for Dan's direct take (optional)">
+        <button class="fit-btn" id="fitsend" type="button">Send to Dan</button>
+      </div>
+      <p class="note" id="fitsent"></p>
     </div>
-    <div class="gdetail" id="anadetail" hidden></div>
   </div>
 </section>
-
-
-
-
-
-
 
 <section id="skills">
   <p class="eyebrow">Capability map</p>
@@ -804,23 +815,24 @@ const G = (function(){
     {label:"Netto Invest",         a:2012.1,  b:2013.5}
   ];
   // Shared detail panel for the analytics carousel: click a block, get the story.
-  const anadetail = document.getElementById("anadetail");
+  const anadetail = document.getElementById("anapanel");
   const byId2 = {}; G.N.forEach(n => byId2[n.id] = n);
   const YRDATES = {nicola: "2026 to now", bnp: "2024 to 2026", bng: "2021 to 2024", athora: "2021 to 2024", asr: "2021 to 2022",
     pggm: "2020 to 2021", shell: "2020 to 2021", caceis: "2020 to 2021", achmea: "2020 to 2021", fis: "2015 to 2020", gtc: "2012 to 2015"};
   function showDetail(title, body, extra, kicker){
-    POP.open(kicker || "Detail", title, body, extra);
     if (!anadetail) return;
     anadetail.hidden = false;
     anadetail.textContent = "";
-    const t = document.createElement("div"); t.className = "t"; t.textContent = title;
+    if (kicker){ const k = document.createElement("div"); k.className = "pk"; k.textContent = kicker; anadetail.appendChild(k); }
+    const t = document.createElement("div"); t.className = "pt"; t.textContent = title;
     anadetail.appendChild(t);
-    const b = document.createElement("div"); b.textContent = body;
-    anadetail.appendChild(b);
-    if (extra){
-      const c = document.createElement("div"); c.style.marginTop = "6px"; c.style.fontSize = "13px";
-      c.textContent = extra;
-      anadetail.appendChild(c);
+    if (body){ const b = document.createElement("div"); b.className = "pb"; b.textContent = body; anadetail.appendChild(b); }
+    if (extra){ const c = document.createElement("div"); c.className = "px"; c.textContent = extra; anadetail.appendChild(c); }
+    anadetail.classList.remove("flash");
+    void anadetail.offsetWidth;
+    anadetail.classList.add("flash");
+    if (window.matchMedia && window.matchMedia("(max-width:900px)").matches){
+      anadetail.scrollIntoView({block: "nearest", behavior: "smooth"});
     }
   }
   const IDMAP = {"Nicola Wealth": ["nicola"], "Asqin · BNP Paribas": ["bnp"], "Qconcepts": ["bng", "athora", "asr"],
