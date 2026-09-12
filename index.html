@@ -39,7 +39,7 @@ h2{font-size:24px;font-weight:800;letter-spacing:-0.01em;margin:0}
 .topbar{display:flex;justify-content:space-between;align-items:center;padding:20px 0;border-bottom:1px solid var(--dark-line)}
 .brand{font-family:'Manrope',sans-serif;font-weight:800;font-size:18px;color:#FFFFFF;letter-spacing:-0.01em}
 .brand i{display:inline-block;width:10px;height:10px;background:var(--lemon);margin-right:8px;border-radius:2px}
-.topbar nav{display:flex;gap:18px;font-size:13.5px}
+.topbar nav{display:flex;gap:18px;font-size:13.5px;flex-wrap:wrap;justify-content:flex-end;row-gap:4px}
 .topbar nav a{color:var(--dark-muted);text-decoration:none;font-weight:500}
 .topbar nav a:hover{color:var(--lemon)}
 header.hero{padding:44px 0 56px}
@@ -115,6 +115,14 @@ section{margin-bottom:60px}
 .match-chips{display:flex;flex-wrap:wrap;gap:6px}
 .mchip{background:var(--good-soft);color:var(--good);border-radius:6px;padding:3px 9px;font-size:12.5px;font-weight:500}
 .mchip.miss{background:var(--chip);color:var(--muted);font-weight:400}
+.takeaway{font-size:15.5px;font-weight:600;color:var(--ink);margin:0 0 14px;max-width:62ch;line-height:1.45}
+.expo-row{font-size:13.5px;color:var(--body);padding:10px 0;border-top:1px solid var(--line);line-height:1.5}
+.expo-row strong{color:var(--ink)}
+.expo-row .via{color:var(--muted);font-size:12.5px;display:block;margin-top:2px}
+#sankey svg text{cursor:pointer}
+#sankey svg rect{cursor:pointer}
+#gantt .grow{cursor:pointer}
+.matrix .mc.on{cursor:pointer}
 .graph-card{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:14px}
 #graph{width:100%;height:460px;display:block;border-radius:8px;cursor:pointer}
 .legend{display:flex;gap:18px;flex-wrap:wrap;padding:10px 6px 2px;font-size:13px;color:var(--body)}
@@ -124,6 +132,18 @@ section{margin-bottom:60px}
 .gdetail{margin-top:10px;padding:14px 16px;background:var(--lemon-soft);border-radius:8px;font-size:14px;color:var(--ink)}
 .gdetail[hidden]{display:none}
 .gdetail .t{font-weight:700;font-family:'Manrope',sans-serif}
+.popout{position:fixed;z-index:300;width:min(360px,calc(100vw - 32px));background:var(--paper);border:1px solid var(--ink);border-top:4px solid var(--lemon);border-radius:12px;padding:16px 18px 14px;box-shadow:0 14px 40px rgba(21,23,27,0.22);font-size:14px;line-height:1.5;color:var(--body)}
+.popout[hidden]{display:none}
+.popout .pt{font-family:'Manrope',sans-serif;font-weight:800;font-size:16px;color:var(--ink);padding-right:56px;line-height:1.25}
+.popout .pk{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent-ink);margin-bottom:4px}
+.popout .pb{margin-top:8px}
+.popout .px{margin-top:10px;padding-top:10px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+.popout .pclose{position:absolute;top:10px;right:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:4px 12px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit}
+.popout .pclose:hover{background:var(--lemon);border-color:var(--ink)}
+.pophint{font-size:12.5px;color:var(--accent-ink);font-weight:600;margin:0 0 10px}
+@media (max-width:620px){
+  .popout{left:16px!important;right:16px;top:auto!important;bottom:16px;width:auto}
+}
 .ghint{font-size:12.5px;color:var(--muted);padding:8px 6px 0}
 .timeline{border-left:2px solid var(--line);padding-left:26px;display:flex;flex-direction:column;gap:28px}
 .engagement{position:relative}
@@ -187,10 +207,10 @@ footer strong{color:#FFFFFF}
 <div class="topbar">
   <div class="brand"><i></i>LensIQ</div>
   <nav>
-    <a href="#analytics">Analytics</a>
-    <a href="#graphsec">Experience</a>
-    <a href="#writing">Writing</a>
     <a href="#fit">Fit check</a>
+    <a href="#graphsec">Experience</a>
+    <a href="#analytics">Analytics</a>
+    <a href="#writing">Writing</a>
     <a href="#faq">Ask</a>
     <a href="#contact">Contact</a>
   </nav>
@@ -227,10 +247,7 @@ footer strong{color:#FFFFFF}
 <main>
 <div class="wrap">
 
-<section id="analytics">
-  <p class="eyebrow">Analytics</p>
-  <h2>The numbers</h2>
-  <div class="ll"></div>
+<section id="quick">
   <div class="insight-strip">
     <div class="tile"><div class="n">13</div><div class="l">years in investment technology, 2012 to present</div></div>
     <div class="tile"><div class="n">11</div><div class="l">institutions served, buy side and sell side</div></div>
@@ -238,38 +255,34 @@ footer strong{color:#FFFFFF}
     <div class="tile"><div class="n">4</div><div class="l">ESG frameworks delivered: SFDR, EU Taxonomy, CSRD, Pillar III</div></div>
     <div class="tile"><div class="n">3</div><div class="l">AI-driven products in independent build</div></div>
   </div>
-  <div class="carousel-wrap">
-    <div class="carousel">
-      <div class="chart-card">
-        <h3>Career arc, share of focus</h3>
-        <div class="arcwrap"><div class="radar-wrap" id="arc"></div><div class="arc-tip" id="arctip"></div></div>
-        <div class="mini-legend" id="arclegend"></div>
-        <p class="chart-note">From equity trading to Front Arena engineering to SimCorp Dimension delivery, with an AI and product layer compounding since 2023. Share of focus per year, approximated from engagement dates.</p>
-      </div>
-      <div class="chart-card">
-        <h3>Coverage map, engagements and builds</h3>
-        <div class="matrix-scroll"><div class="matrix" id="matrix"></div></div>
-        <p class="chart-note">Every engagement and own build mapped to the platforms (green dots) and domains (purple dots) it touched. Drawn live from the experience graph.</p>
-      </div>
-      <div class="chart-card">
-        <h3>Platform exposure, years</h3>
-        <div class="radar-wrap" id="platradar"></div>
-        <p class="chart-note">Years hands-on, computed from engagement dates; overlapping platform work counts toward each platform.</p>
-      </div>
-      <div class="chart-card">
-        <h3>Domain coverage, connections</h3>
-        <div class="radar-wrap" id="domradar"></div>
-        <p class="chart-note">Counted live from the experience graph: engagements and own builds linked to each domain.</p>
-      </div>
-      <div class="chart-card">
-        <h3>Engagement timeline</h3>
-        <div id="gantt"></div>
-        <p class="chart-note">Computed from the engagement dates below. The lemon bar is the current engagement.</p>
-      </div>
+</section>
+
+<section id="fit">
+  <p class="eyebrow">Fit check</p>
+  <h2>Is Dan a fit? Paste the job spec.</h2>
+  <div class="ll"></div>
+  <div class="ask">
+    <p style="margin:0 0 10px;font-size:15px">Paste the role description, or upload it as a .txt or .md file. The instant analysis below runs in your browser against Dan's published profile; the full assessment is produced by Dan's scheduled review agent and delivered by email when you send it in. Nothing is stored unless you choose to send.</p>
+    <textarea class="fit-ta" id="specin" maxlength="20000" placeholder="Paste the job spec here, requirements and all..."></textarea>
+    <div class="fit-row">
+      <button class="fit-btn" id="fitbtn" type="button">Analyze fit</button>
+      <input type="file" id="specfile" accept=".txt,.md,text/plain">
     </div>
-    <div class="cnav">
-      <div class="cdots"></div>
-      <div class="cbtns"><button class="cbtn" type="button" data-dir="-1">Prev</button><button class="cbtn" type="button" data-dir="1">Next</button></div>
+    <div id="fitres" hidden>
+      <div class="fit-score"><span class="n" id="fitpct"></span><span class="s" id="fitsum"></span></div>
+      <div class="chart-card" style="margin-top:10px">
+        <h3>Spec emphasis vs Dan's depth</h3>
+        <div class="radar-wrap arcwrap" id="fitradar"></div>
+        <div class="mini-legend"><span><i style="background:#F5D843;border:1px solid #15171B"></i>Dan's depth, from the experience graph</span><span><i style="background:#15171B"></i>This spec's emphasis</span></div>
+        <p class="chart-note">Spec emphasis is the share of recognized requirements per area in the pasted text. Dan's depth is connection density in the experience graph, normalized. Both are computed live in your browser.</p>
+      </div>
+      <div id="fitmatch"></div>
+      <div class="match-block" id="fitexpowrap" hidden><h4>Where the exposure comes from</h4><p class="pophint">Click any line for the projects behind it.</p><div id="fitexpo"></div></div>
+      <div class="fit-row" style="margin-top:14px">
+        <input class="fit-email" id="fitemail" type="email" maxlength="200" placeholder="Your email for Dan's direct take (optional)">
+        <button class="fit-btn" id="fitsend" type="button">Send to Dan</button>
+      </div>
+      <p class="note" id="fitsent"></p>
     </div>
   </div>
 </section>
@@ -342,6 +355,64 @@ footer strong{color:#FFFFFF}
   </div>
 </section>
 
+<section id="analytics">
+  <p class="eyebrow">Analytics</p>
+  <h2>The story in charts</h2>
+  <div class="ll"></div>
+  <div class="carousel-wrap">
+    <div class="carousel">
+      <div class="chart-card">
+        <h3>Where the years went</h3>
+        <p class="takeaway">Thirteen years that start in trading and Front Arena connectivity, then consolidate into SimCorp Dimension front office work from 2020 on, with an AI and product layer now compounding on top.</p>
+        <div class="radar-wrap arcwrap" id="sankey"></div>
+        <p class="chart-note">Flow width = engagement years, split across the capability areas each engagement touched, drawn from the experience graph and engagement dates. Click any block for the detail.</p>
+      </div>
+      <div class="chart-card">
+        <h3>Engagement timeline</h3>
+        <p class="takeaway">Eight engagements back to back since 2012, no gaps. Click a bar for the project detail.</p>
+        <div id="gantt"></div>
+        <p class="chart-note">Computed from the engagement dates below. The lemon bar is the current engagement.</p>
+      </div>
+      <div class="chart-card">
+        <h3>Career arc, share of focus</h3>
+        <p class="takeaway">The toolkit shifted three times, the direction never did.</p>
+        <div class="arcwrap"><div class="radar-wrap" id="arc"></div><div class="arc-tip" id="arctip"></div></div>
+        <div class="mini-legend" id="arclegend"></div>
+        <p class="chart-note">From equity trading to Front Arena engineering to SimCorp Dimension delivery, with an AI and product layer compounding since 2023. Share of focus per year, approximated from engagement dates.</p>
+      </div>
+      <div class="chart-card">
+        <h3>Coverage map, engagements and builds</h3>
+        <p class="takeaway">Depth where it matters: SimCorp Dimension and the front office dominate the map. Click a dot for the detail.</p>
+        <div class="matrix-scroll"><div class="matrix" id="matrix"></div></div>
+        <p class="chart-note">Every engagement and own build mapped to the platforms (green dots) and domains (purple dots) it touched. Drawn live from the experience graph.</p>
+      </div>
+      <div class="chart-card">
+        <h3>Platform exposure, years</h3>
+        <p class="takeaway">Seven years of connectivity, six of Front Arena, five and a half of SimCorp Dimension.</p>
+        <div class="radar-wrap" id="platradar"></div>
+        <p class="chart-note">Years hands-on, computed from engagement dates; overlapping platform work counts toward each platform.</p>
+      </div>
+      <div class="chart-card">
+        <h3>Domain coverage, connections</h3>
+        <p class="takeaway">The front office is the center of gravity.</p>
+        <div class="radar-wrap" id="domradar"></div>
+        <p class="chart-note">Counted live from the experience graph: engagements and own builds linked to each domain.</p>
+      </div>
+    </div>
+    <div class="cnav">
+      <div class="cdots"></div>
+      <div class="cbtns"><button class="cbtn" type="button" data-dir="-1">Prev</button><button class="cbtn" type="button" data-dir="1">Next</button></div>
+    </div>
+    <div class="gdetail" id="anadetail" hidden></div>
+  </div>
+</section>
+
+
+
+
+
+
+
 <section id="skills">
   <p class="eyebrow">Capability map</p>
   <h2>Skills</h2>
@@ -402,34 +473,7 @@ footer strong{color:#FFFFFF}
 
 <div class="wrap" style="padding-top:56px">
 
-<section id="fit">
-  <p class="eyebrow">Fit check</p>
-  <h2>Paste a job spec, see the match</h2>
-  <div class="ll"></div>
-  <div class="ask">
-    <p style="margin:0 0 10px;font-size:15px">Paste the role description, or upload it as a .txt or .md file. The analysis runs in your browser against Dan's published profile only, nothing is stored unless you choose to send it.</p>
-    <textarea class="fit-ta" id="specin" maxlength="20000" placeholder="Paste the job spec here, requirements and all..."></textarea>
-    <div class="fit-row">
-      <button class="fit-btn" id="fitbtn" type="button">Analyze fit</button>
-      <input type="file" id="specfile" accept=".txt,.md,text/plain">
-    </div>
-    <div id="fitres" hidden>
-      <div class="fit-score"><span class="n" id="fitpct"></span><span class="s" id="fitsum"></span></div>
-      <div class="chart-card" style="margin-top:10px">
-        <h3>Spec emphasis vs Dan's depth</h3>
-        <div class="radar-wrap arcwrap" id="fitradar"></div>
-        <div class="mini-legend"><span><i style="background:#F5D843;border:1px solid #15171B"></i>Dan's depth, from the experience graph</span><span><i style="background:#15171B"></i>This spec's emphasis</span></div>
-        <p class="chart-note">Spec emphasis is the share of recognized requirements per area in the pasted text. Dan's depth is connection density in the experience graph, normalized. Both are computed live in your browser.</p>
-      </div>
-      <div id="fitmatch"></div>
-      <div class="fit-row" style="margin-top:14px">
-        <input class="fit-email" id="fitemail" type="email" maxlength="200" placeholder="Your email for Dan's direct take (optional)">
-        <button class="fit-btn" id="fitsend" type="button">Send to Dan</button>
-      </div>
-      <p class="note" id="fitsent"></p>
-    </div>
-  </div>
-</section>
+
 
 <section id="faq">
   <p class="eyebrow">For recruiters</p>
@@ -479,7 +523,57 @@ footer strong{color:#FFFFFF}
   </div>
 </footer>
 
+<div class="popout" id="popout" hidden></div>
+
 <script>
+// ---------- Dynamic popout: every clickable data block opens a card at the click point ----------
+const POP = (function(){
+  const el = document.getElementById("popout");
+  let last = {x: 0, y: 0};
+  document.addEventListener("mousedown", function(ev){ last = {x: ev.clientX, y: ev.clientY}; }, true);
+  document.addEventListener("touchstart", function(ev){
+    if (ev.touches && ev.touches[0]) last = {x: ev.touches[0].clientX, y: ev.touches[0].clientY};
+  }, true);
+  function close(){ if (el) el.hidden = true; }
+  function place(){
+    el.style.left = "0px"; el.style.top = "0px";
+    const w = el.offsetWidth, h = el.offsetHeight;
+    const vw = document.documentElement.clientWidth, vh = document.documentElement.clientHeight;
+    const cx = Math.min(Math.max(last.x, 12), vw - 12);
+    const cy = Math.min(Math.max(last.y, 12), vh - 12);
+    let x = cx + 18, y = cy + 14;
+    if (x + w > vw - 12) x = cx - w - 18;
+    x = Math.max(12, Math.min(x, vw - w - 12));
+    if (y + h > vh - 12) y = vh - h - 12;
+    y = Math.max(12, Math.min(y, vh - h - 12));
+    el.style.left = x + "px"; el.style.top = y + "px";
+  }
+  function open(kicker, title, body, extra){
+    if (!el) return;
+    el.hidden = false;
+    el.textContent = "";
+    const b = document.createElement("button");
+    b.className = "pclose"; b.type = "button"; b.textContent = "Close";
+    b.addEventListener("click", close);
+    el.appendChild(b);
+    if (kicker){ const k = document.createElement("div"); k.className = "pk"; k.textContent = kicker; el.appendChild(k); }
+    const t = document.createElement("div"); t.className = "pt"; t.textContent = title; el.appendChild(t);
+    if (body){ const p = document.createElement("div"); p.className = "pb"; p.textContent = body; el.appendChild(p); }
+    if (extra){ const e2 = document.createElement("div"); e2.className = "px"; e2.textContent = extra; el.appendChild(e2); }
+    place();
+  }
+  document.addEventListener("keydown", function(ev){ if (ev.key === "Escape") close(); });
+  document.addEventListener("click", function(ev){
+    if (!el || el.hidden) return;
+    if (el.contains(ev.target)) return;
+    const t = ev.target;
+    if (t && t.closest && t.closest("#sankey, #gantt, .matrix, #graph, .expo-row")) return;
+    close();
+  });
+  window.addEventListener("resize", close);
+  return {open: open, close: close};
+})();
+
 // ---------- Experience graph (canvas force layout, data from the public CV only) ----------
 const G = (function(){
   const N = [];
@@ -664,6 +758,8 @@ const G = (function(){
     const c = document.createElement("div"); c.style.marginTop = "6px"; c.style.fontSize = "13px";
     c.textContent = "Connected: " + nb.join(", ");
     detail.append(t, f, c);
+    POP.open(n.cat === "eng" ? "Engagement" : (n.cat === "build" ? "Own build" : (n.cat === "plat" ? "Platform" : "Domain")),
+      n.label, n.fact, nb.length ? "Connected: " + nb.join(", ") : "");
     draw();
   });
 
@@ -707,6 +803,45 @@ const G = (function(){
     {label:"GTC Derivatives",      a:2013.5,  b:2015.25},
     {label:"Netto Invest",         a:2012.1,  b:2013.5}
   ];
+  // Shared detail panel for the analytics carousel: click a block, get the story.
+  const anadetail = document.getElementById("anadetail");
+  const byId2 = {}; G.N.forEach(n => byId2[n.id] = n);
+  const YRDATES = {nicola: "2026 to now", bnp: "2024 to 2026", bng: "2021 to 2024", athora: "2021 to 2024", asr: "2021 to 2022",
+    pggm: "2020 to 2021", shell: "2020 to 2021", caceis: "2020 to 2021", achmea: "2020 to 2021", fis: "2015 to 2020", gtc: "2012 to 2015"};
+  function showDetail(title, body, extra, kicker){
+    POP.open(kicker || "Detail", title, body, extra);
+    if (!anadetail) return;
+    anadetail.hidden = false;
+    anadetail.textContent = "";
+    const t = document.createElement("div"); t.className = "t"; t.textContent = title;
+    anadetail.appendChild(t);
+    const b = document.createElement("div"); b.textContent = body;
+    anadetail.appendChild(b);
+    if (extra){
+      const c = document.createElement("div"); c.style.marginTop = "6px"; c.style.fontSize = "13px";
+      c.textContent = extra;
+      anadetail.appendChild(c);
+    }
+  }
+  const IDMAP = {"Nicola Wealth": ["nicola"], "Asqin · BNP Paribas": ["bnp"], "Qconcepts": ["bng", "athora", "asr"],
+    "BNG Bank": ["bng"], "SimCorp": ["pggm", "shell", "caceis", "achmea"], "FIS Global": ["fis"],
+    "GTC Derivatives": ["gtc"], "Netto Invest": ["gtc"]};
+  function neighborsOf(ids){
+    const s = new Set();
+    G.E.forEach(function(e){
+      ids.forEach(function(id){ if (e[0] === id) s.add(e[1]); if (e[1] === id) s.add(e[0]); });
+    });
+    ids.forEach(id => s.delete(id)); s.delete("dan");
+    return Array.from(s);
+  }
+  function engDetail(label, dates){
+    const ids = IDMAP[label] || [];
+    const facts = ids.map(id => byId2[id] ? byId2[id].fact : "").filter(Boolean).join(" ");
+    const nb = neighborsOf(ids).map(id => byId2[id].label);
+    showDetail(label + " · " + dates, facts, nb.length ? "Touched: " + nb.join(", ") : "", "Engagement");
+    if (window.qaHighlight && ids.length) window.qaHighlight(null, ids);
+  }
+
   const gantt = document.getElementById("gantt");
   if (gantt){
     TL.forEach(r => {
@@ -718,6 +853,10 @@ const G = (function(){
       bar.style.width = (Math.max(r.b - r.a, 0.2) / (Y1 - Y0) * 100) + "%";
       track.appendChild(bar);
       row.append(l, track);
+      row.addEventListener("click", function(){
+        const d1 = Math.floor(r.a), d2 = r.now ? "now" : String(Math.round(r.b));
+        engDetail(r.label, d1 + " to " + d2);
+      });
       gantt.appendChild(row);
     });
     const axis = document.createElement("div"); axis.className = "gaxis";
@@ -968,10 +1107,126 @@ const G = (function(){
         const cell = document.createElement("div");
         const on = has[r.id + "|" + c.id];
         cell.className = "mc " + (c.cat === "plat" ? "plat" : "dom") + (on ? " on" : "");
-        if (on) cell.title = r.label + ": " + c.label;
+        if (on){
+          cell.title = r.label + ": " + c.label;
+          cell.addEventListener("click", function(){
+            const dates = YRDATES[r.id] ? " · " + YRDATES[r.id] : "";
+            showDetail(r.label + " × " + c.label + dates, byId2[r.id].fact, byId2[c.id].label + ": " + byId2[c.id].fact, "Coverage");
+          });
+        }
         host.appendChild(cell);
       });
     });
+  })();
+
+  // Sankey: engagement years flowing into capability areas, computed from the graph.
+  (function(){
+    const el = document.getElementById("sankey");
+    if (!el) return;
+    const NS = "http://www.w3.org/2000/svg";
+    const AREA_OF = {scd: "SimCorp Dimension", fo: "Front Office & IBOR", ibor: "Front Office & IBOR",
+      fix: "Connectivity & Trading", bbg: "Connectivity & Trading", arena: "Connectivity & Trading", trading: "Connectivity & Trading",
+      esg: "ESG & Regulatory", credit: "ESG & Regulatory", py: "Data & Engineering",
+      alts: "Alternatives & Wealth", wealth: "Alternatives & Wealth", aladdin: "Alternatives & Wealth"};
+    const AREA_COLOR = {"SimCorp Dimension": "#1E7A4E", "Front Office & IBOR": "#7A4FA0", "Connectivity & Trading": "#3D6FA8",
+      "ESG & Regulatory": "#A08200", "Data & Engineering": "#6E7480", "Alternatives & Wealth": "#B85030", "AI & Products": "#F5D843"};
+    const AREA_ORDER = ["SimCorp Dimension", "Front Office & IBOR", "Connectivity & Trading", "ESG & Regulatory", "Data & Engineering", "Alternatives & Wealth", "AI & Products"];
+    // Left nodes: TL engagements (GTC and Netto merged) plus own builds.
+    const LEFT = [];
+    TL.forEach(function(r){
+      if (r.label === "Netto Invest") return;
+      const yrs = (r.label === "GTC Derivatives") ? 3.2 : Math.max(r.b - r.a, 0.3);
+      LEFT.push({label: r.label, ids: IDMAP[r.label] || [], yrs: yrs, tl: r});
+    });
+    LEFT.push({label: "AI & own products", ids: ["watchdesk", "socialarb", "agentstack"], yrs: 1.5, ai: true});
+    // Links: each left node's years split across the areas its graph edges touch.
+    LEFT.forEach(function(L){
+      const areas = new Set();
+      neighborsOf(L.ids).forEach(function(id){ if (AREA_OF[id]) areas.add(AREA_OF[id]); });
+      if (L.ai) areas.add("AI & Products");
+      L.links = Array.from(areas).map(a => ({area: a, w: L.yrs / areas.size}));
+    });
+    const inflow = {};
+    LEFT.forEach(L => L.links.forEach(k => { inflow[k.area] = (inflow[k.area] || 0) + k.w; }));
+    const RIGHT = AREA_ORDER.filter(a => inflow[a]).map(a => ({label: a, w: inflow[a]}));
+    const total = LEFT.reduce((s, L) => s + L.yrs, 0);
+    const W = 680, H = 470, top = 16, gapL = 7, gapR = 9, x0 = 178, x1 = 500, nw = 12;
+    const k = (H - 2 * top - gapL * (LEFT.length - 1)) / total;
+    const svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+    // position nodes
+    let y = top;
+    LEFT.forEach(function(L){ L.y = y; L.h = L.yrs * k; L.off = 0; y += L.h + gapL; });
+    const kr = (H - 2 * top - gapR * (RIGHT.length - 1)) / total;
+    let yr = top;
+    RIGHT.forEach(function(R){ R.y = yr; R.h = R.w * kr; R.off = 0; yr += R.h + gapR; });
+    const rByLabel = {}; RIGHT.forEach(R => rByLabel[R.label] = R);
+    // ribbons
+    LEFT.forEach(function(L){
+      L.links.forEach(function(kk){
+        const R = rByLabel[kk.area];
+        const hL = kk.w * k, hR = kk.w * kr;
+        const ly0 = L.y + L.off, ly1 = ly0 + hL;
+        const ry0 = R.y + R.off, ry1 = ry0 + hR;
+        L.off += hL; R.off += hR;
+        const mx = (x0 + nw + x1) / 2;
+        const p = document.createElementNS(NS, "path");
+        p.setAttribute("d", "M" + (x0 + nw) + " " + ly0 + " C" + mx + " " + ly0 + " " + mx + " " + ry0 + " " + x1 + " " + ry0 +
+          " L" + x1 + " " + ry1 + " C" + mx + " " + ry1 + " " + mx + " " + ly1 + " " + (x0 + nw) + " " + ly1 + " Z");
+        p.setAttribute("fill", AREA_COLOR[kk.area]);
+        p.setAttribute("fill-opacity", "0.42");
+        svg.appendChild(p);
+      });
+    });
+    const ink = cssv("--ink"), body = cssv("--body"), muted = cssv("--muted");
+    function nodeRect(x, n, color, strokeInk){
+      const r = document.createElementNS(NS, "rect");
+      r.setAttribute("x", x); r.setAttribute("y", n.y);
+      r.setAttribute("width", nw); r.setAttribute("height", Math.max(n.h, 3));
+      r.setAttribute("fill", color); r.setAttribute("rx", "2");
+      if (strokeInk){ r.setAttribute("stroke", ink); r.setAttribute("stroke-width", "1"); }
+      svg.appendChild(r);
+      return r;
+    }
+    LEFT.forEach(function(L){
+      const rect = nodeRect(x0, L, ink, false);
+      const t = document.createElementNS(NS, "text");
+      t.setAttribute("x", x0 - 8); t.setAttribute("y", L.y + L.h / 2 + 4);
+      t.setAttribute("text-anchor", "end");
+      t.setAttribute("font-family", "'IBM Plex Sans', sans-serif");
+      t.setAttribute("font-size", "12.5"); t.setAttribute("fill", body);
+      t.textContent = L.label + " (" + (Math.round(L.yrs * 10) / 10) + "y)";
+      svg.appendChild(t);
+      function open(){
+        if (L.ai){
+          showDetail("AI & own products", L.ids.map(id => byId2[id].fact).join(" "), "Dan's own IP, built alongside the consulting work.", "Own builds");
+          if (window.qaHighlight) window.qaHighlight(null, L.ids);
+        } else {
+          const d1 = Math.floor(L.tl.a), d2 = L.tl.now ? "now" : String(Math.round(L.tl.b));
+          engDetail(L.label, d1 + " to " + d2);
+        }
+      }
+      rect.addEventListener("click", open);
+      t.addEventListener("click", open);
+    });
+    RIGHT.forEach(function(R){
+      const rect = nodeRect(x1, R, AREA_COLOR[R.label], R.label === "AI & Products");
+      const t = document.createElementNS(NS, "text");
+      t.setAttribute("x", x1 + nw + 8); t.setAttribute("y", R.y + R.h / 2 + 4);
+      t.setAttribute("text-anchor", "start");
+      t.setAttribute("font-family", "'IBM Plex Sans', sans-serif");
+      t.setAttribute("font-size", "12.5"); t.setAttribute("fill", body);
+      t.textContent = R.label + " (" + (Math.round(R.w * 10) / 10) + "y)";
+      svg.appendChild(t);
+      function open(){
+        const feeders = LEFT.filter(L => L.links.some(kk => kk.area === R.label)).map(L => L.label);
+        showDetail(R.label + " · " + (Math.round(R.w * 10) / 10) + " weighted years", "Fed by: " + feeders.join(", ") + ".",
+          "Weighted years split engagement time equally across the areas each engagement touched.", "Capability area");
+      }
+      rect.addEventListener("click", open);
+      t.addEventListener("click", open);
+    });
+    el.appendChild(svg);
   })();
 
   // Carousels: scroll-snap slides with dots and Prev/Next controls.
@@ -1050,6 +1305,8 @@ const G = (function(){
       sumEl.textContent = "No recognizable platform, domain or tooling requirements found in this text. Paste the full requirements section of the spec.";
       document.getElementById("fitradar").innerHTML = "";
       document.getElementById("fitmatch").innerHTML = "";
+      document.getElementById("fitexpowrap").hidden = true;
+      document.getElementById("fitexpo").innerHTML = "";
       return;
     }
     const score = Math.round(100 * rec / (rec + out));
@@ -1071,6 +1328,41 @@ const G = (function(){
     }
     block("Matched in Dan's profile", Array.from(matchedTerms).sort().slice(0, 24), "");
     block("In the spec, outside the published profile", outsideHits, "miss");
+    // Where the exposure comes from: top matched skills with the engagements behind them
+    const DATES = {nicola: "2026 to now", bnp: "2024 to 2026", bng: "2021 to 2024", athora: "2021 to 2024",
+      asr: "2021 to 2022", pggm: "2020 to 2021", shell: "2020 to 2021", caceis: "2020 to 2021",
+      achmea: "2020 to 2021", fis: "2015 to 2020", gtc: "2013 to 2015"};
+    const xw = document.getElementById("fitexpowrap"), xe = document.getElementById("fitexpo");
+    xe.innerHTML = "";
+    const topIds = Object.keys(nodeHits).sort((a, b) => nodeHits[b] - nodeHits[a]).slice(0, 5);
+    topIds.forEach(function(id){
+      const node = byId[id]; if (!node) return;
+      const engs = [];
+      G.E.forEach(function(ed){
+        const other = ed[0] === id ? ed[1] : (ed[1] === id ? ed[0] : null);
+        if (!other) return;
+        const on = byId[other]; if (!on) return;
+        if (on.cat === "eng") engs.push(on.label + (DATES[on.id] ? " (" + DATES[on.id] + ")" : ""));
+        else if (on.cat === "build") engs.push(on.label + " (own build)");
+      });
+      const row = document.createElement("div"); row.className = "expo-row";
+      row.style.cursor = "pointer";
+      row.addEventListener("click", function(){
+        POP.open("Exposure", node.label, node.fact, engs.length ? "Via: " + engs.join(", ") : "");
+      });
+      const head = document.createElement("div");
+      const st = document.createElement("strong"); st.textContent = node.label;
+      head.appendChild(st);
+      head.appendChild(document.createTextNode(" · " + node.fact));
+      row.appendChild(head);
+      if (engs.length){
+        const via = document.createElement("div"); via.className = "via";
+        via.textContent = "Via: " + engs.join(", ");
+        row.appendChild(via);
+      }
+      xe.appendChild(row);
+    });
+    xw.hidden = topIds.length === 0;
     // light the experience graph
     const ids = Object.keys(nodeHits).sort((a, b) => nodeHits[b] - nodeHits[a]);
     if (window.qaHighlight && ids.length) window.qaHighlight(null, ids.slice(0, 8));
@@ -1144,15 +1436,14 @@ const G = (function(){
     if (!spec) return;
     send.disabled = true;
     sent.textContent = "Sending...";
-    const prefix = "Job spec fit check" + (typeof window.__fitScore === "number" ? " (" + window.__fitScore + "% profile coverage)" : "") + ": ";
-    const q = (prefix + spec).slice(0, 295);
+    const q = ("Job spec fit check" + (typeof window.__fitScore === "number" ? " (" + window.__fitScore + "% instant coverage)" : "")).slice(0, 295);
     fetch("https://hvitxwhfdhsdwhgllaqf.supabase.co/functions/v1/site", {
       method: "POST",
       headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({question: q, email: email})
+      body: JSON.stringify({question: q, email: email, spec: spec.slice(0, 8000)})
     }).then(function(r){
       sent.textContent = (r.ok || r.status === 202)
-        ? (email ? "Sent. Dan replies to your email within one business day." : "Sent to Dan. Leave your email above and send again to get his reply directly.")
+        ? (email ? "Sent. The full assessment is prepared by Dan's scheduled review agent and emailed to you, normally within the hour." : "Sent to Dan's scheduled review agent. Leave your email above and send again to receive the full assessment directly.")
         : "Could not send right now. Email deenikdaniel@gmail.com with the spec instead.";
       send.disabled = false;
     }).catch(function(){
@@ -1187,6 +1478,7 @@ CANNED.forEach(function(item){
   });
   chipsEl.appendChild(b);
 });
+
 
 const input = document.getElementById('qinput');
 const emailInput = document.getElementById('qemail');
@@ -1232,6 +1524,7 @@ input.addEventListener('keydown', function(e){ if (e.key === 'Enter') ask(); });
     s.href = 'https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(location.href);
   }
 })();
+
 </script>
 
 </body>
