@@ -1,0 +1,1543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dan Deenik | SimCorp Dimension Consultant | LensIQ</title>
+<meta name="description" content="Dan Deenik is a freelance SimCorp Dimension consultant (Front Office, IBOR, Alternative Investments) at LensIQ. Over a decade delivering for buy-side and sell-side firms. Remote-first from Amsterdam, open to contract engagements.">
+<meta property="og:title" content="Dan Deenik | SimCorp Dimension Consultant">
+<meta property="og:description" content="Freelance SimCorp Dimension specialist: Front Office, IBOR, Alternative Investments, ESG. Certified SimCorp Dimension Professional. Remote-first, EU.">
+<meta property="og:type" content="profile">
+<meta name="robots" content="index, follow">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%93%88%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#FAFAF7; --paper:#FFFFFF; --surface:#FFFFFF; --ink:#15171B; --body:#3A4048; --muted:#6E7480;
+  --line:#E5E7E3; --lemon:#F5D843; --lemon-soft:#FCF6D8; --accent:#F5D843; --accent-ink:#6E6112; --hl:#A08200;
+  --chip:#F1F2EE; --good:#1E7A4E; --good-soft:#E6F3EC;
+  --dark:#15171B; --dark-2:#1D2025; --dark-line:#2C3037; --dark-body:#C2C7CE; --dark-muted:#8A919B;
+  --cat-eng:#3D6FA8; --cat-plat:#1E7A4E; --cat-dom:#7A4FA0; --cat-build:#B85030;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--body);font-family:'IBM Plex Sans',system-ui,-apple-system,sans-serif;font-size:16px;line-height:1.6}
+.mono{font-family:'IBM Plex Mono',ui-monospace,monospace}
+h1,h2,h3{font-family:'Manrope',system-ui,sans-serif;color:var(--ink);text-wrap:balance;margin:0}
+h1{font-size:clamp(32px,5.4vw,50px);font-weight:800;letter-spacing:-0.025em;line-height:1.04}
+h2{font-size:24px;font-weight:800;letter-spacing:-0.01em;margin:0}
+.band{padding-block:0}
+.band.dark{background:var(--dark);color:var(--dark-body)}
+.band.dark.sticky{position:sticky;top:0;z-index:60}
+.band.dark h1,.band.dark h2,.band.dark h3{color:#FFFFFF}
+.wrap{max-width:960px;margin:0 auto;padding:0 24px}
+.ll{width:54px;height:9px;border-top:2px solid var(--lemon);border-bottom:2px solid var(--lemon);margin:12px 0 20px}
+.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.16em;text-transform:uppercase;color:var(--accent-ink);margin:0 0 8px}
+.band.dark .eyebrow{color:var(--lemon)}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:20px 0;border-bottom:1px solid var(--dark-line)}
+.brand{font-family:'Manrope',sans-serif;font-weight:800;font-size:18px;color:#FFFFFF;letter-spacing:-0.01em}
+.brand i{display:inline-block;width:10px;height:10px;background:var(--lemon);margin-right:8px;border-radius:2px}
+.topbar nav{display:flex;gap:18px;font-size:13.5px;flex-wrap:wrap;justify-content:flex-end;row-gap:4px}
+.topbar nav a{color:var(--dark-muted);text-decoration:none;font-weight:500}
+.topbar nav a:hover{color:var(--lemon)}
+header.hero{padding:44px 0 56px}
+.hero-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.avail{display:inline-flex;align-items:center;gap:8px;background:var(--lemon);color:var(--ink);border-radius:999px;padding:7px 15px;font-size:13px;font-weight:600;white-space:nowrap}
+.avail .dot{width:8px;height:8px;border-radius:50%;background:var(--ink)}
+.tagline{font-size:18px;max-width:62ch;margin:16px 0 0;color:var(--dark-body)}
+.contact-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:26px}
+.contact-row a{display:inline-flex;align-items:center;gap:6px;text-decoration:none;font-size:14px;font-weight:600;padding:10px 18px;border-radius:8px;border:1px solid var(--dark-line);color:#FFFFFF;background:transparent}
+.contact-row a.primary{background:var(--lemon);border-color:var(--lemon);color:var(--ink)}
+.contact-row a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--lemon);outline-offset:2px}
+.fact-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:1px;background:var(--dark-line);border:1px solid var(--dark-line);border-radius:10px;overflow:hidden;margin-top:34px}
+.fact{background:var(--dark-2);padding:14px 16px}
+.fact .k{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--dark-muted)}
+.fact .v{color:#FFFFFF;font-weight:600;font-size:15px;margin-top:4px}
+main{padding:56px 0 8px}
+section{margin-bottom:60px}
+.insight-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin:0 0 16px}
+.tile{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px 18px;border-top:3px solid var(--lemon)}
+.tile .n{font-family:'Manrope',sans-serif;font-size:32px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums;line-height:1.1}
+.tile .l{font-size:12.5px;color:var(--muted);margin-top:4px;line-height:1.35}
+.chart-card{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:20px 22px}
+.chart-card h3{font-size:13px;font-family:'IBM Plex Mono',monospace;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin:0 0 16px}
+.chart-note{font-size:12px;color:var(--muted);margin:12px 0 0;line-height:1.5}
+.grow{display:grid;grid-template-columns:158px 1fr;gap:10px;align-items:center;margin-bottom:9px}
+.grow .glabel{font-size:12.5px;color:var(--body);text-align:right;line-height:1.25}
+.grow .gtrack{position:relative;height:16px;background:var(--chip);border-radius:4px}
+.grow .gbar{position:absolute;top:0;height:100%;background:var(--ink);border-radius:4px;min-width:5px}
+.grow .gbar.now{background:var(--lemon);border:1px solid var(--ink)}
+.gaxis{display:grid;grid-template-columns:158px 1fr;gap:10px;margin-top:4px}
+.gaxis .scale{position:relative;height:16px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--muted)}
+.gaxis .scale span{position:absolute;transform:translateX(-50%)}
+.carousel-wrap{position:relative}
+.carousel{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:14px;scrollbar-width:none}
+.carousel::-webkit-scrollbar{display:none}
+.carousel > *{scroll-snap-align:start;flex:0 0 100%;min-width:0}
+.carousel.cards > *{flex:0 0 min(320px,86%)}
+.cnav{display:flex;align-items:center;justify-content:space-between;margin-top:12px}
+.cbtns{display:flex;gap:8px}
+.cbtn{padding:8px 16px;border-radius:999px;border:1px solid var(--line);background:var(--paper);color:var(--ink);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+.cbtn:hover{background:var(--lemon);border-color:var(--ink)}
+.cdots{display:flex;gap:6px}
+.cdot{width:8px;height:8px;border-radius:50%;background:var(--line)}
+.cdot.on{background:var(--ink)}
+.radar-wrap svg{width:100%;height:auto;display:block;max-width:600px;margin:0 auto}
+.arcwrap{position:relative}
+.arcwrap svg{max-width:none}
+.arc-tip{position:absolute;pointer-events:none;background:var(--ink);color:#FFFFFF;font-size:12px;padding:6px 10px;border-radius:6px;display:none;z-index:5;white-space:nowrap}
+.mini-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--body);margin-top:8px}
+.mini-legend span{display:inline-flex;align-items:center;gap:6px}
+.mini-legend i{width:10px;height:10px;border-radius:2px;display:inline-block}
+.matrix-scroll{overflow-x:auto}
+.matrix{display:grid;gap:2px;font-size:12px;color:var(--body)}
+.matrix .mh{writing-mode:vertical-rl;transform:rotate(180deg);font-size:11px;color:var(--muted);padding:4px 0;justify-self:center}
+.matrix .mr{padding-right:8px;white-space:nowrap;display:flex;align-items:center;justify-content:flex-end;gap:6px}
+.matrix .mc{width:30px;height:24px;background:var(--chip);border-radius:4px;position:relative}
+.matrix .mc.on::after{content:"";position:absolute;inset:0;margin:auto;width:9px;height:9px;border-radius:50%}
+.matrix .mc.plat.on::after{background:var(--cat-plat)}
+.matrix .mc.dom.on::after{background:var(--cat-dom)}
+.matrix .rdot{width:8px;height:8px;border-radius:50%;flex:none}
+.fit-ta{width:100%;min-height:130px;padding:12px 14px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit;font-size:14px;resize:vertical}
+.fit-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:center}
+.fit-btn{padding:10px 18px;border-radius:8px;background:var(--lemon);color:var(--ink);font-weight:700;font-size:14px;cursor:pointer;font-family:inherit;border:1px solid var(--ink)}
+.fit-btn:disabled{opacity:0.6;cursor:wait}
+.fit-email{flex:1;min-width:220px;padding:10px 14px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit;font-size:14px}
+#specfile{font-size:12.5px;color:var(--muted);max-width:100%}
+#fitres[hidden]{display:none}
+.fit-score{display:flex;align-items:baseline;gap:14px;margin:18px 0 8px;flex-wrap:wrap}
+.fit-score .n{font-family:'Manrope',sans-serif;font-size:44px;font-weight:800;color:var(--ink);line-height:1}
+.fit-score .s{font-size:14.5px;max-width:58ch;color:var(--body)}
+.match-block{margin-top:12px}
+.match-block h4{font-size:12px;font-family:'IBM Plex Mono',monospace;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+.match-chips{display:flex;flex-wrap:wrap;gap:6px}
+.mchip{background:var(--good-soft);color:var(--good);border-radius:6px;padding:3px 9px;font-size:12.5px;font-weight:500}
+.mchip.miss{background:var(--chip);color:var(--muted);font-weight:400}
+.takeaway{font-size:15.5px;font-weight:600;color:var(--ink);margin:0 0 14px;max-width:62ch;line-height:1.45}
+.expo-row{font-size:13.5px;color:var(--body);padding:10px 0;border-top:1px solid var(--line);line-height:1.5}
+.expo-row strong{color:var(--ink)}
+.expo-row .via{color:var(--muted);font-size:12.5px;display:block;margin-top:2px}
+#sankey svg text{cursor:pointer}
+#sankey svg rect{cursor:pointer}
+#gantt .grow{cursor:pointer}
+.matrix .mc.on{cursor:pointer}
+.graph-card{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:14px}
+#graph{width:100%;height:460px;display:block;border-radius:8px;cursor:pointer}
+.legend{display:flex;gap:18px;flex-wrap:wrap;padding:10px 6px 2px;font-size:13px;color:var(--body)}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.legend i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.legend i.dan{border:1.5px solid var(--ink)}
+.gdetail{margin-top:10px;padding:14px 16px;background:var(--lemon-soft);border-radius:8px;font-size:14px;color:var(--ink)}
+.gdetail[hidden]{display:none}
+.gdetail .t{font-weight:700;font-family:'Manrope',sans-serif}
+.popout{position:fixed;z-index:300;width:min(360px,calc(100vw - 32px));background:var(--paper);border:1px solid var(--ink);border-top:4px solid var(--lemon);border-radius:12px;padding:16px 18px 14px;box-shadow:0 14px 40px rgba(21,23,27,0.22);font-size:14px;line-height:1.5;color:var(--body)}
+.popout[hidden]{display:none}
+.popout .pt{font-family:'Manrope',sans-serif;font-weight:800;font-size:16px;color:var(--ink);padding-right:56px;line-height:1.25}
+.popout .pk{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent-ink);margin-bottom:4px}
+.popout .pb{margin-top:8px}
+.popout .px{margin-top:10px;padding-top:10px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+.popout .pclose{position:absolute;top:10px;right:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:4px 12px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit}
+.popout .pclose:hover{background:var(--lemon);border-color:var(--ink)}
+.pophint{font-size:12.5px;color:var(--accent-ink);font-weight:600;margin:0 0 10px}
+.ana-grid{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:20px;align-items:start}
+.side-panel{position:sticky;top:88px;background:var(--paper);border:1px solid var(--line);border-top:4px solid var(--lemon);border-radius:12px;padding:18px 20px;font-size:14px;line-height:1.55;color:var(--body);min-height:220px}
+.side-panel .sp-empty{color:var(--muted);font-size:13.5px}
+.side-panel .pk{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent-ink);margin-bottom:4px}
+.side-panel .pt{font-family:'Manrope',sans-serif;font-weight:800;font-size:17px;color:var(--ink);line-height:1.25}
+.side-panel .pb{margin-top:8px}
+.side-panel .px{margin-top:10px;padding-top:10px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+.side-panel.flash{animation:spflash 0.5s ease-out}
+@keyframes spflash{0%{border-color:var(--hl);box-shadow:0 0 0 4px var(--lemon-soft);transform:translateY(-2px)}100%{border-color:var(--line);box-shadow:none;transform:none}}
+@media (max-width:900px){
+  .ana-grid{grid-template-columns:minmax(0,1fr)}
+  .side-panel{position:static;min-height:0}
+}
+@media (max-width:620px){
+  .popout{left:16px!important;right:16px;top:auto!important;bottom:16px;width:auto}
+}
+.ghint{font-size:12.5px;color:var(--muted);padding:8px 6px 0}
+.timeline{border-left:2px solid var(--line);padding-left:26px;display:flex;flex-direction:column;gap:28px}
+.engagement{position:relative}
+.engagement::before{content:"";position:absolute;left:-33px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--lemon);border:2px solid var(--ink)}
+.engagement .dates{font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.engagement h3{font-size:17px;font-weight:700;margin:4px 0 2px}
+.engagement .org{font-size:14px;color:var(--accent-ink);font-weight:600}
+.engagement p{margin:8px 0 0;font-size:15px;max-width:68ch}
+.skill-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.skill-block{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px 18px}
+.skill-block h3{font-size:13px;font-family:'IBM Plex Mono',monospace;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{background:var(--chip);color:var(--ink);border-radius:6px;padding:3px 9px;font-size:13px}
+.certs{display:flex;flex-direction:column;gap:8px;font-size:15px}
+.certs div{display:flex;gap:10px;align-items:baseline}
+.certs .yr{font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--muted);min-width:44px;font-variant-numeric:tabular-nums}
+.writing-band{padding-block:56px}
+.post-card{display:block;background:var(--dark-2);border:1px solid var(--dark-line);border-radius:12px;padding:22px 24px;margin-top:20px;text-decoration:none;max-width:640px}
+.post-card:hover{border-color:var(--lemon)}
+.post-card .pdate{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--dark-muted)}
+.post-card .ptitle{font-family:'Manrope',sans-serif;font-size:19px;font-weight:800;color:#FFFFFF;margin:6px 0 4px}
+.post-card .psub{font-size:14.5px;color:var(--dark-body)}
+.writing-cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.writing-cta a{display:inline-flex;align-items:center;text-decoration:none;font-size:14px;font-weight:600;padding:10px 18px;border-radius:8px;border:1px solid var(--dark-line);color:#FFFFFF}
+.writing-cta a.primary{background:var(--lemon);border-color:var(--lemon);color:var(--ink)}
+.ask{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:24px}
+.qchips{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 0}
+.qchip{background:var(--chip);border:1px solid var(--line);color:var(--ink);border-radius:999px;padding:8px 15px;font-size:13.5px;font-weight:500;cursor:pointer;font-family:inherit}
+.qchip:hover{border-color:var(--hl);background:var(--lemon-soft)}
+.answer{margin-top:16px;padding:16px 18px;background:var(--lemon-soft);border-radius:10px;font-size:15px;color:var(--ink);line-height:1.55}
+.answer[hidden]{display:none}
+.freeform{margin-top:18px}
+.freeform[hidden]{display:none}
+.freeform .row{display:flex;gap:8px}
+.freeform input{flex:1;padding:10px 14px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit;font-size:14.5px}
+.freeform button{padding:10px 18px;border:none;border-radius:8px;background:var(--lemon);color:var(--ink);font-weight:700;font-size:14px;cursor:pointer;font-family:inherit;border:1px solid var(--ink)}
+.freeform button:disabled{opacity:0.6;cursor:wait}
+.note{font-size:12.5px;color:var(--muted);margin-top:10px;line-height:1.5}
+.cta-band{background:var(--paper);border:1px solid var(--line);border-top:3px solid var(--lemon);border-radius:12px;padding:28px;text-align:center}
+.cta-band h2{margin-bottom:8px}
+.cta-band p{max-width:52ch;margin:0 auto 18px;font-size:15px}
+.cta-row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.cta-row a{display:inline-flex;align-items:center;gap:6px;text-decoration:none;font-size:14px;font-weight:600;padding:10px 18px;border-radius:8px;border:1px solid var(--line);color:var(--ink);background:var(--paper)}
+.cta-row a.primary{background:var(--lemon);border-color:var(--ink);color:var(--ink)}
+.li-bar{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:18px;padding-top:18px;border-top:1px solid var(--line)}
+.li-bar a{display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-size:13.5px;font-weight:600;padding:8px 14px;border-radius:8px;border:1px solid var(--line);color:var(--ink);background:var(--bg)}
+.li-bar a:hover{border-color:#0A66C2}
+.li-bar svg{width:15px;height:15px;fill:#0A66C2;flex:none}
+footer.band.dark{margin-top:60px;padding-block:26px;font-size:13.5px;color:var(--dark-muted)}
+footer .cols{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+footer strong{color:#FFFFFF}
+@media (max-width:620px){
+  .timeline{padding-left:20px}.engagement::before{left:-27px}.topbar nav{gap:12px;font-size:12px}#graph{height:400px}
+  .grow,.gaxis{grid-template-columns:96px 1fr}
+  .grow .glabel{font-size:11px}
+}
+</style>
+
+<div class="band dark sticky">
+<div class="wrap">
+<div class="topbar">
+  <div class="brand"><i></i>LensIQ</div>
+  <nav>
+    <a href="#analytics">Analytics</a>
+    <a href="#graphsec">Experience</a>
+    <a href="#fit">Fit check</a>
+    <a href="#writing">Writing</a>
+    <a href="#faq">Ask</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</div>
+</div>
+</div>
+
+<div class="band dark">
+<div class="wrap">
+<header class="hero">
+  <div class="hero-top">
+    <div>
+      <p class="eyebrow">Freelance Consultant · Front Office · Alternative Investments</p>
+      <h1>Dan Deenik</h1>
+    </div>
+    <span class="avail"><span class="dot"></span>Open to contract engagements</span>
+  </div>
+  <p class="tagline">SimCorp Dimension specialist with over a decade delivering Front Office, IBOR and Alternative Investments solutions for buy-side and sell-side firms. Certified SimCorp Dimension Professional. Remote-first from Amsterdam.</p>
+  <div class="contact-row">
+    <a class="primary" href="mailto:deenikdaniel@gmail.com">Email Dan</a>
+    <a href="https://www.linkedin.com/in/dandeenik" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="tel:+31611716277" class="mono">+31 6 1171 6277</a>
+  </div>
+  <div class="fact-strip">
+    <div class="fact"><div class="k">Base</div><div class="v">Amsterdam, NL</div></div>
+    <div class="fact"><div class="k">Engagement type</div><div class="v">Freelance / contract</div></div>
+    <div class="fact"><div class="k">Work mode</div><div class="v">Remote-first, EU</div></div>
+    <div class="fact"><div class="k">Core platform</div><div class="v">SimCorp Dimension</div></div>
+  </div>
+</header>
+</div>
+</div>
+
+<main>
+<div class="wrap">
+
+<section id="quick">
+  <div class="insight-strip">
+    <div class="tile"><div class="n">13</div><div class="l">years in investment technology, 2012 to present</div></div>
+    <div class="tile"><div class="n">11</div><div class="l">institutions served, buy side and sell side</div></div>
+    <div class="tile"><div class="n">7</div><div class="l">engagements running SimCorp Dimension</div></div>
+    <div class="tile"><div class="n">4</div><div class="l">ESG frameworks delivered: SFDR, EU Taxonomy, CSRD, Pillar III</div></div>
+    <div class="tile"><div class="n">3</div><div class="l">AI-driven products in independent build</div></div>
+  </div>
+</section>
+
+<section id="analytics">
+  <p class="eyebrow">Analytics</p>
+  <h2>The story in charts</h2>
+  <div class="ll"></div>
+  <div class="ana-grid">
+  <div class="carousel-wrap">
+    <div class="carousel">
+      <div class="chart-card">
+        <h3>Where the years went</h3>
+        <p class="takeaway">Thirteen years that start in trading and Front Arena connectivity, then consolidate into SimCorp Dimension front office work from 2020 on, with an AI and product layer now compounding on top.</p>
+        <div class="radar-wrap arcwrap" id="sankey"></div>
+        <p class="chart-note">Flow width = engagement years, split across the capability areas each engagement touched, drawn from the experience graph and engagement dates. Click any block for the detail.</p>
+      </div>
+      <div class="chart-card">
+        <h3>Engagement timeline</h3>
+        <p class="takeaway">Eight engagements back to back since 2012, no gaps. Click a bar for the project detail.</p>
+        <div id="gantt"></div>
+        <p class="chart-note">Computed from the engagement dates below. The lemon bar is the current engagement.</p>
+      </div>
+      <div class="chart-card">
+        <h3>Career arc, share of focus</h3>
+        <p class="takeaway">The toolkit shifted three times, the direction never did.</p>
+        <div class="arcwrap"><div class="radar-wrap" id="arc"></div><div class="arc-tip" id="arctip"></div></div>
+        <div class="mini-legend" id="arclegend"></div>
+        <p class="chart-note">From equity trading to Front Arena engineering to SimCorp Dimension delivery, with an AI and product layer compounding since 2023. Share of focus per year, approximated from engagement dates.</p>
+      </div>
+      <div class="chart-card">
+        <h3>Coverage map, engagements and builds</h3>
+        <p class="takeaway">Depth where it matters: SimCorp Dimension and the front office dominate the map. Click a dot for the detail.</p>
+        <div class="matrix-scroll"><div class="matrix" id="matrix"></div></div>
+        <p class="chart-note">Every engagement and own build mapped to the platforms (green dots) and domains (purple dots) it touched. Drawn live from the experience graph.</p>
+      </div>
+      <div class="chart-card">
+        <h3>Platform exposure, years</h3>
+        <p class="takeaway">Seven years of connectivity, six of Front Arena, five and a half of SimCorp Dimension.</p>
+        <div class="radar-wrap" id="platradar"></div>
+        <p class="chart-note">Years hands-on, computed from engagement dates; overlapping platform work counts toward each platform.</p>
+      </div>
+      <div class="chart-card">
+        <h3>Domain coverage, connections</h3>
+        <p class="takeaway">The front office is the center of gravity.</p>
+        <div class="radar-wrap" id="domradar"></div>
+        <p class="chart-note">Counted live from the experience graph: engagements and own builds linked to each domain.</p>
+      </div>
+    </div>
+    <div class="cnav">
+      <div class="cdots"></div>
+      <div class="cbtns"><button class="cbtn" type="button" data-dir="-1">Prev</button><button class="cbtn" type="button" data-dir="1">Next</button></div>
+    </div>
+  </div>
+  <aside class="side-panel" id="anapanel">
+    <div class="sp-empty">Click any block, bar or dot in the chart and its detail opens here.</div>
+  </aside>
+  </div>
+</section>
+
+<section id="graphsec">
+  <p class="eyebrow">The map</p>
+  <h2>Experience graph</h2>
+  <div class="ll"></div>
+  <div class="graph-card">
+    <canvas id="graph"></canvas>
+    <div class="legend">
+      <span><i class="dan" style="background:var(--lemon)"></i>Dan</span>
+      <span><i style="background:var(--cat-eng)"></i>Engagements</span>
+      <span><i style="background:var(--cat-plat)"></i>Platforms</span>
+      <span><i style="background:var(--cat-dom)"></i>Domains</span>
+      <span><i style="background:var(--cat-build)"></i>Own builds</span>
+    </div>
+    <p class="ghint">Tap any node, or ask a question below: the parts of Dan's track record behind the answer light up here.</p>
+    <div class="gdetail" id="gdetail" hidden></div>
+  </div>
+</section>
+
+<section id="engagements">
+  <p class="eyebrow">Track record</p>
+  <h2>Engagements</h2>
+  <div class="ll"></div>
+  <div class="timeline">
+    <div class="engagement">
+      <div class="dates">01/2026 – present</div>
+      <h3>Freelance Consultant, Nicola Wealth Management</h3>
+      <div class="org">via Alpha FMC · remote, Canada</div>
+      <p>SimCorp Dimension SME for Front Office and IBOR on a wealth-platform implementation. Fund decomposition for multi-class and fund-of-fund structures, automated redemption date engine, Alternative Investment Manager configuration, data extractions and performance (IAP) integration.</p>
+    </div>
+    <div class="engagement">
+      <div class="dates">10/2024 – 01/2026</div>
+      <h3>Senior Consultant, Asqin</h3>
+      <div class="org">Amsterdam · project lead at BNP Paribas</div>
+      <p>Custom FIX integration via Adroit EMS for bonds, interest rate swaps and futures. Axioma API integration with SimCorp for equity portfolio remodelling, online compliance rules, regulatory data extractions and bespoke OTC order ingestion.</p>
+    </div>
+    <div class="engagement">
+      <div class="dates">02/2022 – 10/2024</div>
+      <h3>Senior Consultant, Qconcepts</h3>
+      <div class="org">Amsterdam · BNG Bank, Athora, A.S.R</div>
+      <p>Sustainable finance specialism: ESG, SFDR, EU Taxonomy, CSRD, physical climate risk, Pillar III. Led the SimCorp Dimension ESG and SFDR module implementation at A.S.R; Aladdin Risk and eFront delivery and Front Office Analytics vendor selection at Athora.</p>
+    </div>
+    <div class="engagement">
+      <div class="dates">09/2021 – 01/2022</div>
+      <h3>Business Analyst, BNG Bank</h3>
+      <div class="org">The Hague</div>
+      <p>Front Arena Treasury: automated test cases with the Arena Test Framework, workflow design, Python Extensions, custom SQL, compliance and data governance workstreams.</p>
+    </div>
+    <div class="engagement">
+      <div class="dates">06/2020 – 08/2021</div>
+      <h3>Senior Business Consultant, SimCorp</h3>
+      <div class="org">Netherlands · PGGM, Shell AM, CACEIS, Achmea IM</div>
+      <p>Certified SimCorp Dimension Professional. Implementation workshops, FIX trading for listed and OTC instruments (Bloomberg TSOX, FXGO), end-user training on Asset Manager, Order Manager and Alternative Investment Manager. Acting PM at Shell Asset Management.</p>
+    </div>
+    <div class="engagement">
+      <div class="dates">05/2015 – 03/2020</div>
+      <h3>BA / QA Manager / Consultant, FIS Global</h3>
+      <div class="org">Cape Town</div>
+      <p>Five years on Front Arena: credit limits, Asset Arena 360 OMS and PMS implementations, FIX integrations, regression suites across GUI, API and unit layers, Azure DevOps roadmaps.</p>
+    </div>
+    <div class="engagement">
+      <div class="dates">2012 – 2015</div>
+      <h3>Equity Analyst and Trader, GTC Derivatives · Netto Invest</h3>
+      <div class="org">South Africa</div>
+      <p>JSE Registered Securities Trader. Built asset management capability and an in-house long and long/short equity investment model.</p>
+    </div>
+  </div>
+</section>
+
+<section id="fit">
+  <p class="eyebrow">Fit check</p>
+  <h2>Is Dan a fit? Paste the job spec.</h2>
+  <div class="ll"></div>
+  <div class="ask">
+    <p style="margin:0 0 10px;font-size:15px">Paste the role description, or upload it as a .txt or .md file. The instant analysis below runs in your browser against Dan's published profile; the full assessment is produced by Dan's scheduled review agent and delivered by email when you send it in. Nothing is stored unless you choose to send.</p>
+    <textarea class="fit-ta" id="specin" maxlength="20000" placeholder="Paste the job spec here, requirements and all..."></textarea>
+    <div class="fit-row">
+      <button class="fit-btn" id="fitbtn" type="button">Analyze fit</button>
+      <input type="file" id="specfile" accept=".txt,.md,text/plain">
+    </div>
+    <div id="fitres" hidden>
+      <div class="fit-score"><span class="n" id="fitpct"></span><span class="s" id="fitsum"></span></div>
+      <div class="chart-card" style="margin-top:10px">
+        <h3>Spec emphasis vs Dan's depth</h3>
+        <div class="radar-wrap arcwrap" id="fitradar"></div>
+        <div class="mini-legend"><span><i style="background:#F5D843;border:1px solid #15171B"></i>Dan's depth, from the experience graph</span><span><i style="background:#15171B"></i>This spec's emphasis</span></div>
+        <p class="chart-note">Spec emphasis is the share of recognized requirements per area in the pasted text. Dan's depth is connection density in the experience graph, normalized. Both are computed live in your browser.</p>
+      </div>
+      <div id="fitmatch"></div>
+      <div class="match-block" id="fitexpowrap" hidden><h4>Where the exposure comes from</h4><p class="pophint">Click any line for the projects behind it.</p><div id="fitexpo"></div></div>
+      <div class="fit-row" style="margin-top:14px">
+        <input class="fit-email" id="fitemail" type="email" maxlength="200" placeholder="Your email for Dan's direct take (optional)">
+        <button class="fit-btn" id="fitsend" type="button">Send to Dan</button>
+      </div>
+      <p class="note" id="fitsent"></p>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <p class="eyebrow">Capability map</p>
+  <h2>Skills</h2>
+  <div class="ll"></div>
+  <div class="carousel-wrap">
+  <div class="carousel cards">
+    <div class="skill-block"><h3>SimCorp Dimension · Front Office</h3><div class="tags"><span class="tag">Asset Manager</span><span class="tag">Order Manager</span><span class="tag">Compliance Manager</span><span class="tag">Risk Analysis Manager</span><span class="tag">Alternative Investment Manager</span><span class="tag">ESG / SFDR module</span><span class="tag">Fund decomposition</span><span class="tag">Redemption automation</span></div></div>
+    <div class="skill-block"><h3>SimCorp Dimension · Operations &amp; Data</h3><div class="tags"><span class="tag">Pricing &amp; market data precedence</span><span class="tag">Cash management &amp; reconciliation</span><span class="tag">Private debt lifecycle</span><span class="tag">Mutual fund order flow</span><span class="tag">Performance (IAP)</span><span class="tag">Collateral</span><span class="tag">Data Extractor Suite</span><span class="tag">DEX validation</span><span class="tag">Dashboards</span></div></div>
+    <div class="skill-block"><h3>Connectivity</h3><div class="tags"><span class="tag">FIX</span><span class="tag">SWIFT</span><span class="tag">STP</span><span class="tag">Communication Server</span><span class="tag">Adroit EMS</span><span class="tag">Axioma API</span><span class="tag">Batch &amp; Auxiliary Jobs</span></div></div>
+    <div class="skill-block"><h3>Platforms</h3><div class="tags"><span class="tag">SimCorp Cloud</span><span class="tag">BlackRock Aladdin</span><span class="tag">eFront</span><span class="tag">Front Arena</span><span class="tag">Bloomberg TSOX / FXGO</span><span class="tag">Oracle SQL Developer</span><span class="tag">Azure DevOps</span><span class="tag">Snowflake</span></div></div>
+    <div class="skill-block"><h3>Engineering</h3><div class="tags"><span class="tag">Python</span><span class="tag">SQL (Oracle &amp; Postgres)</span><span class="tag">React</span><span class="tag">Supabase &amp; edge functions</span><span class="tag">PostGIS geospatial</span><span class="tag">Machine Learning</span><span class="tag">Cloud architectures</span></div></div>
+    <div class="skill-block"><h3>AI &amp; Agents</h3><div class="tags"><span class="tag">Multi-agent orchestration</span><span class="tag">RAG pipelines</span><span class="tag">MCP tool integrations</span><span class="tag">Scheduled AI agents</span><span class="tag">Human-in-the-loop review</span><span class="tag">Prompt engineering</span><span class="tag">LLM APIs (Claude, DeepSeek, Kimi)</span><span class="tag">AI in finance</span></div></div>
+    <div class="skill-block"><h3>Domain</h3><div class="tags"><span class="tag">Regulatory Reporting</span><span class="tag">ESG / SFDR / CSRD</span><span class="tag">Credit Risk</span><span class="tag">Alternative Investments</span><span class="tag">IBOR</span><span class="tag">Wealth Management</span><span class="tag">Treasury</span><span class="tag">Equity Trading</span></div></div>
+    <div class="skill-block"><h3>Independent product work</h3><div class="tags"><span class="tag">WatchDesk: watch market analytics (React, Supabase, PostGIS)</span><span class="tag">Multi-agent investment research pipeline</span><span class="tag">AI project-management agent for ClickUp</span><span class="tag">This site: AI recruiter agent with live Q&amp;A</span><span class="tag">LensIQ agent stack (incl. this site's assistant)</span></div></div>
+  </div>
+  <div class="cnav">
+    <div class="cdots"></div>
+    <div class="cbtns"><button class="cbtn" type="button" data-dir="-1">Prev</button><button class="cbtn" type="button" data-dir="1">Next</button></div>
+  </div>
+  </div>
+</section>
+
+<section id="certs">
+  <p class="eyebrow">Verified</p>
+  <h2>Certifications &amp; Education</h2>
+  <div class="ll"></div>
+  <div class="certs">
+    <div><span class="yr mono"></span><span>Certified SimCorp Dimension Professional · Compliance Specialist · Portfolio Management Specialist</span></div>
+    <div><span class="yr mono">2023</span><span>CFA Institute Certificate in ESG Investing</span></div>
+    <div><span class="yr mono">2017</span><span>FIS Professional Services Consulting Programme, Duke University</span></div>
+    <div><span class="yr mono">2013</span><span>JSE Registered Securities Trader, SAIFM</span></div>
+    <div><span class="yr mono">2011</span><span>Post Graduate Diploma in Tax, Rhodes University</span></div>
+    <div><span class="yr mono">2010</span><span>BCom Accounting, Rhodes University</span></div>
+  </div>
+  <p style="margin:16px 0 0;font-size:14.5px">Languages: English (native) · Afrikaans (advanced) · Dutch (intermediate)</p>
+</section>
+
+</div>
+</main>
+
+<div class="band dark writing-band" id="writing">
+<div class="wrap">
+  <p class="eyebrow">Writing · Substack</p>
+  <h2>Notes on AI, investing and building</h2>
+  <div class="ll"></div>
+  <p style="max-width:62ch;margin:0">Dan writes on Substack about angel investing, social arb trading and building products from the ground up, and on putting AI to work in a real business.</p>
+  <a class="post-card" href="https://danieldeenik1.substack.com/p/the-best-cookies-in-amsterdam" target="_blank" rel="noopener">
+    <div class="pdate">Jul 28, 2026 · Latest post</div>
+    <div class="ptitle">The best cookies in Amsterdam</div>
+    <div class="psub">Why context matters in an age of AI.</div>
+  </a>
+  <div class="writing-cta">
+    <a class="primary" href="https://danieldeenik1.substack.com" target="_blank" rel="noopener">Read Dan on Substack</a>
+    <a href="https://danieldeenik1.substack.com/subscribe" target="_blank" rel="noopener">Subscribe</a>
+  </div>
+</div>
+</div>
+
+<div class="wrap" style="padding-top:56px">
+
+
+
+<section id="faq">
+  <p class="eyebrow">For recruiters</p>
+  <h2>Is Dan a fit? Ask.</h2>
+  <div class="ll"></div>
+  <div class="ask">
+    <p style="margin:0;font-size:15px">Quick answers below, or ask your own question. Commercial terms are discussed directly with Dan.</p>
+    <div class="qchips" id="qchips"></div>
+    <div class="answer" id="answer" hidden></div>
+    <div class="freeform" id="freeform">
+      <div class="row">
+        <input id="qinput" type="text" placeholder="e.g. Is Dan a fit for a SimCorp Front Office lead role?" maxlength="300">
+        <button id="qbtn" type="button">Ask</button>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <input id="qemail" type="email" placeholder="Your email (optional, for a reply if the assistant is offline)" maxlength="200">
+      </div>
+      <p class="note">Answers come only from Dan's published profile. Rates, client project internals and personal data are not discussed here; those questions go to Dan directly. If the assistant is offline, your question is logged and answered by email within one business day when you leave an address.</p>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="cta-band">
+    <h2>Have a contract brief?</h2>
+    <p>Freelance SimCorp Dimension work, remote-first or Spain-compatible. Send the client, duration, start date and remote policy and you will get a fast, straight answer.</p>
+    <div class="cta-row">
+      <a class="primary" href="mailto:deenikdaniel@gmail.com?subject=Contract%20brief%20for%20Dan%20Deenik">Send a brief</a>
+      <a href="https://www.linkedin.com/in/dandeenik" target="_blank" rel="noopener">Connect on LinkedIn</a>
+    </div>
+    <div class="li-bar">
+      <a href="https://www.linkedin.com/in/dandeenik" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45z"/></svg>Message Dan on LinkedIn</a>
+      <a id="liShare" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fwww.linkedin.com%2Fin%2Fdandeenik" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 1 0-3-3c0 .24.04.47.09.7L8.04 9.81A2.99 2.99 0 0 0 3 12a3 3 0 0 0 5.04 2.19l7.12 4.16c-.05.21-.08.43-.08.65a2.92 2.92 0 1 0 2.92-2.92z"/></svg>Share this profile on LinkedIn</a>
+      <a href="https://www.linkedin.com/in/dandeenik/recent-activity/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45z"/></svg>Follow Dan's posts</a>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<footer class="band dark">
+  <div class="wrap">
+  <div class="cols">
+    <span><strong>LensIQ</strong> · Dan Deenik · Amsterdam, NL</span>
+    <span>This site shares Dan's professional profile only: no client-confidential information and no commercial terms. It stores only the questions asked, and an email address only when you choose to leave one for a reply.</span>
+  </div>
+  </div>
+</footer>
+
+<div class="popout" id="popout" hidden></div>
+
+<script>
+// ---------- Dynamic popout: every clickable data block opens a card at the click point ----------
+const POP = (function(){
+  const el = document.getElementById("popout");
+  let last = {x: 0, y: 0};
+  document.addEventListener("mousedown", function(ev){ last = {x: ev.clientX, y: ev.clientY}; }, true);
+  document.addEventListener("touchstart", function(ev){
+    if (ev.touches && ev.touches[0]) last = {x: ev.touches[0].clientX, y: ev.touches[0].clientY};
+  }, true);
+  function close(){ if (el) el.hidden = true; }
+  function place(){
+    el.style.left = "0px"; el.style.top = "0px";
+    const w = el.offsetWidth, h = el.offsetHeight;
+    const vw = document.documentElement.clientWidth, vh = document.documentElement.clientHeight;
+    const cx = Math.min(Math.max(last.x, 12), vw - 12);
+    const cy = Math.min(Math.max(last.y, 12), vh - 12);
+    let x = cx + 18, y = cy + 14;
+    if (x + w > vw - 12) x = cx - w - 18;
+    x = Math.max(12, Math.min(x, vw - w - 12));
+    if (y + h > vh - 12) y = vh - h - 12;
+    y = Math.max(12, Math.min(y, vh - h - 12));
+    el.style.left = x + "px"; el.style.top = y + "px";
+  }
+  function open(kicker, title, body, extra){
+    if (!el) return;
+    el.hidden = false;
+    el.textContent = "";
+    const b = document.createElement("button");
+    b.className = "pclose"; b.type = "button"; b.textContent = "Close";
+    b.addEventListener("click", close);
+    el.appendChild(b);
+    if (kicker){ const k = document.createElement("div"); k.className = "pk"; k.textContent = kicker; el.appendChild(k); }
+    const t = document.createElement("div"); t.className = "pt"; t.textContent = title; el.appendChild(t);
+    if (body){ const p = document.createElement("div"); p.className = "pb"; p.textContent = body; el.appendChild(p); }
+    if (extra){ const e2 = document.createElement("div"); e2.className = "px"; e2.textContent = extra; el.appendChild(e2); }
+    place();
+  }
+  document.addEventListener("keydown", function(ev){ if (ev.key === "Escape") close(); });
+  document.addEventListener("click", function(ev){
+    if (!el || el.hidden) return;
+    if (el.contains(ev.target)) return;
+    const t = ev.target;
+    if (t && t.closest && t.closest("#sankey, #gantt, .matrix, #graph, .expo-row")) return;
+    close();
+  });
+  window.addEventListener("resize", close);
+  return {open: open, close: close};
+})();
+
+// ---------- Experience graph (canvas force layout, data from the public CV only) ----------
+const G = (function(){
+  const N = [];
+  const E = [];
+  function n(id, cat, label, fact, kw){ N.push({id, cat, label, fact, kw: kw || []}); }
+  function e(a, b){ E.push([a, b]); }
+  n("dan","dan","Dan Deenik","Freelance consultant, Amsterdam. Certified SimCorp Dimension Professional.",["dan","deenik"]);
+  // Engagements
+  n("nicola","eng","Nicola Wealth","2026 to present, via Alpha FMC, remote Canada. SCD SME for Front Office, IBOR and Alternative Investment Manager.",["nicola","alpha fmc","canada","current engagement","redemption","decomposition"]);
+  n("bnp","eng","BNP Paribas","2024 to 2026, project lead. FIX via Adroit EMS, Axioma integration, compliance rules, OTC order ingestion.",["bnp","paribas","adroit","axioma","ems"]);
+  n("bng","eng","BNG Bank","2021 to 2024. Front Arena Treasury, Python Extensions, automated testing, climate risk vendor selection.",["bng","treasury","climate"]);
+  n("athora","eng","Athora","2021 to 2024. Aladdin Risk and eFront delivery, Front Office Analytics vendor selection (RFP).",["athora","rfp","vendor selection"]);
+  n("asr","eng","A.S.R","2021 to 2022. Led the SimCorp Dimension ESG and SFDR module implementation.",["a.s.r","asr"]);
+  n("pggm","eng","PGGM","2020 to 2021 as SimCorp Senior Business Consultant.",["pggm","pension"]);
+  n("shell","eng","Shell AM","2020 to 2021. Acting project manager; FIX trading via Bloomberg TSOX and FXGO.",["shell","project manager","acting pm"]);
+  n("caceis","eng","CACEIS","2020 to 2021 as SimCorp Senior Business Consultant.",["caceis","custod"]);
+  n("achmea","eng","Achmea IM","2020 to 2021 as SimCorp Senior Business Consultant.",["achmea","insur"]);
+  n("fis","eng","FIS Global","2015 to 2020, Cape Town. Five years on Front Arena: credit limits, OMS and PMS, QA and BA.",["fis","cape town","qa","quality assurance","test"]);
+  n("gtc","eng","GTC Derivatives","2013 to 2015. JSE Registered Securities Trader; built long and long/short equity models.",["gtc","jse","derivative"]);
+  // Platforms
+  n("scd","plat","SimCorp Dimension","Core platform: Asset Manager, Order Manager, Compliance, Risk Analysis, Alternative Investment Manager, ESG module.",["simcorp","dimension","scd","asset manager","order manager","compliance","certified"]);
+  n("arena","plat","Front Arena","Trading and treasury platform: 6+ years across FIS Global and BNG Bank.",["front arena","arena"]);
+  n("aladdin","plat","BlackRock Aladdin","Aladdin Risk and eFront implementation experience at Athora.",["aladdin","blackrock","efront"]);
+  n("bbg","plat","Bloomberg TSOX / FXGO","FIX trading workflows for listed and OTC instruments.",["bloomberg","tsox","fxgo"]);
+  n("fix","plat","FIX & SWIFT","Connectivity: FIX integrations, SWIFT, STP, Communication Server.",["fix","swift","stp","connectivity","integration"]);
+  n("py","plat","Python · SQL · ML","Engineering layer: Python extensions, custom SQL, machine learning in finance.",["python","sql","machine learning"," ml","engineer","developer","coding"]);
+  // Domains
+  n("fo","dom","Front Office","Order and execution workflows, portfolio management tooling, front office analytics.",["front office","execution","portfolio management","trading workflow"]);
+  n("ibor","dom","IBOR","Investment book of record design and data flows.",["ibor","book of record"]);
+  n("alts","dom","Alternative Investments","Private markets configuration, fund decomposition, alternatives data.",["alternative","private market","aim","fund-of-fund","fund of fund","private equity","alts"]);
+  n("esg","dom","ESG & Sustainable Finance","SFDR, EU Taxonomy, CSRD, physical climate risk, Pillar III.",["esg","sfdr","taxonomy","csrd","sustain","pillar"]);
+  n("credit","dom","Credit Risk","Counterparty credit risk and credit limits (ARENA Limit Controller).",["credit","counterparty","limit"]);
+  n("wealth","dom","Wealth Management","Wealth platform implementation, redemption processing, household portfolios.",["wealth","household","redemption"]);
+  n("trading","dom","Equity Trading","JSE registered trader; long and long/short equity model construction.",["equity","trader","trading","long/short"]);
+  // Own builds (independent product work, Dan's own IP)
+  n("watchdesk","build","WatchDesk","Self-built pre-owned watch market analytics platform: React dashboard, Supabase backend, PostGIS geospatial analysis.",["watch","watchdesk","react","supabase","postgis","full stack","product"]);
+  n("socialarb","build","Social Arb Research","Self-built multi-agent AI research pipeline for investment signals, human-in-the-loop review.",["research pipeline","multi-agent","signal","social arb","investment research"]);
+  n("agentstack","build","LensIQ Agent Stack","Self-built stack of scheduled AI agents for research, inbox and project workflows, including the assistant answering on this site.",["agent","automation","ai workflow","llm","claude","assistant","lensiq","genai","generative"]);
+  // Edges: Dan to engagements and builds
+  ["nicola","bnp","bng","athora","asr","pggm","shell","caceis","achmea","fis","gtc","watchdesk","socialarb","agentstack"].forEach(x => e("dan", x));
+  // Builds to platforms and domains
+  e("watchdesk","py"); e("socialarb","py"); e("socialarb","trading"); e("agentstack","py"); e("agentstack","scd");
+  // Engagements to platforms
+  e("nicola","scd"); e("bnp","scd"); e("bnp","fix"); e("bng","arena"); e("bng","py");
+  e("athora","aladdin"); e("asr","scd"); e("pggm","scd"); e("shell","scd"); e("shell","bbg");
+  e("caceis","scd"); e("achmea","scd"); e("fis","arena"); e("fis","fix"); e("gtc","py");
+  // Engagements to domains
+  e("nicola","fo"); e("nicola","ibor"); e("nicola","alts"); e("nicola","wealth");
+  e("bnp","fo"); e("bng","esg"); e("athora","fo"); e("asr","esg");
+  e("pggm","fo"); e("shell","fo"); e("caceis","fo"); e("achmea","fo");
+  e("fis","credit"); e("fis","fo"); e("gtc","trading");
+  return {N, E};
+})();
+
+(function(){
+  const canvas = document.getElementById("graph");
+  const ctx = canvas.getContext("2d");
+  const detail = document.getElementById("gdetail");
+  const nodes = G.N, edges = G.E;
+  const byId = {}; nodes.forEach(n => byId[n.id] = n);
+  const deg = {}; edges.forEach(([a,b]) => { deg[a]=(deg[a]||0)+1; deg[b]=(deg[b]||0)+1; });
+  let W = 0, H = 0, selectedSet = null;
+
+  function css(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+  function colorFor(n){
+    if (n.cat === "dan") return css("--lemon");
+    if (n.cat === "eng") return css("--cat-eng");
+    if (n.cat === "plat") return css("--cat-plat");
+    if (n.cat === "build") return css("--cat-build");
+    return css("--cat-dom");
+  }
+  function radiusFor(n){
+    if (n.cat === "dan") return 16;
+    return 7 + Math.min(9, (deg[n.id] || 1) * 1.2);
+  }
+
+  function size(){
+    const dpr = window.devicePixelRatio || 1;
+    W = canvas.clientWidth; H = canvas.clientHeight;
+    canvas.width = W * dpr; canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  // Deterministic radial layout: Dan center, engagements and builds on the
+  // inner ring, platforms and domains on the outer ring. No randomness.
+  function layout(){
+    const cx = W/2, cy = H/2;
+    const inner = nodes.filter(n => n.cat === "eng" || n.cat === "build");
+    const outer = nodes.filter(n => n.cat === "plat" || n.cat === "dom");
+    const irx = W * 0.30, iry = H * 0.26;
+    const orx = W * 0.44, ory = H * 0.415;
+    nodes.forEach(n => { if (n.cat === "dan"){ n.x = cx; n.y = cy; } });
+    inner.forEach((n, i) => {
+      const a = -Math.PI/2 + (i / inner.length) * Math.PI * 2;
+      n.x = cx + Math.cos(a) * irx;
+      n.y = cy + Math.sin(a) * iry;
+    });
+    outer.forEach((n, i) => {
+      const a = -Math.PI/2 + ((i + 0.5) / outer.length) * Math.PI * 2;
+      n.x = cx + Math.cos(a) * orx;
+      n.y = cy + Math.sin(a) * ory;
+    });
+  }
+
+  function neighbors(id){
+    const s = new Set();
+    edges.forEach(([a,b]) => { if (a === id) s.add(b); if (b === id) s.add(a); });
+    return s;
+  }
+
+  function haloSet(){
+    if (!selectedSet) return null;
+    const s = new Set(selectedSet);
+    selectedSet.forEach(id => neighbors(id).forEach(x => s.add(x)));
+    return s;
+  }
+
+  function draw(){
+    ctx.clearRect(0, 0, W, H);
+    const line = css("--line"), ink = css("--ink"), muted = css("--muted");
+    const halo = haloSet();
+    // edges
+    edges.forEach(([ai,bi]) => {
+      const a = byId[ai], b = byId[bi];
+      const hot = selectedSet && (selectedSet.has(ai) || selectedSet.has(bi));
+      ctx.strokeStyle = hot ? css("--hl") : line;
+      ctx.lineWidth = hot ? 1.8 : 1;
+      ctx.globalAlpha = selectedSet && !hot ? 0.3 : 1;
+      ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+    });
+    // nodes + labels
+    nodes.forEach(n => {
+      const r = radiusFor(n);
+      const core = selectedSet && selectedSet.has(n.id);
+      const dim = selectedSet && !core && !(halo && halo.has(n.id));
+      ctx.globalAlpha = dim ? 0.28 : 1;
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, core ? r + 2 : r, 0, Math.PI * 2);
+      ctx.fillStyle = colorFor(n);
+      ctx.fill();
+      ctx.lineWidth = core ? 3 : 2;
+      ctx.strokeStyle = core ? css("--hl") : (n.cat === "dan" ? ink : css("--surface"));
+      ctx.stroke();
+      const showLabel = n.cat === "dan" || r >= 10 || !selectedSet || core || (halo && halo.has(n.id));
+      if (showLabel){
+        ctx.font = ((n.cat === "dan" || core) ? "700 12.5px" : "500 11.5px") + " 'IBM Plex Sans', sans-serif";
+        ctx.fillStyle = dim ? muted : ink;
+        ctx.textAlign = "center";
+        const lx = Math.max(70, Math.min(W - 70, n.x));
+        const ly = (n.cat === "dan" || n.y < H/2) ? n.y - r - 7 : n.y + r + 14;
+        ctx.fillText(n.label, lx, ly);
+      }
+      ctx.globalAlpha = 1;
+    });
+  }
+
+  function settle(){
+    const iters = 260;
+    for (let i = 0; i < iters; i++) step();
+    draw();
+  }
+
+  function nodeAt(x, y){
+    for (let i = nodes.length - 1; i >= 0; i--){
+      const n = nodes[i];
+      const r = radiusFor(n) + 8;
+      if ((n.x - x)**2 + (n.y - y)**2 <= r*r) return n;
+    }
+    return null;
+  }
+
+  canvas.addEventListener("click", ev => {
+    const rect = canvas.getBoundingClientRect();
+    const n = nodeAt(ev.clientX - rect.left, ev.clientY - rect.top);
+    if (!n){ selectedSet = null; detail.hidden = true; draw(); return; }
+    selectedSet = new Set([n.id]);
+    const nb = Array.from(neighbors(n.id)).map(id => byId[id].label);
+    detail.hidden = false;
+    detail.textContent = "";
+    const t = document.createElement("div"); t.className = "t"; t.textContent = n.label;
+    const f = document.createElement("div"); f.textContent = n.fact;
+    const c = document.createElement("div"); c.style.marginTop = "6px"; c.style.fontSize = "13px";
+    c.textContent = "Connected: " + nb.join(", ");
+    detail.append(t, f, c);
+    POP.open(n.cat === "eng" ? "Engagement" : (n.cat === "build" ? "Own build" : (n.cat === "plat" ? "Platform" : "Domain")),
+      n.label, n.fact, nb.length ? "Connected: " + nb.join(", ") : "");
+    draw();
+  });
+
+  // Question-driven highlighting: light up the nodes behind an answer.
+  window.qaHighlight = function(text, explicitIds){
+    let ids = Array.isArray(explicitIds) ? explicitIds.filter(id => byId[id]) : [];
+    if (!ids.length && text){
+      const t = " " + String(text).toLowerCase() + " ";
+      nodes.forEach(n => { if (n.kw.some(k => t.includes(k))) ids.push(n.id); });
+    }
+    ids = ids.filter(id => id !== "dan").slice(0, 8);
+    if (!ids.length){ return 0; }
+    selectedSet = new Set(ids);
+    detail.hidden = false;
+    detail.textContent = "";
+    const t2 = document.createElement("div"); t2.className = "t"; t2.textContent = "Behind this answer";
+    const c2 = document.createElement("div"); c2.style.fontSize = "13px";
+    c2.textContent = ids.map(id => byId[id].label).join(", ");
+    detail.append(t2, c2);
+    draw();
+    return ids.length;
+  };
+
+  const reflow = () => { size(); layout(); draw(); };
+  window.addEventListener("resize", reflow);
+  reflow();
+})();
+
+// ---------- Analytics charts, rendered from one data block plus the graph itself ----------
+(function(){
+  // Engagement timeline, decimal years from the engagement dates listed on this page.
+  const Y0 = 2012, Y1 = 2027;
+  const nowDec = new Date().getFullYear() + (new Date().getMonth() + 0.5) / 12;
+  const TL = [
+    {label:"Nicola Wealth",        a:2026.0,  b:Math.min(nowDec, Y1), now:true},
+    {label:"Asqin · BNP Paribas",  a:2024.75, b:2026.05},
+    {label:"Qconcepts",            a:2022.1,  b:2024.75},
+    {label:"BNG Bank",             a:2021.7,  b:2022.05},
+    {label:"SimCorp",              a:2020.45, b:2021.6},
+    {label:"FIS Global",           a:2015.35, b:2020.2},
+    {label:"GTC Derivatives",      a:2013.5,  b:2015.25},
+    {label:"Netto Invest",         a:2012.1,  b:2013.5}
+  ];
+  // Shared detail panel for the analytics carousel: click a block, get the story.
+  const anadetail = document.getElementById("anapanel");
+  const byId2 = {}; G.N.forEach(n => byId2[n.id] = n);
+  const YRDATES = {nicola: "2026 to now", bnp: "2024 to 2026", bng: "2021 to 2024", athora: "2021 to 2024", asr: "2021 to 2022",
+    pggm: "2020 to 2021", shell: "2020 to 2021", caceis: "2020 to 2021", achmea: "2020 to 2021", fis: "2015 to 2020", gtc: "2012 to 2015"};
+  function showDetail(title, body, extra, kicker){
+    if (!anadetail) return;
+    anadetail.hidden = false;
+    anadetail.textContent = "";
+    if (kicker){ const k = document.createElement("div"); k.className = "pk"; k.textContent = kicker; anadetail.appendChild(k); }
+    const t = document.createElement("div"); t.className = "pt"; t.textContent = title;
+    anadetail.appendChild(t);
+    if (body){ const b = document.createElement("div"); b.className = "pb"; b.textContent = body; anadetail.appendChild(b); }
+    if (extra){ const c = document.createElement("div"); c.className = "px"; c.textContent = extra; anadetail.appendChild(c); }
+    anadetail.classList.remove("flash");
+    void anadetail.offsetWidth;
+    anadetail.classList.add("flash");
+    if (window.matchMedia && window.matchMedia("(max-width:900px)").matches){
+      anadetail.scrollIntoView({block: "nearest", behavior: "smooth"});
+    }
+  }
+  const IDMAP = {"Nicola Wealth": ["nicola"], "Asqin · BNP Paribas": ["bnp"], "Qconcepts": ["bng", "athora", "asr"],
+    "BNG Bank": ["bng"], "SimCorp": ["pggm", "shell", "caceis", "achmea"], "FIS Global": ["fis"],
+    "GTC Derivatives": ["gtc"], "Netto Invest": ["gtc"]};
+  function neighborsOf(ids){
+    const s = new Set();
+    G.E.forEach(function(e){
+      ids.forEach(function(id){ if (e[0] === id) s.add(e[1]); if (e[1] === id) s.add(e[0]); });
+    });
+    ids.forEach(id => s.delete(id)); s.delete("dan");
+    return Array.from(s);
+  }
+  function engDetail(label, dates){
+    const ids = IDMAP[label] || [];
+    const facts = ids.map(id => byId2[id] ? byId2[id].fact : "").filter(Boolean).join(" ");
+    const nb = neighborsOf(ids).map(id => byId2[id].label);
+    showDetail(label + " · " + dates, facts, nb.length ? "Touched: " + nb.join(", ") : "", "Engagement");
+    if (window.qaHighlight && ids.length) window.qaHighlight(null, ids);
+  }
+
+  const gantt = document.getElementById("gantt");
+  if (gantt){
+    TL.forEach(r => {
+      const row = document.createElement("div"); row.className = "grow";
+      const l = document.createElement("span"); l.className = "glabel"; l.textContent = r.label;
+      const track = document.createElement("div"); track.className = "gtrack";
+      const bar = document.createElement("div"); bar.className = "gbar" + (r.now ? " now" : "");
+      bar.style.left = ((r.a - Y0) / (Y1 - Y0) * 100) + "%";
+      bar.style.width = (Math.max(r.b - r.a, 0.2) / (Y1 - Y0) * 100) + "%";
+      track.appendChild(bar);
+      row.append(l, track);
+      row.addEventListener("click", function(){
+        const d1 = Math.floor(r.a), d2 = r.now ? "now" : String(Math.round(r.b));
+        engDetail(r.label, d1 + " to " + d2);
+      });
+      gantt.appendChild(row);
+    });
+    const axis = document.createElement("div"); axis.className = "gaxis";
+    axis.appendChild(document.createElement("span"));
+    const scale = document.createElement("div"); scale.className = "scale";
+    for (let y = Y0; y <= Y1; y += 3){
+      const s = document.createElement("span");
+      s.style.left = ((y - Y0) / (Y1 - Y0) * 100) + "%";
+      s.textContent = y;
+      scale.appendChild(s);
+    }
+    axis.appendChild(scale);
+    gantt.appendChild(axis);
+  }
+
+  // Radar (spider) charts: dependency-free SVG.
+  function cssv(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+  function renderRadar(el, data, max, unit){
+    if (!el || !data.length) return;
+    const NS = "http://www.w3.org/2000/svg";
+    const W = 680, H = 400, cx = W/2, cy = H/2 + 4, R = 128, n = data.length;
+    const ink = cssv("--ink"), line = cssv("--line"), lemon = cssv("--lemon"), muted = cssv("--muted"), body = cssv("--body");
+    function pt(i, r){
+      const a = -Math.PI/2 + (i / n) * Math.PI * 2;
+      return [cx + Math.cos(a) * r, cy + Math.sin(a) * r];
+    }
+    const svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+    svg.setAttribute("role", "img");
+    for (let g = 1; g <= 4; g++){
+      const ring = document.createElementNS(NS, "polygon");
+      ring.setAttribute("points", data.map((_, i) => pt(i, R * g / 4).join(",")).join(" "));
+      ring.setAttribute("fill", "none");
+      ring.setAttribute("stroke", line);
+      ring.setAttribute("stroke-width", g === 4 ? "1.5" : "1");
+      svg.appendChild(ring);
+    }
+    data.forEach((_, i) => {
+      const [x, y] = pt(i, R);
+      const sp = document.createElementNS(NS, "line");
+      sp.setAttribute("x1", cx); sp.setAttribute("y1", cy);
+      sp.setAttribute("x2", x); sp.setAttribute("y2", y);
+      sp.setAttribute("stroke", line);
+      svg.appendChild(sp);
+    });
+    const floor = max * 0.04;
+    const val = document.createElementNS(NS, "polygon");
+    val.setAttribute("points", data.map((d, i) => pt(i, R * Math.max(d.v, floor) / max).join(",")).join(" "));
+    val.setAttribute("fill", lemon);
+    val.setAttribute("fill-opacity", "0.5");
+    val.setAttribute("stroke", ink);
+    val.setAttribute("stroke-width", "2");
+    val.setAttribute("stroke-linejoin", "round");
+    svg.appendChild(val);
+    data.forEach((d, i) => {
+      const [x, y] = pt(i, R * Math.max(d.v, floor) / max);
+      const dot = document.createElementNS(NS, "circle");
+      dot.setAttribute("cx", x); dot.setAttribute("cy", y); dot.setAttribute("r", "4");
+      dot.setAttribute("fill", ink);
+      svg.appendChild(dot);
+      const c = Math.cos(-Math.PI/2 + (i / n) * Math.PI * 2);
+      const [lx, ly] = pt(i, R + 24);
+      const t = document.createElementNS(NS, "text");
+      t.setAttribute("x", lx); t.setAttribute("y", ly + 4);
+      t.setAttribute("text-anchor", Math.abs(c) < 0.35 ? "middle" : (c > 0 ? "start" : "end"));
+      t.setAttribute("font-family", "'IBM Plex Sans', sans-serif");
+      t.setAttribute("font-size", "13");
+      t.setAttribute("fill", body);
+      t.textContent = d.label;
+      const tv = document.createElementNS(NS, "tspan");
+      tv.setAttribute("font-family", "'IBM Plex Mono', monospace");
+      tv.setAttribute("font-size", "12");
+      tv.setAttribute("fill", muted);
+      tv.textContent = " " + d.v + unit;
+      t.appendChild(tv);
+      svg.appendChild(t);
+    });
+    el.appendChild(svg);
+  }
+
+  // Platform exposure spider, years computed from the engagement dates.
+  renderRadar(document.getElementById("platradar"), [
+    {label:"FIX & SWIFT", v:7},
+    {label:"Front Arena", v:6},
+    {label:"SimCorp Dimension", v:5.5},
+    {label:"Python / SQL / ML", v:5},
+    {label:"Aladdin / eFront", v:2},
+    {label:"Bloomberg TSOX / FXGO", v:1.5}
+  ], 7, "y");
+
+  // Domain coverage spider, counted live from the experience graph edges.
+  const domData = G.N.filter(n => n.cat === "dom").map(d => ({
+    label: d.label,
+    v: G.E.filter(e => e[0] === d.id || e[1] === d.id).length
+  })).sort((a, b) => b.v - a.v);
+  renderRadar(document.getElementById("domradar"), domData, domData.length ? domData[0].v : 1, "");
+
+  // Career arc: stacked share-of-focus area with story annotations.
+  // CVD-validated stream palette in stacking order: rust, blue, green, gold, purple.
+  (function(){
+    const el = document.getElementById("arc");
+    if (!el) return;
+    const NS = "http://www.w3.org/2000/svg";
+    const STREAMS = [
+      {key:"Equity trading", short:"Trading", color:"#B85030", label:"#FFFFFF"},
+      {key:"Front Arena", short:"Front Arena", color:"#3D6FA8", label:"#FFFFFF"},
+      {key:"SimCorp Dimension", short:"SimCorp Dimension", color:"#1E7A4E", label:"#FFFFFF"},
+      {key:"ESG & sustainable finance", short:"ESG", color:"#A08200", label:"#15171B"},
+      {key:"AI & own products", short:"AI & products", color:"#7A4FA0", label:"#FFFFFF"}
+    ];
+    const YEARS = [2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025,2026];
+    const SH = [
+      [1,0,0,0,0],[1,0,0,0,0],[1,0,0,0,0],[0.4,0.6,0,0,0],[0,1,0,0,0],[0,1,0,0,0],[0,1,0,0,0],[0,1,0,0,0],
+      [0,0.3,0.7,0,0],[0,0.3,0.7,0,0],[0,0.1,0.3,0.6,0],[0,0,0.3,0.6,0.1],[0,0,0.35,0.45,0.2],[0,0,0.65,0.05,0.3],[0,0,0.55,0,0.45]
+    ];
+    const W = 680, H = 400, x0 = 12, x1 = 668, y0 = 46, y1 = 352;
+    const xs = YEARS.map(y => x0 + (y - YEARS[0]) / (YEARS[YEARS.length-1] - YEARS[0]) * (x1 - x0));
+    const yv = f => y1 - f * (y1 - y0);
+    const svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+    svg.setAttribute("role", "img");
+    const cum = SH.map(row => { let a = 0; return row.map(v => (a += v)); });
+    STREAMS.forEach((st, i) => {
+      let d = "";
+      xs.forEach((x, j) => { d += (j ? " L" : "M") + x.toFixed(1) + " " + yv(cum[j][i]).toFixed(1); });
+      for (let j = xs.length - 1; j >= 0; j--){
+        d += " L" + xs[j].toFixed(1) + " " + yv(i ? cum[j][i-1] : 0).toFixed(1);
+      }
+      d += " Z";
+      const p = document.createElementNS(NS, "path");
+      p.setAttribute("d", d);
+      p.setAttribute("fill", st.color);
+      p.setAttribute("stroke", cssv("--paper"));
+      p.setAttribute("stroke-width", "1.5");
+      svg.appendChild(p);
+    });
+    // direct labels at each stream's thickest year
+    STREAMS.forEach((st, i) => {
+      let bj = 0;
+      SH.forEach((row, j) => { if (row[i] > SH[bj][i]) bj = j; });
+      const thick = SH[bj][i] * (y1 - y0);
+      if (thick < 30) return;
+      const t = document.createElementNS(NS, "text");
+      const anchorPos = bj === 0 ? "start" : (bj === xs.length - 1 ? "end" : "middle");
+      t.setAttribute("x", bj === 0 ? xs[0] + 8 : (bj === xs.length - 1 ? xs[xs.length-1] - 8 : xs[bj]));
+      t.setAttribute("y", (yv(cum[bj][i]) + yv(i ? cum[bj][i-1] : 0)) / 2 + 4);
+      t.setAttribute("text-anchor", anchorPos);
+      t.setAttribute("font-family", "'IBM Plex Sans', sans-serif");
+      t.setAttribute("font-size", "12.5");
+      t.setAttribute("font-weight", "600");
+      t.setAttribute("fill", st.label);
+      t.textContent = st.short;
+      svg.appendChild(t);
+    });
+    // story annotations
+    [{y:2015, t:"FIS"}, {y:2020, t:"SimCorp"}, {y:2022, t:"ESG era"}, {y:2026, t:"Freelance + AI"}].forEach(a => {
+      const x = xs[YEARS.indexOf(a.y)];
+      const ln = document.createElementNS(NS, "line");
+      ln.setAttribute("x1", x); ln.setAttribute("y1", y0 - 8);
+      ln.setAttribute("x2", x); ln.setAttribute("y2", y1);
+      ln.setAttribute("stroke", cssv("--muted"));
+      ln.setAttribute("stroke-dasharray", "3 4");
+      ln.setAttribute("stroke-width", "1");
+      svg.appendChild(ln);
+      const t = document.createElementNS(NS, "text");
+      t.setAttribute("x", a.y === 2026 ? x - 4 : x);
+      t.setAttribute("y", y0 - 14);
+      t.setAttribute("text-anchor", a.y === 2026 ? "end" : "middle");
+      t.setAttribute("font-family", "'IBM Plex Mono', monospace");
+      t.setAttribute("font-size", "11");
+      t.setAttribute("fill", cssv("--muted"));
+      t.textContent = a.t;
+      svg.appendChild(t);
+    });
+    // year axis
+    for (let y = 2012; y <= 2026; y += 2){
+      const t = document.createElementNS(NS, "text");
+      t.setAttribute("x", xs[YEARS.indexOf(y)]);
+      t.setAttribute("y", y1 + 20);
+      t.setAttribute("text-anchor", "middle");
+      t.setAttribute("font-family", "'IBM Plex Mono', monospace");
+      t.setAttribute("font-size", "10.5");
+      t.setAttribute("fill", cssv("--muted"));
+      t.textContent = y;
+      svg.appendChild(t);
+    }
+    // hover: per-year guide + tooltip
+    const tip = document.getElementById("arctip");
+    const guide = document.createElementNS(NS, "line");
+    guide.setAttribute("y1", y0); guide.setAttribute("y2", y1);
+    guide.setAttribute("stroke", cssv("--ink"));
+    guide.setAttribute("stroke-width", "1");
+    guide.setAttribute("visibility", "hidden");
+    svg.appendChild(guide);
+    const step = xs[1] - xs[0];
+    YEARS.forEach((yr, j) => {
+      const r = document.createElementNS(NS, "rect");
+      r.setAttribute("x", xs[j] - step/2); r.setAttribute("y", y0);
+      r.setAttribute("width", step); r.setAttribute("height", y1 - y0);
+      r.setAttribute("fill", "transparent");
+      r.addEventListener("mouseenter", function(){
+        guide.setAttribute("x1", xs[j]); guide.setAttribute("x2", xs[j]);
+        guide.setAttribute("visibility", "visible");
+        const parts = [];
+        SH[j].forEach(function(v, i){ if (v > 0) parts.push(STREAMS[i].key + " " + Math.round(v*100) + "%"); });
+        tip.textContent = yr + " · " + parts.join(" · ");
+        if (xs[j] > W / 2){ tip.style.left = "auto"; tip.style.right = "8px"; }
+        else { tip.style.right = "auto"; tip.style.left = Math.max(1, xs[j] / W * 100 - 6) + "%"; }
+        tip.style.top = "10px";
+        tip.style.display = "block";
+      });
+      r.addEventListener("mouseleave", function(){ tip.style.display = "none"; guide.setAttribute("visibility", "hidden"); });
+      svg.appendChild(r);
+    });
+    el.appendChild(svg);
+    const leg = document.getElementById("arclegend");
+    if (leg) STREAMS.forEach(function(st){
+      const s = document.createElement("span");
+      const i2 = document.createElement("i"); i2.style.background = st.color;
+      const tx = document.createElement("em"); tx.style.fontStyle = "normal"; tx.textContent = st.key;
+      s.append(i2, tx); leg.appendChild(s);
+    });
+  })();
+
+  // Coverage matrix: engagements and builds against platforms and domains, from graph edges.
+  (function(){
+    const host = document.getElementById("matrix");
+    if (!host) return;
+    const SHORT = {scd:"SimCorp Dim.", arena:"Front Arena", aladdin:"Aladdin", bbg:"Bloomberg", fix:"FIX & SWIFT", py:"Python/SQL/ML",
+                   fo:"Front Office", ibor:"IBOR", alts:"Alternatives", esg:"ESG", credit:"Credit risk", wealth:"Wealth", trading:"Trading"};
+    const cols = G.N.filter(n => n.cat === "plat").concat(G.N.filter(n => n.cat === "dom"));
+    const rows = G.N.filter(n => n.cat === "eng").concat(G.N.filter(n => n.cat === "build"));
+    const has = {};
+    G.E.forEach(function(e){ has[e[0] + "|" + e[1]] = true; has[e[1] + "|" + e[0]] = true; });
+    host.style.gridTemplateColumns = "150px repeat(" + cols.length + ", 30px)";
+    host.appendChild(document.createElement("span"));
+    cols.forEach(function(c){
+      const hc = document.createElement("div"); hc.className = "mh"; hc.textContent = SHORT[c.id] || c.label;
+      host.appendChild(hc);
+    });
+    rows.forEach(function(r){
+      const lab = document.createElement("div"); lab.className = "mr";
+      const d = document.createElement("i"); d.className = "rdot";
+      d.style.background = r.cat === "eng" ? cssv("--cat-eng") : cssv("--cat-build");
+      const s = document.createElement("span"); s.textContent = r.label;
+      lab.append(d, s); host.appendChild(lab);
+      cols.forEach(function(c){
+        const cell = document.createElement("div");
+        const on = has[r.id + "|" + c.id];
+        cell.className = "mc " + (c.cat === "plat" ? "plat" : "dom") + (on ? " on" : "");
+        if (on){
+          cell.title = r.label + ": " + c.label;
+          cell.addEventListener("click", function(){
+            const dates = YRDATES[r.id] ? " · " + YRDATES[r.id] : "";
+            showDetail(r.label + " × " + c.label + dates, byId2[r.id].fact, byId2[c.id].label + ": " + byId2[c.id].fact, "Coverage");
+          });
+        }
+        host.appendChild(cell);
+      });
+    });
+  })();
+
+  // Sankey: engagement years flowing into capability areas, computed from the graph.
+  (function(){
+    const el = document.getElementById("sankey");
+    if (!el) return;
+    const NS = "http://www.w3.org/2000/svg";
+    const AREA_OF = {scd: "SimCorp Dimension", fo: "Front Office & IBOR", ibor: "Front Office & IBOR",
+      fix: "Connectivity & Trading", bbg: "Connectivity & Trading", arena: "Connectivity & Trading", trading: "Connectivity & Trading",
+      esg: "ESG & Regulatory", credit: "ESG & Regulatory", py: "Data & Engineering",
+      alts: "Alternatives & Wealth", wealth: "Alternatives & Wealth", aladdin: "Alternatives & Wealth"};
+    const AREA_COLOR = {"SimCorp Dimension": "#1E7A4E", "Front Office & IBOR": "#7A4FA0", "Connectivity & Trading": "#3D6FA8",
+      "ESG & Regulatory": "#A08200", "Data & Engineering": "#6E7480", "Alternatives & Wealth": "#B85030", "AI & Products": "#F5D843"};
+    const AREA_ORDER = ["SimCorp Dimension", "Front Office & IBOR", "Connectivity & Trading", "ESG & Regulatory", "Data & Engineering", "Alternatives & Wealth", "AI & Products"];
+    // Left nodes: TL engagements (GTC and Netto merged) plus own builds.
+    const LEFT = [];
+    TL.forEach(function(r){
+      if (r.label === "Netto Invest") return;
+      const yrs = (r.label === "GTC Derivatives") ? 3.2 : Math.max(r.b - r.a, 0.3);
+      LEFT.push({label: r.label, ids: IDMAP[r.label] || [], yrs: yrs, tl: r});
+    });
+    LEFT.push({label: "AI & own products", ids: ["watchdesk", "socialarb", "agentstack"], yrs: 1.5, ai: true});
+    // Links: each left node's years split across the areas its graph edges touch.
+    LEFT.forEach(function(L){
+      const areas = new Set();
+      neighborsOf(L.ids).forEach(function(id){ if (AREA_OF[id]) areas.add(AREA_OF[id]); });
+      if (L.ai) areas.add("AI & Products");
+      L.links = Array.from(areas).map(a => ({area: a, w: L.yrs / areas.size}));
+    });
+    const inflow = {};
+    LEFT.forEach(L => L.links.forEach(k => { inflow[k.area] = (inflow[k.area] || 0) + k.w; }));
+    const RIGHT = AREA_ORDER.filter(a => inflow[a]).map(a => ({label: a, w: inflow[a]}));
+    const total = LEFT.reduce((s, L) => s + L.yrs, 0);
+    const W = 680, H = 470, top = 16, gapL = 7, gapR = 9, x0 = 178, x1 = 500, nw = 12;
+    const k = (H - 2 * top - gapL * (LEFT.length - 1)) / total;
+    const svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+    // position nodes
+    let y = top;
+    LEFT.forEach(function(L){ L.y = y; L.h = L.yrs * k; L.off = 0; y += L.h + gapL; });
+    const kr = (H - 2 * top - gapR * (RIGHT.length - 1)) / total;
+    let yr = top;
+    RIGHT.forEach(function(R){ R.y = yr; R.h = R.w * kr; R.off = 0; yr += R.h + gapR; });
+    const rByLabel = {}; RIGHT.forEach(R => rByLabel[R.label] = R);
+    // ribbons
+    LEFT.forEach(function(L){
+      L.links.forEach(function(kk){
+        const R = rByLabel[kk.area];
+        const hL = kk.w * k, hR = kk.w * kr;
+        const ly0 = L.y + L.off, ly1 = ly0 + hL;
+        const ry0 = R.y + R.off, ry1 = ry0 + hR;
+        L.off += hL; R.off += hR;
+        const mx = (x0 + nw + x1) / 2;
+        const p = document.createElementNS(NS, "path");
+        p.setAttribute("d", "M" + (x0 + nw) + " " + ly0 + " C" + mx + " " + ly0 + " " + mx + " " + ry0 + " " + x1 + " " + ry0 +
+          " L" + x1 + " " + ry1 + " C" + mx + " " + ry1 + " " + mx + " " + ly1 + " " + (x0 + nw) + " " + ly1 + " Z");
+        p.setAttribute("fill", AREA_COLOR[kk.area]);
+        p.setAttribute("fill-opacity", "0.42");
+        svg.appendChild(p);
+      });
+    });
+    const ink = cssv("--ink"), body = cssv("--body"), muted = cssv("--muted");
+    function nodeRect(x, n, color, strokeInk){
+      const r = document.createElementNS(NS, "rect");
+      r.setAttribute("x", x); r.setAttribute("y", n.y);
+      r.setAttribute("width", nw); r.setAttribute("height", Math.max(n.h, 3));
+      r.setAttribute("fill", color); r.setAttribute("rx", "2");
+      if (strokeInk){ r.setAttribute("stroke", ink); r.setAttribute("stroke-width", "1"); }
+      svg.appendChild(r);
+      return r;
+    }
+    LEFT.forEach(function(L){
+      const rect = nodeRect(x0, L, ink, false);
+      const t = document.createElementNS(NS, "text");
+      t.setAttribute("x", x0 - 8); t.setAttribute("y", L.y + L.h / 2 + 4);
+      t.setAttribute("text-anchor", "end");
+      t.setAttribute("font-family", "'IBM Plex Sans', sans-serif");
+      t.setAttribute("font-size", "12.5"); t.setAttribute("fill", body);
+      t.textContent = L.label + " (" + (Math.round(L.yrs * 10) / 10) + "y)";
+      svg.appendChild(t);
+      function open(){
+        if (L.ai){
+          showDetail("AI & own products", L.ids.map(id => byId2[id].fact).join(" "), "Dan's own IP, built alongside the consulting work.", "Own builds");
+          if (window.qaHighlight) window.qaHighlight(null, L.ids);
+        } else {
+          const d1 = Math.floor(L.tl.a), d2 = L.tl.now ? "now" : String(Math.round(L.tl.b));
+          engDetail(L.label, d1 + " to " + d2);
+        }
+      }
+      rect.addEventListener("click", open);
+      t.addEventListener("click", open);
+    });
+    RIGHT.forEach(function(R){
+      const rect = nodeRect(x1, R, AREA_COLOR[R.label], R.label === "AI & Products");
+      const t = document.createElementNS(NS, "text");
+      t.setAttribute("x", x1 + nw + 8); t.setAttribute("y", R.y + R.h / 2 + 4);
+      t.setAttribute("text-anchor", "start");
+      t.setAttribute("font-family", "'IBM Plex Sans', sans-serif");
+      t.setAttribute("font-size", "12.5"); t.setAttribute("fill", body);
+      t.textContent = R.label + " (" + (Math.round(R.w * 10) / 10) + "y)";
+      svg.appendChild(t);
+      function open(){
+        const feeders = LEFT.filter(L => L.links.some(kk => kk.area === R.label)).map(L => L.label);
+        showDetail(R.label + " · " + (Math.round(R.w * 10) / 10) + " weighted years", "Fed by: " + feeders.join(", ") + ".",
+          "Weighted years split engagement time equally across the areas each engagement touched.", "Capability area");
+      }
+      rect.addEventListener("click", open);
+      t.addEventListener("click", open);
+    });
+    el.appendChild(svg);
+  })();
+
+  // Carousels: scroll-snap slides with dots and Prev/Next controls.
+  document.querySelectorAll(".carousel-wrap").forEach(function(wrap){
+    const car = wrap.querySelector(".carousel");
+    const slides = Array.from(car.children);
+    const dotsEl = wrap.querySelector(".cdots");
+    slides.forEach(function(_, i){
+      const d = document.createElement("span");
+      d.className = "cdot" + (i === 0 ? " on" : "");
+      dotsEl.appendChild(d);
+    });
+    const dots = Array.from(dotsEl.children);
+    function stepW(){ return slides.length > 1 ? slides[1].offsetLeft - slides[0].offsetLeft : car.clientWidth; }
+    function upd(){
+      const i = Math.max(0, Math.min(dots.length - 1, Math.round(car.scrollLeft / stepW())));
+      dots.forEach(function(d, j){ d.classList.toggle("on", j === i); });
+    }
+    car.addEventListener("scroll", function(){ requestAnimationFrame(upd); });
+    wrap.querySelectorAll(".cbtn").forEach(function(b){
+      b.addEventListener("click", function(){
+        car.scrollBy({ left: stepW() * Number(b.dataset.dir), behavior: "smooth" });
+      });
+    });
+  });
+})();
+
+// ---------- Fit check: job spec vs profile, computed in the browser ----------
+(function(){
+  const ta = document.getElementById("specin");
+  if (!ta) return;
+  const css2 = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const AREAS = [
+    {key: "SimCorp Dimension", nodes: ["scd"]},
+    {key: "Front Office & IBOR", nodes: ["fo", "ibor"]},
+    {key: "Connectivity & Trading", nodes: ["fix", "bbg", "arena", "trading"]},
+    {key: "ESG & Regulatory", nodes: ["esg", "credit"]},
+    {key: "Data & Engineering", nodes: ["py"]},
+    {key: "Alternatives & Wealth", nodes: ["alts", "wealth", "aladdin"]}
+  ];
+  // Extra profile vocabulary on top of the graph keyword lists (term to graph node).
+  const EXTRA = {"oracle": "py", "postgres": "py", "react": "py", "supabase": "py", "snowflake": "py", "azure devops": "py",
+    "data extractor": "scd", "asset manager": "scd", "iap": "scd", "collateral": "scd", "reconciliation": "scd",
+    "pricing": "scd", "market data": "scd", "mutual fund": "scd", "private debt": "alts", "adroit": "fix", "axioma": "fix",
+    "regulatory reporting": "esg", "solvency": "esg", "treasury": "arena", "business analyst": "fo", "prompt": "agentstack",
+    "rag": "agentstack", "genai": "agentstack", "gen ai": "agentstack", "artificial intelligence": "agentstack"};
+  // Commonly requested platforms and skills that are NOT in Dan's published profile.
+  const OUTSIDE = ["murex", "calypso", "temenos", "charles river", "avaloq", "t24", "geneva", "investran", "broadridge",
+    "ss&c", "simcorp coric", "java", "c#", ".net", "kotlin", "c++", "scala", "cobol", "abap", "sap", "tableau",
+    "power bi", "qlik", "matlab", "kyc", "aml", "transfer agency", "salesforce", "dynamics 365"];
+  const byId = {}; G.N.forEach(n => byId[n.id] = n);
+  const edgeCount = id => G.E.filter(e => e[0] === id || e[1] === id).length;
+  function analyze(){
+    const raw = ta.value.trim();
+    const res = document.getElementById("fitres");
+    if (!raw){ res.hidden = true; return; }
+    const t = " " + raw.toLowerCase().replace(/[\n\r\t]/g, " ") + " ";
+    const nodeHits = {}, matchedTerms = new Set();
+    G.N.forEach(function(n){
+      if (n.id === "dan" || n.cat === "eng") return;
+      n.kw.forEach(function(k){ if (t.includes(k)){ nodeHits[n.id] = (nodeHits[n.id] || 0) + 1; matchedTerms.add(k.trim()); } });
+    });
+    Object.keys(EXTRA).forEach(function(k){
+      if (t.includes(k)){ const id = EXTRA[k]; nodeHits[id] = (nodeHits[id] || 0) + 1; matchedTerms.add(k); }
+    });
+    const outsideHits = OUTSIDE.filter(k => t.includes(k));
+    const specArea = AREAS.map(a => a.nodes.reduce((s, id) => s + (nodeHits[id] || 0), 0));
+    const danArea = AREAS.map(a => a.nodes.reduce((s, id) => s + edgeCount(id), 0));
+    const maxS = Math.max.apply(null, specArea.concat([1]));
+    const maxD = Math.max.apply(null, danArea);
+    const rec = matchedTerms.size, out = outsideHits.length;
+    const pctEl = document.getElementById("fitpct"), sumEl = document.getElementById("fitsum");
+    if (rec + out === 0){
+      res.hidden = false;
+      pctEl.textContent = "?";
+      sumEl.textContent = "No recognizable platform, domain or tooling requirements found in this text. Paste the full requirements section of the spec.";
+      document.getElementById("fitradar").innerHTML = "";
+      document.getElementById("fitmatch").innerHTML = "";
+      document.getElementById("fitexpowrap").hidden = true;
+      document.getElementById("fitexpo").innerHTML = "";
+      return;
+    }
+    const score = Math.round(100 * rec / (rec + out));
+    pctEl.textContent = score + "%";
+    const topAreas = AREAS.map((a, i) => ({k: a.key, v: specArea[i]})).filter(x => x.v > 0).sort((a, b) => b.v - a.v).slice(0, 3).map(x => x.k);
+    sumEl.textContent = "Dan's published profile covers " + rec + " of the " + (rec + out) + " requirements recognized in this spec." +
+      (topAreas.length ? " The spec leans on " + topAreas.join(", ") + "." : "") +
+      (out ? " Items outside the published profile are listed below, ask Dan directly, adjacent experience often transfers." : " No recognized requirement falls outside the profile.");
+    drawFit(AREAS.map(a => a.key), specArea.map(v => v / maxS), danArea.map(v => v / maxD));
+    const mEl = document.getElementById("fitmatch");
+    mEl.innerHTML = "";
+    function block(title, items, cls){
+      if (!items.length) return;
+      const b = document.createElement("div"); b.className = "match-block";
+      const hh = document.createElement("h4"); hh.textContent = title; b.appendChild(hh);
+      const w = document.createElement("div"); w.className = "match-chips";
+      items.forEach(function(x){ const c = document.createElement("span"); c.className = "mchip" + (cls ? " " + cls : ""); c.textContent = x; w.appendChild(c); });
+      b.appendChild(w); mEl.appendChild(b);
+    }
+    block("Matched in Dan's profile", Array.from(matchedTerms).sort().slice(0, 24), "");
+    block("In the spec, outside the published profile", outsideHits, "miss");
+    // Where the exposure comes from: top matched skills with the engagements behind them
+    const DATES = {nicola: "2026 to now", bnp: "2024 to 2026", bng: "2021 to 2024", athora: "2021 to 2024",
+      asr: "2021 to 2022", pggm: "2020 to 2021", shell: "2020 to 2021", caceis: "2020 to 2021",
+      achmea: "2020 to 2021", fis: "2015 to 2020", gtc: "2013 to 2015"};
+    const xw = document.getElementById("fitexpowrap"), xe = document.getElementById("fitexpo");
+    xe.innerHTML = "";
+    const topIds = Object.keys(nodeHits).sort((a, b) => nodeHits[b] - nodeHits[a]).slice(0, 5);
+    topIds.forEach(function(id){
+      const node = byId[id]; if (!node) return;
+      const engs = [];
+      G.E.forEach(function(ed){
+        const other = ed[0] === id ? ed[1] : (ed[1] === id ? ed[0] : null);
+        if (!other) return;
+        const on = byId[other]; if (!on) return;
+        if (on.cat === "eng") engs.push(on.label + (DATES[on.id] ? " (" + DATES[on.id] + ")" : ""));
+        else if (on.cat === "build") engs.push(on.label + " (own build)");
+      });
+      const row = document.createElement("div"); row.className = "expo-row";
+      row.style.cursor = "pointer";
+      row.addEventListener("click", function(){
+        POP.open("Exposure", node.label, node.fact, engs.length ? "Via: " + engs.join(", ") : "");
+      });
+      const head = document.createElement("div");
+      const st = document.createElement("strong"); st.textContent = node.label;
+      head.appendChild(st);
+      head.appendChild(document.createTextNode(" · " + node.fact));
+      row.appendChild(head);
+      if (engs.length){
+        const via = document.createElement("div"); via.className = "via";
+        via.textContent = "Via: " + engs.join(", ");
+        row.appendChild(via);
+      }
+      xe.appendChild(row);
+    });
+    xw.hidden = topIds.length === 0;
+    // light the experience graph
+    const ids = Object.keys(nodeHits).sort((a, b) => nodeHits[b] - nodeHits[a]);
+    if (window.qaHighlight && ids.length) window.qaHighlight(null, ids.slice(0, 8));
+    res.hidden = false;
+    window.__fitScore = score;
+  }
+  function drawFit(labels, spec, dan){
+    const el = document.getElementById("fitradar");
+    el.innerHTML = "";
+    const NS = "http://www.w3.org/2000/svg";
+    const W = 680, H = 380, cx = W/2, cy = H/2 + 4, R = 122, n = labels.length;
+    const ink = css2("--ink"), line = css2("--line"), lemon = css2("--lemon"), body = css2("--body");
+    const pt = (i, r) => { const a = -Math.PI/2 + (i / n) * Math.PI * 2; return [cx + Math.cos(a) * r, cy + Math.sin(a) * r]; };
+    const svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+    for (let g = 1; g <= 4; g++){
+      const ring = document.createElementNS(NS, "polygon");
+      ring.setAttribute("points", labels.map((_, i) => pt(i, R * g / 4).join(",")).join(" "));
+      ring.setAttribute("fill", "none"); ring.setAttribute("stroke", line);
+      svg.appendChild(ring);
+    }
+    labels.forEach(function(_, i){
+      const [x, y] = pt(i, R);
+      const sp = document.createElementNS(NS, "line");
+      sp.setAttribute("x1", cx); sp.setAttribute("y1", cy); sp.setAttribute("x2", x); sp.setAttribute("y2", y);
+      sp.setAttribute("stroke", line); svg.appendChild(sp);
+    });
+    function poly(vals, fill, fo, stroke, dash){
+      const p = document.createElementNS(NS, "polygon");
+      p.setAttribute("points", vals.map((v, i) => pt(i, R * Math.max(v, 0.04)).join(",")).join(" "));
+      p.setAttribute("fill", fill); p.setAttribute("fill-opacity", fo);
+      p.setAttribute("stroke", stroke); p.setAttribute("stroke-width", "2");
+      if (dash) p.setAttribute("stroke-dasharray", "5 4");
+      p.setAttribute("stroke-linejoin", "round");
+      svg.appendChild(p);
+    }
+    poly(dan, lemon, "0.45", ink, false);
+    poly(spec, ink, "0.08", ink, true);
+    spec.forEach(function(v, i){
+      const [x, y] = pt(i, R * Math.max(v, 0.04));
+      const d = document.createElementNS(NS, "circle");
+      d.setAttribute("cx", x); d.setAttribute("cy", y); d.setAttribute("r", "4"); d.setAttribute("fill", ink);
+      svg.appendChild(d);
+    });
+    labels.forEach(function(lb, i){
+      const c = Math.cos(-Math.PI/2 + (i / n) * Math.PI * 2);
+      const [lx, ly] = pt(i, R + 22);
+      const tx = document.createElementNS(NS, "text");
+      tx.setAttribute("x", lx); tx.setAttribute("y", ly + 4);
+      tx.setAttribute("text-anchor", Math.abs(c) < 0.35 ? "middle" : (c > 0 ? "start" : "end"));
+      tx.setAttribute("font-family", "'IBM Plex Sans', sans-serif");
+      tx.setAttribute("font-size", "13"); tx.setAttribute("fill", body);
+      tx.textContent = lb;
+      svg.appendChild(tx);
+    });
+    el.appendChild(svg);
+  }
+  document.getElementById("fitbtn").addEventListener("click", analyze);
+  document.getElementById("specfile").addEventListener("change", function(ev){
+    const f = ev.target.files && ev.target.files[0];
+    if (!f) return;
+    const r = new FileReader();
+    r.onload = function(){ ta.value = String(r.result).slice(0, 20000); analyze(); };
+    r.readAsText(f);
+  });
+  const send = document.getElementById("fitsend");
+  send.addEventListener("click", function(){
+    const sent = document.getElementById("fitsent");
+    const email = document.getElementById("fitemail").value.trim();
+    const spec = ta.value.trim();
+    if (!spec) return;
+    send.disabled = true;
+    sent.textContent = "Sending...";
+    const q = ("Job spec fit check" + (typeof window.__fitScore === "number" ? " (" + window.__fitScore + "% instant coverage)" : "")).slice(0, 295);
+    fetch("https://hvitxwhfdhsdwhgllaqf.supabase.co/functions/v1/site", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({question: q, email: email, spec: spec.slice(0, 8000)})
+    }).then(function(r){
+      sent.textContent = (r.ok || r.status === 202)
+        ? (email ? "Sent. The full assessment is prepared by Dan's scheduled review agent and emailed to you, normally within the hour." : "Sent to Dan's scheduled review agent. Leave your email above and send again to receive the full assessment directly.")
+        : "Could not send right now. Email deenikdaniel@gmail.com with the spec instead.";
+      send.disabled = false;
+    }).catch(function(){
+      sent.textContent = "Sending is not available in this view. Email the spec to deenikdaniel@gmail.com and Dan will reply directly.";
+      send.disabled = false;
+    });
+  });
+})();
+
+// ---------- Q&A ----------
+const CANNED = [
+  ["Is Dan a fit for my role?", "If the role is freelance or contract SimCorp Dimension work (Front Office, IBOR, Alternative Investments, ESG module), remote-first or Spain-compatible, the answer is very likely yes: over a decade of delivery, certified on the platform, formerly at SimCorp itself. Ask a specific question above or send the brief to deenikdaniel@gmail.com for a fast, straight answer.", ["scd","fo","ibor","alts","esg"]],
+  ["Is Dan available?", "Dan is open to freelance and contract engagements. For current availability and start dates, email deenikdaniel@gmail.com and he will respond directly.", ["nicola"]],
+  ["What is his day rate?", "Dan discusses commercial terms directly rather than publishing them. Email deenikdaniel@gmail.com or connect on LinkedIn to start that conversation.", []],
+  ["Remote or on-site?", "Remote-first from Amsterdam, with EU-compatible setups including Spain. He currently delivers a Canadian engagement fully remote, so distributed teams and time zones are proven territory.", ["nicola"]],
+  ["SimCorp Dimension depth?", "Certified SimCorp Dimension Professional, formerly a Senior Business Consultant at SimCorp itself. Deep Front Office and IBOR: Asset Manager, Order Manager, Compliance, Risk Analysis and the Alternative Investment Manager, plus the ESG and SFDR module, FIX and SWIFT connectivity and data extractions.", ["scd","nicola","bnp","asr","pggm","shell","caceis","achmea"]],
+  ["Which clients has he served?", "Engagement history includes Nicola Wealth (via Alpha FMC), BNP Paribas, BNG Bank, Athora, A.S.R, PGGM, Shell Asset Management, CACEIS and Achmea IM. Project internals stay confidential; the profile above gives the headline scope of each.", ["nicola","bnp","bng","athora","asr","pggm","shell","caceis","achmea"]],
+  ["What does he build himself?", "Three AI-driven products of his own: WatchDesk, a pre-owned watch market analytics platform (React, Supabase, PostGIS); a multi-agent AI research pipeline for investment signals; and the LensIQ agent stack of scheduled AI agents for research, inbox and project workflows, which includes the assistant answering on this site. It is working proof of the AI and engineering depth on the CV.", ["watchdesk","socialarb","agentstack","py"]],
+  ["Permanent roles?", "Dan works freelance and contract only. If the role is permanent, he is not the right fit, but a strong contract brief will get a fast answer.", []]
+];
+const chipsEl = document.getElementById('qchips');
+const answerEl = document.getElementById('answer');
+CANNED.forEach(function(item){
+  const b = document.createElement('button');
+  b.className = 'qchip'; b.type = 'button'; b.textContent = item[0];
+  b.addEventListener('click', function(){
+    answerEl.textContent = item[1]; answerEl.hidden = false;
+    if (window.qaHighlight){
+      const hits = window.qaHighlight(item[1], item[2]);
+      if (hits) answerEl.textContent = item[1] + " (The relevant experience is highlighted on the graph above.)";
+    }
+  });
+  chipsEl.appendChild(b);
+});
+
+
+const input = document.getElementById('qinput');
+const emailInput = document.getElementById('qemail');
+const btn = document.getElementById('qbtn');
+let busy = false;
+async function ask() {
+  const q = input.value.trim();
+  if (!q || busy) return;
+  busy = true; btn.disabled = true;
+  answerEl.hidden = false; answerEl.textContent = 'Thinking...';
+  try {
+    const res = await fetch('https://hvitxwhfdhsdwhgllaqf.supabase.co/functions/v1/site', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ question: q, email: emailInput.value.trim() })
+    });
+    const data = await res.json();
+    if (res.ok && data.answer) {
+      answerEl.textContent = data.answer;
+      if (window.qaHighlight) window.qaHighlight(q + ' ' + data.answer);
+    } else if (res.status === 202 && data.queued) {
+      answerEl.textContent = data.email_captured
+        ? 'The live assistant is offline right now, so your question has been logged. You will receive an answer by email within one business day.'
+        : 'The live assistant is offline right now. Your question has been logged for Dan. Leave your email above and ask again to get the answer sent to you, or email deenikdaniel@gmail.com directly.';
+      if (window.qaHighlight) window.qaHighlight(q);
+    } else if (res.status === 429) {
+      answerEl.textContent = 'The assistant is busy right now. The quick answers above cover the most common questions, or email deenikdaniel@gmail.com.';
+    } else {
+      answerEl.textContent = 'The assistant is momentarily unavailable. Use the quick answers above, or email deenikdaniel@gmail.com and Dan will respond directly.';
+    }
+  } catch (e) {
+    answerEl.textContent = 'Connection issue. Use the quick answers above, or email deenikdaniel@gmail.com.';
+  }
+  busy = false; btn.disabled = false;
+}
+btn.addEventListener('click', ask);
+input.addEventListener('keydown', function(e){ if (e.key === 'Enter') ask(); });
+
+// LinkedIn share: share the page the visitor is actually on.
+(function(){
+  const s = document.getElementById('liShare');
+  if (s && location.protocol.indexOf('http') === 0){
+    s.href = 'https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(location.href);
+  }
+})();
+
+</script>
+
+</body>
+</html>

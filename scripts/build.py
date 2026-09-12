@@ -84,13 +84,17 @@ def build():
 if __name__ == "__main__":
     html = build()
     target = ROOT / "index.html"
+    dist = ROOT / "dist" / "index.html"
     check_only = "--check" in sys.argv
     digest = hashlib.md5(html.encode()).hexdigest()
     if check_only:
-        current = target.read_text() if target.exists() else ""
-        if current != html:
-            sys.exit("CHECK FAILED: index.html is stale, run scripts/build.py and commit the result")
-        print("index.html is up to date (%d bytes, md5 %s)" % (len(html), digest))
+        for p in (target, dist):
+            current = p.read_text() if p.exists() else ""
+            if current != html:
+                sys.exit("CHECK FAILED: %s is stale, run scripts/build.py and commit the result" % p)
+        print("index.html and dist/index.html are up to date (%d bytes, md5 %s)" % (len(html), digest))
     else:
-        target.write_text(html)
-        print("wrote %s (%d bytes, md5 %s)" % (target, len(html), digest))
+        dist.parent.mkdir(parents=True, exist_ok=True)
+        for p in (target, dist):
+            p.write_text(html)
+        print("wrote index.html and dist/index.html (%d bytes, md5 %s)" % (len(html), digest))

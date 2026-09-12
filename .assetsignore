@@ -1,8 +1,0 @@
-# Everything that is source or process, not the published site.
-src/
-scripts/
-.github/
-PRODUCTION.md
-wrangler.toml
-.assetsignore
-.nojekyll
