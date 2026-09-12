@@ -1,0 +1,9 @@
+# Cloudflare Workers static-assets deploy for the LensIQ recruiter site.
+# Workers Builds runs `npx wrangler deploy` on every push to main.
+# There is no worker script: this serves the committed index.html directly.
+name = "lensiq"
+compatibility_date = "2025-06-01"
+
+[assets]
+directory = "."
+not_found_handling = "single-page-application"
