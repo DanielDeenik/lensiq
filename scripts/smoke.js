@@ -73,6 +73,33 @@ const FILE = 'file://' + path.resolve(__dirname, '..', 'index.html');
   add('fit exposure rows', fit.rows > 0, 'rows=' + fit.rows);
   add('fit radar drawn', fit.radar > 10, 'els=' + fit.radar);
 
+  // The fit check must weigh depth, not first match. A spec built on Dan's core
+  // has to outscore one built on the tools that merely support his delivery.
+  const scoreFor = async (text) => {
+    await page.fill('#specin', text);
+    await page.evaluate(() => document.getElementById('fitbtn').click());
+    await page.waitForTimeout(300);
+    return page.evaluate(() => ({
+      pct: parseInt((document.getElementById('fitpct') || {}).textContent || '0', 10),
+      summary: (document.getElementById('fitsum') || {}).textContent || '',
+      headings: Array.from(document.querySelectorAll('#fitmatch h4')).map(h => h.textContent),
+    }));
+  };
+  const core = await scoreFor('SimCorp Dimension front office consultant. Order Manager, IBOR and position keeping, Compliance Manager rules, Alternative Investment Manager, security setup and valuations, FIX connectivity to Bloomberg.');
+  const periph = await scoreFor('SimCorp Communication Server specialist. Build and maintain Communication Server jobs, batch jobs and job scheduling. Axioma risk model calibration, factor model validation and quantitative model development. Monte Carlo experience required.');
+  add('core spec outscores a peripheral one', core.pct > periph.pct + 15,
+    'core=' + core.pct + '% peripheral=' + periph.pct + '%');
+  add('peripheral spec is called out honestly',
+    /thins out/i.test(periph.summary) || periph.headings.some(h => /thins out/i.test(h)),
+    'summary=' + periph.summary.slice(0, 90));
+  add('core spec names what he leads on',
+    core.headings.some(h => /leads on/i.test(h)), core.headings.join(' | ').slice(0, 90));
+  add('comm server is shown as support, not headline', periph.headings.some(h => /Supports his delivery/i.test(h)) || /communication server/i.test(periph.summary),
+    periph.headings.join(' | ').slice(0, 90));
+  await page.fill('#specin', 'SimCorp Dimension consultant, ESG and SFDR, IBOR, FIX connectivity, Python, front office order management.');
+  await page.evaluate(() => document.getElementById('fitbtn').click());
+  await page.waitForTimeout(300);
+
   // Booking widget: the section, the live slot grid and the form fields.
   add('book a call section present', await page.evaluate(() =>
     !!document.getElementById('call') && !!document.getElementById('slotdays')));
