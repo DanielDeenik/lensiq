@@ -147,11 +147,19 @@ function appCard(a, decided){
 }
 
 function renderApps(){
-  const pending = STATE.applications.filter(a => a.status === "pending_approval" || a.status === "new");
+  const pending = STATE.applications.filter(a => a.status === "pending_approval");
+  const preparing = STATE.applications.filter(a => a.status === "new");
   const decided = STATE.applications.filter(a => a.status !== "pending_approval" && a.status !== "new").slice(0, 8);
   const ap = document.getElementById("apps"); ap.textContent = "";
-  if (!pending.length) ap.appendChild(el("div","empty","Nothing waiting. Specs pasted on the site land here once the agent has tailored the CV."));
-  pending.forEach(a => ap.appendChild(appCard(a, a.status !== "pending_approval" ? true : false)));
+  if (!pending.length && !preparing.length) ap.appendChild(el("div","empty","Nothing waiting. Specs pasted on the site land here once the agent has tailored the CV."));
+  pending.forEach(a => ap.appendChild(appCard(a, false)));
+  preparing.forEach(a => {
+    const card = el("div","card");
+    card.appendChild(el("h3", null, (a.role_title || "Untitled role") + (a.company ? " at " + a.company : "")));
+    card.appendChild(el("div","meta", [fmt(a.created_at), a.recruiter_email, "being written by the agent"].filter(Boolean).join("  \u00b7  ")));
+    card.appendChild(el("div", null, "The spec is in. The fit report, the tailored CV and the cover letter appear here on the agent's next pass, at 45 minutes past the hour."));
+    ap.appendChild(card);
+  });
   const dn = document.getElementById("done"); dn.textContent = "";
   if (!decided.length) dn.appendChild(el("div","empty","Nothing decided yet."));
   decided.forEach(a => dn.appendChild(appCard(a, true)));
@@ -193,9 +201,19 @@ function renderCalls(){
   if (held){ const h = document.getElementById("hdr"); h.textContent = held + " call" + (held > 1 ? "s" : "") + " waiting for you"; }
 }
 
+function renderSources(){
+  const ss = document.getElementById("srcstat");
+  if (!ss || !STATE.sources) return;
+  const on = STATE.sources.filter(x => x.active).map(x => x.id);
+  const off = STATE.sources.filter(x => !x.active);
+  ss.textContent = on.length + " sources live: " + on.join(", ") +
+    (off.length ? "  \u00b7  " + off.length + " dormant, waiting on " + [...new Set(off.flatMap(x => x.missing))].join(" and ") : "");
+}
+
 function renderRoles(){
   const box = document.getElementById("roles"); box.textContent = "";
-  if (!STATE.roles.length){ box.appendChild(el("div","empty", STATE.nexus_configured ? "No roles stored yet. Press Rescan feeds." : "Nexus feed configuration is not loaded yet.")); return; }
+  renderSources();
+  if (!STATE.roles.length){ box.appendChild(el("div","empty", STATE.nexus_configured ? "No roles in the niche yet. The monitor runs twice a day; press Rescan feeds to run it now." : "Nexus feed configuration is not loaded yet.")); return; }
   STATE.roles.slice(0, 40).forEach(r => {
     const row = el("div","role");
     row.appendChild(el("div","sc", String(r.score)));
@@ -211,12 +229,6 @@ function renderRoles(){
     row.appendChild(tags);
     box.appendChild(row);
   });
-  const ss = document.getElementById("srcstat");
-  if (ss && STATE.sources){
-    const on = STATE.sources.filter(x => x.active).map(x => x.id);
-    const off = STATE.sources.filter(x => !x.active);
-    ss.textContent = on.length + " sources live: " + on.join(", ") + (off.length ? "  \u00b7  " + off.length + " dormant, waiting on " + [...new Set(off.flatMap(x => x.missing))].join(" and ") : "");
-  }
   const unseen = STATE.roles.filter(r => !r.seen_by_dan).length;
   document.getElementById("hdr").textContent = unseen ? unseen + " new roles since you last looked" : "private, not linked from the site";
 }

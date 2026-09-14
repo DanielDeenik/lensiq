@@ -94,6 +94,27 @@ const FILE = 'file://' + path.resolve(__dirname, '..', 'index.html');
     'summary=' + periph.summary.slice(0, 90));
   add('core spec names what he leads on',
     core.headings.some(h => /leads on/i.test(h)), core.headings.join(' | ').slice(0, 90));
+  const grid = await page.evaluate(() => ({
+    tiles: document.querySelectorAll('#fitgrid .sg').length,
+    axes: document.querySelectorAll('#fitradar svg text').length,
+    years: Array.from(document.querySelectorAll('#fitgrid .sgy')).map(e => e.textContent),
+    hit: document.querySelectorAll('#fitgrid .sg.hit').length,
+  }));
+  add('spider is granular', grid.axes >= 15, 'axes=' + grid.axes);
+  add('years grid renders a tile per area', grid.tiles >= 15, 'tiles=' + grid.tiles);
+  add('years grid carries real durations', grid.years.filter(y => /year/.test(y)).length >= 8,
+    grid.years.slice(0, 6).join(' | '));
+  add('grid marks what the spec asked for', grid.hit > 0, 'hit=' + grid.hit);
+  add('grid tile opens the evidence popout', await page.evaluate(() => {
+    const t = document.querySelector('#fitgrid .sg.primary');
+    if (!t) return false;
+    t.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, clientX: 300, clientY: 300 }));
+    t.click();
+    const p = document.getElementById('popout');
+    return p && !p.hidden && /Via:|Counted inside/.test(p.textContent);
+  }));
+  await page.evaluate(() => { const p = document.getElementById('popout'); if (p) p.hidden = true; });
+
   add('comm server is shown as support, not headline', periph.headings.some(h => /Supports his delivery/i.test(h)) || /communication server/i.test(periph.summary),
     periph.headings.join(' | ').slice(0, 90));
   await page.fill('#specin', 'SimCorp Dimension consultant, ESG and SFDR, IBOR, FIX connectivity, Python, front office order management.');
