@@ -1,139 +1,124 @@
-# LensIQ recruiter site, production process
+# LensIQ recruiter agent, production process
 
-The site at **lensiq.company** is a single static page generated from one source
-file. This document is the process of record. If a change did not go through
-these steps, it is not in production.
+The repository is the only source of truth. Nobody edits `index.html` by hand, nobody
+hand deploys, and no value that can change is written into code. Every change is a
+commit, a build, a smoke run, a push, and an automatic deploy.
 
-## Ground rules
+## What the system is
 
-1. **The repository is the only source of truth.** Not a sandbox, not a local
-   folder, not a chat session. Anything not committed here does not exist.
-2. **Nobody edits `index.html` by hand.** It is generated. Edit `src/` and run
-   the build. CI rejects a stale or hand-edited `index.html`.
-3. **Every change reaches production the same way**: commit, push, CI, deploy.
-   There is no manual upload path and no "quick fix in the dashboard".
-4. **No hardcoded values.** Project ids, keys and URLs come from repository
-   secrets or from `src/`, never from a script body.
+A recruiter lands on `lensiq.company`. They can do three things:
 
-## Repository layout
+1. **Ask a question.** It is answered live if an AI key is configured, otherwise queued
+   for the scheduled agent.
+2. **Paste a job spec.** The browser scores an instant fit check. When they send it in,
+   an `applications` row is created. The scheduled agent writes a fit report, a CV
+   rewritten against that spec, and a matching cover letter, then holds all three for
+   Dan. **Nothing reaches the recruiter until Dan approves it in his console.**
+3. **Book a call.** Open slots are computed from config minus Dan's real Google Calendar
+   busy blocks minus anything already held. A booking is held, never booked. Dan
+   confirms it in the console and the agent then creates the event, attaches the
+   meeting link and invites the recruiter.
+
+Behind that, privately for Dan only, a role monitor scores the market against his
+profile and a seasonality model tells him when demand is worth chasing.
+
+## Layout
 
 ```
-src/site.master.html   Single source of truth: markup, styles, charts, data.
-                       Line 1 is the title used by the Claude artifact build.
-src/head.html          SEO head for the hosted variant (title, description, OG).
-src/ask.js             API-backed Q&A and LinkedIn share block. Replaces the
-                       offline FACTS block at build time.
-scripts/build.py       Deterministic build. src/ -> index.html.
-scripts/smoke.js       Real-browser smoke test against the built page.
-scripts/sync_supabase.py  Publishes index.html into app_config.page_html.
-index.html             Build output. Committed so the host needs no build step.
-.nojekyll              Stops GitHub Pages running Jekyll over the output.
+src/site.master.html   the page, single source, artifact skeleton format
+src/head.html          the html head the build wraps around it
+src/ask.js             the hosted ask box, swapped in at build time
+src/console.html       Dan's private console markup
+scripts/build.py       src to index.html and dist/index.html, deterministic
+scripts/smoke.js       19 checks in a real browser, plus one live endpoint check
+scripts/cfg.py         push a file or value into app_config through the console
+scripts/sync_supabase.py  publish index.html to app_config.page_html
+supabase/functions/site     public edge function: page, ask, spec, slots, book
+supabase/functions/console  private edge function: approvals, role monitor, config
+supabase/migrations         schema, in order
+agents/                the two scheduled task prompts, version controlled
+config/                the nexus feed model and the CV tailoring rules
+index.html, dist/      build output, committed so the deploy is reproducible
+wrangler.toml          Cloudflare Workers static assets config
 ```
 
-## The build
+## Commands
 
-```bash
-python3 scripts/build.py            # regenerate index.html
-python3 scripts/build.py --check    # fail if index.html is stale (CI uses this)
+```
+python3 scripts/build.py            rebuild index.html and dist/index.html
+python3 scripts/build.py --check    fail if either is stale
+node scripts/smoke.js               19 browser checks plus the live slots endpoint
 ```
 
-The build is deterministic: identical inputs produce identical bytes, so the
-md5 in the build log is a real fingerprint of what ships. It performs three
-transforms and then refuses to emit anything that fails its own assertions:
+The build refuses to emit if the fit check is not before the analytics section, if a
+required element id is missing, or if the offline FACTS block leaks into the hosted page.
 
-| Transform | Why |
-|---|---|
-| Strip line 1 | The artifact build needs a title line, the web page does not. |
-| Reveal the ask box, add the email field and the offline note | The hosted page has a backend; the offline artifact does not. |
-| Replace the `FACTS` block with `src/ask.js` | Answers come from the live API, not a baked-in copy. |
+## Deploying
 
-Guards that fail the build: a missing or duplicated anchor, a leaked offline
-`FACTS` block, a missing `#analytics` / `#anapanel` / `#sankey` / `#fit` /
-`#qemail`, or the analytics section appearing before the fit check.
+**The site.** Commit and push to `main`. Cloudflare Workers Builds runs on push and
+serves `dist/` at `lensiq.company`. No manual step.
 
-## The tests
+**The page inside Supabase.** The `site` edge function serves `app_config.page_html`
+so the agent can update copy without a redeploy. After a site change, publish it:
 
-```bash
-node scripts/smoke.js
+```
+export CONSOLE_BASE="https://hvitxwhfdhsdwhgllaqf.supabase.co/functions/v1/console"
+export CONSOLE_TOKEN="<console_token from app_config>"
+python3 scripts/cfg.py set page_html index.html
 ```
 
-Thirteen checks in a real Chromium against the built file: section order, every
-chart actually drawing, a chart click filling the right-hand detail panel, the
-fit check scoring a spec and listing provenance, no horizontal overflow at
-400px, and zero JavaScript errors. CI fails on any one of them.
+**The edge functions.** Edit `supabase/functions/<name>/index.ts`, then deploy that exact
+file with the Supabase MCP `deploy_edge_function` tool, `verify_jwt` false for both.
+Never edit a deployed function in the dashboard: the repo copy would go stale.
 
-## The pipeline
+**The console markup.** `src/console.html` is served from `app_config.console_html`:
 
-`.github/workflows/deploy.yml`, on every push and pull request to `main`:
-
-1. `scripts/build.py --check` proves `index.html` matches `src/`.
-2. Playwright installs and `scripts/smoke.js` runs the thirteen checks.
-3. On `main` only, `scripts/sync_supabase.py` publishes the same bytes into
-   `app_config.page_html` and verifies by reading the row back and comparing
-   md5.
-
-Hosting deploys from the same commit (see below). One commit, one set of bytes,
-three surfaces: the domain, the Supabase-served page, and the Claude artifact.
-
-## Hosting: Cloudflare Pages
-
-Connected once, then every push to `main` deploys automatically. No tokens in
-this repo, no upload step, no human in the deploy path.
-
-One-time setup, done in the Cloudflare dashboard by the account owner:
-
-1. Workers & Pages, Create, Pages, Connect to Git, authorise GitHub, pick
-   `DanielDeenik/lensiq`.
-2. Production branch `main`. Build command: leave empty. Build output
-   directory: `/`. `index.html` is committed, so there is nothing to build.
-3. Custom domains, add `lensiq.company` and `www.lensiq.company`. Cloudflare
-   writes the DNS records itself because the zone is already on the account,
-   and issues the certificate.
-4. Deployments, confirm the first build is green and the domain serves it.
-
-GitHub Pages stays enabled as a fallback mirror at
-`danieldeenik.github.io/lensiq`. It serves the same committed `index.html`, so
-the two can never drift. Disable it once the domain is stable if you prefer a
-single front door.
-
-## Secrets
-
-Repository secrets, Settings, Secrets and variables, Actions:
-
-| Secret | Used by | Notes |
-|---|---|---|
-| `SUPABASE_URL` | `sync_supabase.py` | `https://<project-ref>.supabase.co` |
-| `SUPABASE_SERVICE_KEY` | `sync_supabase.py` | service_role key. Never commit it. |
-
-The Kimi key for live answers lives in Supabase (`app_config.ai_api_key`, or the
-edge secret `AI_API_KEY`, which wins), not here. The site calls the edge
-function; the key never reaches the browser.
-
-## Making a change
-
-```bash
-git switch -c change/<short-name>
-# edit src/site.master.html (or src/head.html, src/ask.js)
-python3 scripts/build.py
-node scripts/smoke.js
-git add src index.html
-git commit -m "feat(site): <what changed and why>"
-git push -u origin change/<short-name>
+```
+python3 scripts/cfg.py set console_html src/console.html
 ```
 
-Open a pull request. CI runs build-check and the smoke tests on the PR. Merge to
-`main` when green. Cloudflare Pages deploys the merge commit and the Supabase
-job publishes the same bytes. Verify the live URL, then you are done.
+**The schema.** Apply `supabase/migrations/*.sql` in order. Every statement is idempotent.
 
-Rollback is `git revert <sha>` and push. The same pipeline puts the previous
-bytes back; there is nothing to undo by hand.
+## Configuration, none of it in code
 
-## What "done" means
+Everything that can change lives in `app_config`. The important keys:
 
-A change is done when all four are true:
+| key | what it controls |
+| --- | --- |
+| `page_html` | the public page the edge function serves |
+| `console_html` | Dan's private console markup |
+| `console_token` | the only thing gating the console, 24 random bytes |
+| `console_base_url` | where the database cron sends the role refresh |
+| `fact_base`, `sharing_rules` | what the agent may say about Dan |
+| `cv_master_md` | the CV every tailored version is derived from |
+| `cv_tailoring_rules` | the rules the agent must follow when rewriting it |
+| `nexus_agent_config` | feed sources, keyword scores, seasonality model, from nexus_live |
+| `nexus_profile_industry`, `nexus_profile_location` | which seasonality curve applies |
+| `nexus_roles_min_tier`, `nexus_roles_keep_days` | what is worth keeping |
+| `adzuna_app_id`, `adzuna_app_key` | absent by default; setting them arms four dormant sources |
+| `call_window`, `call_durations`, `call_timezone` | the slot grid the site offers |
+| `call_lead_hours`, `call_horizon_days`, `call_max_per_day` | how far out and how dense |
+| `call_daily_cap` | booking rate limit |
+| `default_delivery_mode` | `draft` or `send` for approved applications |
 
-1. CI is green on `main`.
-2. The Cloudflare Pages deployment for that commit is live.
-3. `https://lensiq.company` returns the expected bytes, checked by fetching the
-   page back, not by assuming.
-4. `app_config.page_html` md5 matches the build log md5.
+A feed source may declare `needs: ["some_config_key"]` and use `{{some_config_key}}` in
+its url. It stays dormant until that key holds a value, then arms itself on the next
+scan. That is how a credential turns on coverage without a code change.
+
+## Scheduled work
+
+| what | when | where |
+| --- | --- | --- |
+| role monitor refresh | 04:00 and 13:00 UTC | pg_cron in the database, calls the console endpoint |
+| recruiter agent | every hour at :45 | scheduled task, calendar sync, tailoring, delivery, call invites |
+| market brief for Dan | 05:00 UTC weekdays | scheduled task, role and seasonality email |
+
+The role monitor runs in the database on purpose. It does not depend on an agent
+session being alive, so a silent day means no roles, not a broken monitor.
+
+## Definition of done
+
+1. `python3 scripts/build.py --check` passes.
+2. `node scripts/smoke.js` is green, all 19.
+3. The commit is pushed to `main` and Cloudflare has deployed it.
+4. `app_config.page_html` matches `index.html` byte for byte.

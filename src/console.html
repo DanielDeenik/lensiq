@@ -1,0 +1,289 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>LensIQ console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f5f1;--paper:#fff;--ink:#15171b;--body:#2c3038;--muted:#6b7280;--line:#e3e1da;--lemon:#e8f04a;--accent-ink:#6b6f1e;--hot:#c2410c;--warm:#b45309;--mon:#4b5563}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--body);font-family:'Manrope',system-ui,sans-serif;font-size:15px;line-height:1.55}
+header{background:var(--ink);color:#fff;padding:18px 20px;display:flex;flex-wrap:wrap;gap:12px;align-items:baseline;justify-content:space-between}
+header h1{font-size:17px;margin:0;font-weight:800;letter-spacing:-0.01em}
+header .sub{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--lemon)}
+main{max-width:1080px;margin:0 auto;padding:22px 16px 80px}
+h2{font-size:13px;font-family:'IBM Plex Mono',monospace;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent-ink);margin:30px 0 12px}
+.card{background:var(--paper);border:1px solid var(--line);border-top:4px solid var(--lemon);border-radius:12px;padding:16px 18px;margin-bottom:14px}
+.card h3{margin:0 0 4px;font-size:17px;color:var(--ink);font-weight:800;line-height:1.25}
+.meta{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 8px}
+.tabs button{font-family:inherit;font-size:12px;font-weight:600;padding:5px 12px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--lemon);border-color:var(--ink)}
+textarea{width:100%;min-height:280px;font-family:'IBM Plex Mono',monospace;font-size:12.5px;line-height:1.6;padding:12px;border:1px solid var(--line);border-radius:8px;background:#fcfcfa;color:var(--body);resize:vertical}
+textarea[readonly]{background:#f4f3ef}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
+button.act{font-family:inherit;font-size:13px;font-weight:700;padding:8px 16px;border-radius:999px;border:1px solid var(--ink);background:var(--lemon);color:var(--ink);cursor:pointer}
+button.act.sec{background:var(--paper);font-weight:600}
+button.act.warn{background:var(--paper);border-color:#c2410c;color:#c2410c}
+button.act[disabled]{opacity:0.45;cursor:default}
+.pill{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:0.08em;text-transform:uppercase;padding:3px 9px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--muted)}
+.pill.HOT{color:#fff;background:var(--hot);border-color:var(--hot)}
+.pill.WARM{color:#fff;background:var(--warm);border-color:var(--warm)}
+.pill.MONITOR{color:#fff;background:var(--mon);border-color:var(--mon)}
+.pill.new{background:var(--lemon);color:var(--ink);border-color:var(--ink)}
+.role{display:grid;grid-template-columns:56px minmax(0,1fr) auto;gap:12px;align-items:start;padding:10px 0;border-top:1px solid var(--line)}
+.role:first-child{border-top:0}
+.role .sc{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:18px;color:var(--ink);text-align:right}
+.role a{color:var(--ink);font-weight:700;text-decoration:none}
+.role a:hover{text-decoration:underline}
+.role .s{font-size:12.5px;color:var(--muted);margin-top:2px}
+.bars{display:grid;grid-template-columns:repeat(12,1fr);gap:5px;align-items:end;height:130px;margin-top:12px}
+.bars .b{position:relative;background:var(--lemon);border:1px solid var(--ink);border-radius:3px 3px 0 0;min-height:2px}
+.bars .b.obs{background:var(--ink);border-color:var(--ink);opacity:0.85}
+.blabels{display:grid;grid-template-columns:repeat(12,1fr);gap:5px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);text-align:center;margin-top:5px}
+.blabels span.now{color:var(--ink);font-weight:600;background:var(--lemon);border-radius:3px}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--muted);margin-top:10px;flex-wrap:wrap}
+.legend i{display:inline-block;width:11px;height:11px;border:1px solid var(--ink);border-radius:2px;margin-right:5px;vertical-align:-1px}
+.legend i.m{background:var(--lemon)} .legend i.o{background:var(--ink)}
+.empty{color:var(--muted);font-size:14px;padding:6px 0}
+.status{font-size:12.5px;color:var(--accent-ink);font-weight:600;min-height:18px;margin-top:6px}
+.note{width:100%;font-family:inherit;font-size:13px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:#fcfcfa;margin-top:8px}
+@media (max-width:620px){.role{grid-template-columns:44px minmax(0,1fr)}.role .pill{display:none}}
+</style></head><body>
+<header><h1>LensIQ console</h1><span class="sub" id="hdr">private, not linked from the site</span></header>
+<main>
+  <h2>Waiting for your approval</h2>
+  <div id="apps"><div class="empty">Loading.</div></div>
+  <h2>Recently decided</h2>
+  <div id="done"></div>
+  <h2>Calls waiting for you</h2>
+  <div id="calls"></div>
+
+  <h2>New roles in the market</h2>
+  <div class="card">
+    <div class="row" style="margin-top:0">
+      <button class="act sec" id="refresh" type="button">Rescan feeds</button>
+      <button class="act sec" id="seen" type="button">Mark all as read</button>
+      <span class="status" id="rolestatus"></span>
+    </div>
+    <div id="srcstat" class="meta" style="margin-top:10px"></div>
+    <details id="armbox" style="margin-top:8px"><summary style="cursor:pointer;font-size:13px;font-weight:700;color:var(--ink)">Arm the paid sources</summary><div style="margin-top:8px;font-size:13px;color:var(--muted)">Adzuna covers NL, UK and DE with a real keyword search, so a SimCorp or fund operations contract actually surfaces. The free tier is enough. Register an app at developer.adzuna.com, then paste the two values here. They are stored in your own config and never leave it.</div><div class="row"><input class="note" id="adz_id" placeholder="adzuna app id" style="max-width:260px" autocomplete="off"><input class="note" id="adz_key" placeholder="adzuna app key" style="max-width:320px" autocomplete="off"><button class="act" id="armbtn" type="button">Save and arm</button><span class="status" id="armstatus"></span></div></details>
+    <div id="roles" style="margin-top:10px"><div class="empty">Loading.</div></div>
+  </div>
+  <h2>Seasonality</h2>
+  <div class="card" id="season"><div class="empty">Loading.</div></div>
+  <h2>Agent runs</h2>
+  <div class="card" id="runs"></div>
+</main>
+<script>
+const API = location.pathname.replace(/\/$/, "");
+let STATE = null;
+function el(t, c, txt){ const e = document.createElement(t); if(c) e.className = c; if(txt != null) e.textContent = txt; return e; }
+function fmt(d){ if(!d) return ""; const x = new Date(d); return x.toLocaleDateString(undefined,{day:"2-digit",month:"short"}) + " " + x.toLocaleTimeString(undefined,{hour:"2-digit",minute:"2-digit"}); }
+async function api(path, opts){ const r = await fetch(API + path, Object.assign({credentials:"same-origin", headers:{"Content-Type":"application/json"}}, opts || {})); return r.json(); }
+
+function appCard(a, decided){
+  const card = el("div","card");
+  card.appendChild(el("h3", null, (a.role_title || "Untitled role") + (a.company ? " at " + a.company : "")));
+  const bits = [fmt(a.created_at)];
+  if (a.recruiter_name) bits.push(a.recruiter_name);
+  if (a.recruiter_email) bits.push(a.recruiter_email);
+  if (a.fit_score != null) bits.push("fit " + a.fit_score);
+  bits.push(a.status.replace(/_/g, " "));
+  card.appendChild(el("div","meta", bits.join("  ·  ")));
+
+  const panes = [
+    {k:"fit_report_md", label:"Fit report", ro:true},
+    {k:"cv_md", label:"Tailored CV", ro:false},
+    {k:"cover_letter_md", label:"Cover letter", ro:false},
+    {k:"spec_text", label:"Their spec", ro:true}
+  ];
+  const tabs = el("div","tabs");
+  const ta = el("textarea");
+  let active = 1;
+  function show(i){
+    active = i;
+    [...tabs.children].forEach((b, j) => b.setAttribute("aria-selected", String(j === i)));
+    ta.value = a[panes[i].k] || "";
+    ta.readOnly = panes[i].ro;
+  }
+  panes.forEach((p, i) => {
+    const b = el("button", null, p.label); b.type = "button";
+    b.addEventListener("click", function(){ if(!panes[active].ro) a[panes[active].k] = ta.value; show(i); });
+    tabs.appendChild(b);
+  });
+  ta.addEventListener("input", function(){ if(!panes[active].ro) a[panes[active].k] = ta.value; });
+  card.appendChild(tabs); card.appendChild(ta); show(1);
+
+  const note = el("input","note"); note.placeholder = "Notes for yourself, not sent anywhere"; note.value = a.dan_notes || "";
+  card.appendChild(note);
+
+  const row = el("div","row");
+  const status = el("span","status");
+  async function act(action, delivery){
+    status.textContent = "Working.";
+    const res = await api("/api/application", {method:"POST", body: JSON.stringify({
+      id: a.id, action: action, delivery: delivery,
+      cv_md: ta.readOnly ? undefined : ta.value,
+      cover_letter_md: a.cover_letter_md, dan_notes: note.value
+    })});
+    status.textContent = res.ok ? "Saved." : ("Failed: " + (res.error || "unknown"));
+    if (res.ok) load();
+  }
+  if (!decided){
+    const save = el("button","act sec","Save edits"); save.type="button"; save.addEventListener("click", function(){ if(!panes[active].ro) a[panes[active].k] = ta.value; act("save"); });
+    const apD = el("button","act","Approve, prepare draft"); apD.type="button"; apD.addEventListener("click", function(){ act("approve","draft"); });
+    const apS = el("button","act","Approve and send now"); apS.type="button"; apS.addEventListener("click", function(){ if(confirm("Send this CV and cover letter to " + (a.recruiter_email || "the recruiter") + "?")) act("approve","send"); });
+    const rej = el("button","act warn","Reject"); rej.type="button"; rej.addEventListener("click", function(){ act("reject"); });
+    row.append(save, apD, apS, rej, status);
+  } else {
+    const re = el("button","act sec","Reopen"); re.type="button"; re.addEventListener("click", function(){ act("reopen"); });
+    row.append(re, status);
+    if (a.sent_at) row.appendChild(el("span","pill","sent " + fmt(a.sent_at)));
+    else if (a.gmail_draft_id) row.appendChild(el("span","pill","draft ready in Gmail"));
+  }
+  card.appendChild(row);
+  return card;
+}
+
+function renderApps(){
+  const pending = STATE.applications.filter(a => a.status === "pending_approval" || a.status === "new");
+  const decided = STATE.applications.filter(a => a.status !== "pending_approval" && a.status !== "new").slice(0, 8);
+  const ap = document.getElementById("apps"); ap.textContent = "";
+  if (!pending.length) ap.appendChild(el("div","empty","Nothing waiting. Specs pasted on the site land here once the agent has tailored the CV."));
+  pending.forEach(a => ap.appendChild(appCard(a, a.status !== "pending_approval" ? true : false)));
+  const dn = document.getElementById("done"); dn.textContent = "";
+  if (!decided.length) dn.appendChild(el("div","empty","Nothing decided yet."));
+  decided.forEach(a => dn.appendChild(appCard(a, true)));
+}
+
+function renderCalls(){
+  const box = document.getElementById("calls"); box.textContent = "";
+  const calls = (STATE.calls || []).filter(c => c.status === "held" || c.status === "confirmed");
+  if (!calls.length){ box.appendChild(el("div","empty","No call requests. Recruiters book a slot on the site and it lands here before it touches your calendar.")); return; }
+  const tz = (STATE.defaults && STATE.defaults.call_timezone) || "Europe/Amsterdam";
+  calls.forEach(c => {
+    const card = el("div","card");
+    const when = new Date(c.slot_start).toLocaleString(undefined, {timeZone: tz, weekday:"long", day:"2-digit", month:"short", hour:"2-digit", minute:"2-digit"});
+    card.appendChild(el("h3", null, when + ", " + c.duration_minutes + " minutes"));
+    card.appendChild(el("div","meta", [c.requester_name, c.company, c.requester_email, c.role_title, c.status].filter(Boolean).join("  \u00b7  ")));
+    if (c.note) card.appendChild(el("div", null, c.note));
+    if (c.meet_link){ const a = el("a", null, "Meet link"); a.href = c.meet_link; a.target = "_blank"; a.rel="noopener noreferrer"; card.appendChild(a); }
+    const row = el("div","row"); const st = el("span","status");
+    async function act(action, reason){
+      st.textContent = "Working.";
+      const res = await api("/api/call", {method:"POST", body: JSON.stringify({id: c.id, action: action, reason: reason})});
+      st.textContent = res.ok ? "Saved. The agent sends the invite on its next pass." : ("Failed: " + (res.error || "unknown"));
+      if (res.ok) load();
+    }
+    if (c.status === "held"){
+      const yes = el("button","act","Confirm and invite"); yes.type="button"; yes.addEventListener("click", function(){ act("confirm"); });
+      const no = el("button","act warn","Decline"); no.type="button"; no.addEventListener("click", function(){
+        const r = prompt("Reason to send back, optional:") ; if (r !== null) act("decline", r);
+      });
+      row.append(yes, no, st);
+    } else {
+      row.appendChild(el("span","pill","confirmed"));
+      row.appendChild(st);
+    }
+    card.appendChild(row);
+    box.appendChild(card);
+  });
+  const held = calls.filter(c => c.status === "held").length;
+  if (held){ const h = document.getElementById("hdr"); h.textContent = held + " call" + (held > 1 ? "s" : "") + " waiting for you"; }
+}
+
+function renderRoles(){
+  const box = document.getElementById("roles"); box.textContent = "";
+  if (!STATE.roles.length){ box.appendChild(el("div","empty", STATE.nexus_configured ? "No roles stored yet. Press Rescan feeds." : "Nexus feed configuration is not loaded yet.")); return; }
+  STATE.roles.slice(0, 40).forEach(r => {
+    const row = el("div","role");
+    row.appendChild(el("div","sc", String(r.score)));
+    const mid = el("div");
+    const a = el("a", null, r.title); a.href = r.link || "#"; a.target = "_blank"; a.rel = "noopener noreferrer";
+    mid.appendChild(a);
+    const src = (r.source_ids || []).length;
+    mid.appendChild(el("div","s", [r.jurisdiction, src > 1 ? src + " sources agree" : "1 source", "seen " + fmt(r.last_seen)].filter(Boolean).join("  ·  ")));
+    row.appendChild(mid);
+    const tags = el("div");
+    tags.appendChild(el("span","pill " + r.tier, r.tier));
+    if (!r.seen_by_dan) tags.appendChild(el("span","pill new","new"));
+    row.appendChild(tags);
+    box.appendChild(row);
+  });
+  const ss = document.getElementById("srcstat");
+  if (ss && STATE.sources){
+    const on = STATE.sources.filter(x => x.active).map(x => x.id);
+    const off = STATE.sources.filter(x => !x.active);
+    ss.textContent = on.length + " sources live: " + on.join(", ") + (off.length ? "  \u00b7  " + off.length + " dormant, waiting on " + [...new Set(off.flatMap(x => x.missing))].join(" and ") : "");
+  }
+  const unseen = STATE.roles.filter(r => !r.seen_by_dan).length;
+  document.getElementById("hdr").textContent = unseen ? unseen + " new roles since you last looked" : "private, not linked from the site";
+}
+
+function renderSeason(){
+  const box = document.getElementById("season"); box.textContent = "";
+  if (!STATE.season){ box.appendChild(el("div","empty","Seasonality needs the nexus configuration.")); return; }
+  const s = STATE.season, o = STATE.observed;
+  const now = new Date().getUTCMonth();
+  box.appendChild(el("h3", null, s.industry + ", " + s.location));
+  box.appendChild(el("div","meta", ["model from nexus", "peak " + s.peak.join(", "), "slow " + s.slow.join(", "), o && o.total ? o.total + " roles observed" : "no observations yet"].join("  ·  ")));
+  const bars = el("div","bars");
+  s.model.forEach((v, i) => {
+    const cell = el("div"); cell.style.display = "grid"; cell.style.gridTemplateColumns = "1fr 1fr"; cell.style.gap = "2px"; cell.style.alignItems = "end"; cell.style.height = "100%";
+    const m = el("div","b"); m.style.height = Math.max(2, v) + "%"; m.title = s.months[i] + " model " + v;
+    const ob = el("div","b obs"); const ov = o ? o.index[i] : 0; ob.style.height = Math.max(2, ov) + "%"; ob.title = s.months[i] + " observed " + (o ? o.counts[i] : 0) + " roles";
+    cell.append(m, ob); bars.appendChild(cell);
+  });
+  box.appendChild(bars);
+  const lab = el("div","blabels");
+  s.months.forEach((m, i) => { const sp = el("span", i === now ? "now" : null, m); lab.appendChild(sp); });
+  box.appendChild(lab);
+  const lg = el("div","legend");
+  const l1 = el("span"); l1.appendChild(el("i","m")); l1.appendChild(document.createTextNode("nexus demand model"));
+  const l2 = el("span"); l2.appendChild(el("i","o")); l2.appendChild(document.createTextNode("roles this monitor actually saw"));
+  lg.append(l1, l2); box.appendChild(lg);
+  const here = s.peak.includes(s.months[now]) ? "This month is one of the three strongest in the model. Push outreach now."
+    : s.slow.includes(s.months[now]) ? "This month is one of the three weakest in the model. Use it for product work and pipeline, not cold outreach."
+    : "This month is mid range in the model.";
+  box.appendChild(el("div","status", here));
+}
+
+function renderRuns(){
+  const box = document.getElementById("runs"); box.textContent = "";
+  if (!STATE.runs.length){ box.appendChild(el("div","empty","No runs recorded yet.")); return; }
+  STATE.runs.forEach(r => {
+    const d = el("div","s"); d.style.padding = "5px 0"; d.style.borderTop = "1px solid var(--line)"; d.style.fontSize = "12.5px";
+    d.textContent = fmt(r.ran_at) + "  ·  " + r.kind + "  ·  " + (r.ok ? "ok" : "failed") + "  ·  " + r.items + " items";
+    box.appendChild(d);
+  });
+}
+
+async function load(){
+  STATE = await api("/api/state");
+  renderApps(); renderCalls(); renderRoles(); renderSeason(); renderRuns();
+}
+document.getElementById("refresh").addEventListener("click", async function(){
+  const s = document.getElementById("rolestatus"); s.textContent = "Scanning the job boards.";
+  const r = await api("/api/roles/refresh");
+  s.textContent = r.ok ? (r.kept + " roles kept from " + r.seen + " seen, " + Math.round(r.ms / 100) / 10 + "s") : ("Failed: " + (r.error || "unknown"));
+  load();
+});
+document.getElementById("armbtn").addEventListener("click", async function(){
+  const st = document.getElementById("armstatus");
+  const id = document.getElementById("adz_id").value.trim();
+  const key = document.getElementById("adz_key").value.trim();
+  if (!id || !key){ st.textContent = "Both values are needed."; return; }
+  st.textContent = "Saving.";
+  const a = await api("/api/config", {method:"POST", body: JSON.stringify({key:"adzuna_app_id", value:id})});
+  const b = await api("/api/config", {method:"POST", body: JSON.stringify({key:"adzuna_app_key", value:key})});
+  if (!a.ok || !b.ok){ st.textContent = "Save failed."; return; }
+  document.getElementById("adz_id").value = ""; document.getElementById("adz_key").value = "";
+  st.textContent = "Armed. Scanning now.";
+  const r = await api("/api/roles/refresh");
+  st.textContent = r.ok ? (r.kept + " roles kept from " + r.seen + " seen.") : "Scan failed.";
+  load();
+});
+document.getElementById("seen").addEventListener("click", async function(){ await api("/api/roles/seen", {method:"POST"}); load(); });
+load();
+</script></body></html>

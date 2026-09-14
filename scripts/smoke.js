@@ -9,6 +9,26 @@ const FILE = 'file://' + path.resolve(__dirname, '..', 'index.html');
 (async () => {
   const browser = await chromium.launch();
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+
+  // The booking widget reads live slots from the edge function. The headless
+  // browser has no route to it, so the widget is exercised against a fixture
+  // here and the real endpoint is checked over the network further down.
+  await page.route('**/functions/v1/site/slots', route => route.fulfill({
+    status: 200,
+    contentType: 'application/json',
+    body: JSON.stringify({
+      timezone: 'Europe/Amsterdam',
+      window: { days: [1, 2, 3, 4, 5], start: '09:00', end: '13:00' },
+      durations: [{ id: 'qualifier', minutes: 15, label: '15 minute quick qualifier' }],
+      location: 'Google Meet',
+      calendar_synced: false,
+      slots: [
+        { start: '2026-09-16T07:00:00.000Z', end: '2026-09-16T07:15:00.000Z', date: '2026-09-16', day: 'Wed 16/09', time: '09:00' },
+        { start: '2026-09-16T07:15:00.000Z', end: '2026-09-16T07:30:00.000Z', date: '2026-09-16', day: 'Wed 16/09', time: '09:15' },
+        { start: '2026-09-17T07:00:00.000Z', end: '2026-09-17T07:15:00.000Z', date: '2026-09-17', day: 'Thu 17/09', time: '09:00' }
+      ]
+    })
+  }));
   const errors = [];
   page.on('pageerror', e => errors.push('pageerror: ' + e.message));
   page.on('console', m => { if (m.type() === 'error' && !/net::ERR/.test(m.text())) errors.push('console: ' + m.text()); });
@@ -53,6 +73,27 @@ const FILE = 'file://' + path.resolve(__dirname, '..', 'index.html');
   add('fit exposure rows', fit.rows > 0, 'rows=' + fit.rows);
   add('fit radar drawn', fit.radar > 10, 'els=' + fit.radar);
 
+  // Booking widget: the section, the live slot grid and the form fields.
+  add('book a call section present', await page.evaluate(() =>
+    !!document.getElementById('call') && !!document.getElementById('slotdays')));
+  add('recruiter fields on the fit form', await page.evaluate(() =>
+    ['fitname', 'fitcompany', 'fitrole', 'fitemail'].every(id => !!document.getElementById(id))));
+  const slots = await page.evaluate(() => ({
+    buttons: document.querySelectorAll('#slotdays .slotbtn').length,
+    days: document.querySelectorAll('#slotdays .slotday').length,
+    meta: (document.getElementById('slotmeta') || {}).textContent || '',
+  }));
+  add('slot grid renders days and times', slots.buttons === 3 && slots.days === 2,
+    'buttons=' + slots.buttons + ' days=' + slots.days);
+  add('slot grid states the call terms', /15 minute/.test(slots.meta) && /Amsterdam/.test(slots.meta), slots.meta.slice(0, 70));
+  add('slot selection updates the choice line', await page.evaluate(() => {
+    const b = document.querySelector('#slotdays .slotbtn');
+    if (!b) return false;
+    b.click();
+    const p = document.getElementById('slotpick');
+    return !p.hidden && /Chosen:/.test(p.textContent);
+  }));
+
   await page.setViewportSize({ width: 400, height: 800 });
   await page.waitForTimeout(400);
   const overflow = await page.evaluate(() =>
@@ -62,6 +103,22 @@ const FILE = 'file://' + path.resolve(__dirname, '..', 'index.html');
   add('no javascript errors', errors.length === 0, errors.join(' | '));
 
   await browser.close();
+
+  // Live endpoint check. Uses the process proxy and CA like every other tool,
+  // so a broken deploy fails the pipeline rather than hiding behind a fixture.
+  const live = await (async () => {
+    const base = process.env.SITE_FN_URL || 'https://hvitxwhfdhsdwhgllaqf.supabase.co/functions/v1/site';
+    try {
+      const res = await fetch(base + '/slots');
+      if (!res.ok) return { ok: false, detail: 'http ' + res.status };
+      const data = await res.json();
+      const n = Array.isArray(data.slots) ? data.slots.length : 0;
+      return { ok: n > 0 && !!data.timezone, detail: n + ' open slots, tz ' + data.timezone };
+    } catch (e) {
+      return { ok: false, detail: 'unreachable: ' + e.message };
+    }
+  })();
+  add('live slots endpoint answers', live.ok, live.detail);
 
   let failed = 0;
   for (const c of checks) {

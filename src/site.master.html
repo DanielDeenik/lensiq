@@ -91,6 +91,15 @@ section{margin-bottom:60px}
 .fit-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:center}
 .fit-btn{padding:10px 18px;border-radius:8px;background:var(--lemon);color:var(--ink);font-weight:700;font-size:14px;cursor:pointer;font-family:inherit;border:1px solid var(--ink)}
 .fit-btn:disabled{opacity:0.6;cursor:wait}
+.slotdays{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:12px;margin-top:14px}
+.slotday{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--bg)}
+.slotday h4{margin:0 0 8px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent-ink)}
+.slottimes{display:flex;flex-wrap:wrap;gap:6px}
+.slotbtn{font-family:inherit;font-size:13px;font-weight:600;padding:6px 11px;border-radius:8px;border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer}
+.slotbtn:hover{background:var(--lemon);border-color:var(--ink)}
+.slotbtn[aria-pressed="true"]{background:var(--lemon);border-color:var(--ink)}
+.slotpick{font-size:14px;font-weight:700;color:var(--ink);margin:14px 0 0}
+.slotnote{font-size:13px;color:var(--muted);margin:4px 0 0}
 .fit-email{flex:1;min-width:220px;padding:10px 14px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit;font-size:14px}
 #specfile{font-size:12.5px;color:var(--muted);max-width:100%}
 #fitres[hidden]{display:none}
@@ -216,6 +225,7 @@ footer strong{color:#FFFFFF}
     <a href="#graphsec">Experience</a>
     <a href="#writing">Writing</a>
     <a href="#faq">Ask</a>
+    <a href="#call">Book a call</a>
     <a href="#contact">Contact</a>
   </nav>
 </div>
@@ -266,7 +276,7 @@ footer strong{color:#FFFFFF}
   <h2>Is Dan a fit? Paste the job spec.</h2>
   <div class="ll"></div>
   <div class="ask">
-    <p style="margin:0 0 10px;font-size:15px">Paste the role description, or upload it as a .txt or .md file. The instant analysis below runs in your browser against Dan's published profile; the full assessment is produced by Dan's scheduled review agent and delivered by email when you send it in. Nothing is stored unless you choose to send.</p>
+    <p style="margin:0 0 10px;font-size:15px">Paste the role description, or upload it as a .txt or .md file. The instant analysis below runs in your browser against Dan's published profile; when you send it in, Dan's agent writes a full assessment and a version of his CV focused on what this spec asks for. Dan reads and approves both himself before anything reaches you. Nothing is stored unless you choose to send.</p>
     <textarea class="fit-ta" id="specin" maxlength="20000" placeholder="Paste the job spec here, requirements and all..."></textarea>
     <div class="fit-row">
       <button class="fit-btn" id="fitbtn" type="button">Analyze fit</button>
@@ -283,7 +293,12 @@ footer strong{color:#FFFFFF}
       <div id="fitmatch"></div>
       <div class="match-block" id="fitexpowrap" hidden><h4>Where the exposure comes from</h4><p class="pophint">Click any line for the projects behind it.</p><div id="fitexpo"></div></div>
       <div class="fit-row" style="margin-top:14px">
-        <input class="fit-email" id="fitemail" type="email" maxlength="200" placeholder="Your email for Dan's direct take (optional)">
+        <input class="fit-email" id="fitname" type="text" maxlength="120" placeholder="Your name">
+        <input class="fit-email" id="fitcompany" type="text" maxlength="160" placeholder="Company or agency">
+      </div>
+      <div class="fit-row" style="margin-top:8px">
+        <input class="fit-email" id="fitrole" type="text" maxlength="200" placeholder="Role title">
+        <input class="fit-email" id="fitemail" type="email" maxlength="200" placeholder="Your email for Dan's reply">
         <button class="fit-btn" id="fitsend" type="button">Send to Dan</button>
       </div>
       <p class="note" id="fitsent"></p>
@@ -494,6 +509,31 @@ footer strong{color:#FFFFFF}
       </div>
       <p class="note">Answers come only from Dan's published profile. Rates, client project internals and personal data are not discussed here; those questions go to Dan directly.</p>
     </div>
+  </div>
+</section>
+
+<section id="call">
+  <p class="eyebrow">Book a call</p>
+  <h2>Fifteen minutes, mornings, Amsterdam time.</h2>
+  <div class="ll"></div>
+  <div class="ask">
+    <p style="margin:0 0 6px;font-size:15px">Pick a slot that suits you. It is held immediately, Dan confirms it personally, and the calendar invite with the meeting link follows. Times below are shown in Amsterdam time.</p>
+    <p class="slotnote" id="slotmeta"></p>
+    <div class="slotdays" id="slotdays"><p class="slotnote">Loading open times.</p></div>
+    <p class="slotpick" id="slotpick" hidden></p>
+    <div class="fit-row" style="margin-top:12px">
+      <input class="fit-email" id="callname" type="text" maxlength="120" placeholder="Your name">
+      <input class="fit-email" id="callemail" type="email" maxlength="200" placeholder="Your email">
+    </div>
+    <div class="fit-row" style="margin-top:8px">
+      <input class="fit-email" id="callcompany" type="text" maxlength="160" placeholder="Company or agency">
+      <input class="fit-email" id="callrole" type="text" maxlength="200" placeholder="Role you want to discuss">
+    </div>
+    <div class="fit-row" style="margin-top:8px">
+      <input class="fit-email" id="callnote" type="text" maxlength="300" placeholder="Anything Dan should read first (optional)">
+      <button class="fit-btn" id="callbook" type="button">Hold this slot</button>
+    </div>
+    <p class="note" id="callsent"></p>
   </div>
 </section>
 
@@ -1465,6 +1505,9 @@ const G = (function(){
   send.addEventListener("click", function(){
     const sent = document.getElementById("fitsent");
     const email = document.getElementById("fitemail").value.trim();
+    const name = document.getElementById("fitname").value.trim();
+    const company = document.getElementById("fitcompany").value.trim();
+    const role = document.getElementById("fitrole").value.trim();
     const spec = ta.value.trim();
     if (!spec) return;
     send.disabled = true;
@@ -1473,10 +1516,10 @@ const G = (function(){
     fetch("https://hvitxwhfdhsdwhgllaqf.supabase.co/functions/v1/site", {
       method: "POST",
       headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({question: q, email: email, spec: spec.slice(0, 8000)})
+      body: JSON.stringify({question: q, email: email, name: name, company: company, role: role, spec: spec.slice(0, 8000)})
     }).then(function(r){
       sent.textContent = (r.ok || r.status === 202)
-        ? (email ? "Sent. The full assessment is prepared by Dan's scheduled review agent and emailed to you, normally within the hour." : "Sent to Dan's scheduled review agent. Leave your email above and send again to receive the full assessment directly.")
+        ? (email ? "Sent. Dan's agent writes the assessment and a CV focused on this spec, Dan reads and approves it himself, then it comes back to you. Normally same day." : "Sent to Dan's review agent. Add your email above and send again so the assessment can reach you.")
         : "Could not send right now. Email deenikdaniel@gmail.com with the spec instead.";
       send.disabled = false;
     }).catch(function(){
@@ -1484,6 +1527,95 @@ const G = (function(){
       send.disabled = false;
     });
   });
+})();
+
+// ---------- Call booking ----------
+(function(){
+  const API = "https://hvitxwhfdhsdwhgllaqf.supabase.co/functions/v1/site";
+  const daysEl = document.getElementById("slotdays");
+  const metaEl = document.getElementById("slotmeta");
+  const pickEl = document.getElementById("slotpick");
+  const sentEl = document.getElementById("callsent");
+  const btn = document.getElementById("callbook");
+  if (!daysEl || !btn) return;
+  let chosen = null, durationId = null;
+
+  function render(data){
+    durationId = data.durations && data.durations[0] ? data.durations[0].id : null;
+    const label = data.durations && data.durations[0] ? data.durations[0].label : "call";
+    metaEl.textContent = label + ", " + (data.location || "online") + ", " + data.timezone.replace("_", " ") + ".";
+    daysEl.textContent = "";
+    if (!data.slots || !data.slots.length){
+      const p = document.createElement("p"); p.className = "slotnote";
+      p.textContent = "No open slots in the next two weeks. Email deenikdaniel@gmail.com and Dan will find a time.";
+      daysEl.appendChild(p); return;
+    }
+    const byDay = {};
+    data.slots.forEach(function(s){ (byDay[s.day] = byDay[s.day] || []).push(s); });
+    Object.keys(byDay).forEach(function(day){
+      const box = document.createElement("div"); box.className = "slotday";
+      const h = document.createElement("h4"); h.textContent = day; box.appendChild(h);
+      const times = document.createElement("div"); times.className = "slottimes";
+      byDay[day].forEach(function(s){
+        const b = document.createElement("button");
+        b.type = "button"; b.className = "slotbtn"; b.textContent = s.time;
+        b.setAttribute("aria-pressed", "false");
+        b.addEventListener("click", function(){
+          chosen = s;
+          daysEl.querySelectorAll(".slotbtn").forEach(function(x){ x.setAttribute("aria-pressed", "false"); });
+          b.setAttribute("aria-pressed", "true");
+          pickEl.hidden = false;
+          pickEl.textContent = "Chosen: " + s.day + " at " + s.time + ", " + data.timezone.split("/")[1].replace("_", " ") + " time.";
+        });
+        times.appendChild(b);
+      });
+      box.appendChild(times); daysEl.appendChild(box);
+    });
+  }
+
+  function load(){
+    fetch(API + "/slots").then(function(r){ return r.json(); }).then(render).catch(function(){
+      daysEl.textContent = "";
+      const p = document.createElement("p"); p.className = "slotnote";
+      p.textContent = "Open times are not loading right now. Email deenikdaniel@gmail.com and Dan will find a time.";
+      daysEl.appendChild(p);
+    });
+  }
+
+  btn.addEventListener("click", function(){
+    const email = document.getElementById("callemail").value.trim();
+    if (!chosen){ sentEl.textContent = "Pick a time above first."; return; }
+    if (!email){ sentEl.textContent = "Add your email so Dan can send the invite."; return; }
+    btn.disabled = true; sentEl.textContent = "Holding the slot...";
+    fetch(API + "/book", {
+      method: "POST", headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        slot_start: chosen.start, duration_id: durationId,
+        name: document.getElementById("callname").value.trim(),
+        email: email,
+        company: document.getElementById("callcompany").value.trim(),
+        role: document.getElementById("callrole").value.trim(),
+        note: document.getElementById("callnote").value.trim()
+      })
+    }).then(function(r){ return r.json().then(function(j){ return {ok: r.ok, status: r.status, j: j}; }); })
+    .then(function(res){
+      btn.disabled = false;
+      if (res.j && res.j.held){
+        sentEl.textContent = "Held for " + res.j.when + ", " + res.j.timezone.split("/")[1].replace("_", " ") + " time. Dan confirms it personally and the invite follows by email.";
+        pickEl.hidden = true; chosen = null; load();
+      } else if (res.status === 409){
+        sentEl.textContent = "That slot was taken while you were typing. The times below are refreshed, pick another.";
+        load();
+      } else {
+        sentEl.textContent = "Could not hold that slot. Email deenikdaniel@gmail.com and Dan will find a time.";
+      }
+    }).catch(function(){
+      btn.disabled = false;
+      sentEl.textContent = "Booking is not available in this view. Email deenikdaniel@gmail.com and Dan will find a time.";
+    });
+  });
+
+  load();
 })();
 
 // ---------- Q&A ----------
