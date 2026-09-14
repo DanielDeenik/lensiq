@@ -31,6 +31,7 @@ button.act[disabled]{opacity:0.45;cursor:default}
 .pill.WARM{color:#fff;background:var(--warm);border-color:var(--warm)}
 .pill.MONITOR{color:#fff;background:var(--mon);border-color:var(--mon)}
 .pill.new{background:var(--lemon);color:var(--ink);border-color:var(--ink)}
+.pill.watch{background:var(--ink);color:#fff;border-color:var(--ink)}
 .role{display:grid;grid-template-columns:56px minmax(0,1fr) auto;gap:12px;align-items:start;padding:10px 0;border-top:1px solid var(--line)}
 .role:first-child{border-top:0}
 .role .sc{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:18px;color:var(--ink);text-align:right}
@@ -214,16 +215,23 @@ function renderRoles(){
   const box = document.getElementById("roles"); box.textContent = "";
   renderSources();
   if (!STATE.roles.length){ box.appendChild(el("div","empty", STATE.nexus_configured ? "No roles in the niche yet. The monitor runs twice a day; press Rescan feeds to run it now." : "Nexus feed configuration is not loaded yet.")); return; }
-  STATE.roles.slice(0, 40).forEach(r => {
+  // Watchlist firms first: one opening at a firm that already places him beats
+  // a higher scoring row from an aggregator.
+  const ordered = STATE.roles.slice().sort(function(a, b){
+    if (Boolean(b.watchlist) !== Boolean(a.watchlist)) return b.watchlist ? 1 : -1;
+    return b.score - a.score;
+  });
+  ordered.slice(0, 40).forEach(r => {
     const row = el("div","role");
     row.appendChild(el("div","sc", String(r.score)));
     const mid = el("div");
     const a = el("a", null, r.title); a.href = r.link || "#"; a.target = "_blank"; a.rel = "noopener noreferrer";
     mid.appendChild(a);
     const src = (r.source_ids || []).length;
-    mid.appendChild(el("div","s", [r.jurisdiction, src > 1 ? src + " sources agree" : "1 source", "seen " + fmt(r.last_seen)].filter(Boolean).join("  ·  ")));
+    mid.appendChild(el("div","s", [r.company, r.jurisdiction, src > 1 ? src + " sources agree" : "1 source", "seen " + fmt(r.last_seen)].filter(Boolean).join("  ·  ")));
     row.appendChild(mid);
     const tags = el("div");
+    if (r.watchlist) tags.appendChild(el("span","pill watch","watchlist"));
     tags.appendChild(el("span","pill " + r.tier, r.tier));
     if (!r.seen_by_dan) tags.appendChild(el("span","pill new","new"));
     row.appendChild(tags);

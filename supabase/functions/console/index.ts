@@ -65,6 +65,14 @@ type Source = {
   id: string; name: string; authority: number; jurisdiction: string; url: string;
   kind?: "rss" | "json";
   needs?: string[];
+  // A watchlist source is a named firm that actually places Dan, polled through
+  // its own public ATS. Those deserve a lower floor than a generic job board:
+  // one opening at Alpha FMC matters more than a hundred rows from an aggregator.
+  watchlist?: boolean;
+  minScore?: number;
+  // An ATS feed carries the location where a job board carries the employer, so
+  // a watchlist source names its own firm and the location moves into the text.
+  company?: string;
   map?: { list?: string; title: string; company?: string; link: string; date?: string; snippet?: string };
   headers?: Record<string, string>;
 };
@@ -90,14 +98,24 @@ function expand(url: string, cfg: Record<string, string>): string {
   return url.replace(/\{\{([a-z0-9_]+)\}\}/gi, (_m, k) => encodeURIComponent(cfg[k] ?? ""));
 }
 
-function clean(s: string): string {
-  return String(s ?? "")
-    .replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, "$1")
-    .replace(/<[^>]+>/g, " ")
-    .replace(/&nbsp;/g, " ").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">")
+// Some feeds deliver HTML, some deliver HTML that has been entity escaped a
+// second time. Unescape first, then strip tags, then unescape what the tags hid,
+// or the markup survives into both the display text and the scored text.
+function unescapeEntities(v: string): string {
+  return v
+    .replace(/&nbsp;/g, " ").replace(/&lt;/g, "<").replace(/&gt;/g, ">")
     .replace(/&quot;/g, '"').replace(/&#39;|&apos;/g, "'")
     .replace(/&#(\d+);/g, (_m, d) => String.fromCharCode(parseInt(d, 10)))
-    .replace(/\s+/g, " ").trim();
+    .replace(/&#x([0-9a-f]+);/gi, (_m, h) => String.fromCharCode(parseInt(h, 16)))
+    .replace(/&amp;/g, "&");
+}
+
+function clean(s: string): string {
+  let v = String(s ?? "").replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, "$1");
+  for (let i = 0; i < 2; i++) {
+    v = unescapeEntities(v).replace(/<[^>]+>/g, " ");
+  }
+  return unescapeEntities(v).replace(/\s+/g, " ").trim();
 }
 
 function tag(block: string, names: string[]): string {
@@ -200,15 +218,17 @@ function scoreAll(nx: NexusConfig, src: Source, items: Item[]) {
     }
     const score = Math.round(raw * recency(nx, it.date) * src.authority);
     return {
-      fingerprint: `${it.title} ${it.company}`.toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, nx.scoring.dedupKeyLen),
+      fingerprint: `${it.title} ${src.company ?? it.company}`.toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, nx.scoring.dedupKeyLen),
       title: it.title.slice(0, 300),
-      company: it.company ? it.company.slice(0, 200) : null,
+      company: src.company ?? (it.company ? it.company.slice(0, 200) : null),
       link: it.link.slice(0, 1000),
       jurisdiction: src.jurisdiction,
       source_ids: [src.id],
+      watchlist: Boolean(src.watchlist),
+      floor: typeof src.minScore === "number" ? src.minScore : null,
       pub_date: it.date && isFinite(new Date(it.date).getTime()) ? new Date(it.date).toISOString() : null,
       score, tier: tierOf(nx, score), matches,
-      snippet: it.snippet.slice(0, 600),
+      snippet: (src.company && it.company ? it.company + ". " : "") + it.snippet.slice(0, 560),
     };
   }).filter((i) => i.fingerprint);
 }
@@ -254,14 +274,16 @@ async function scanRoles(nx: NexusConfig, cfg: Record<string, string>, minTier: 
   const order = [...nx.scoring.tiers.map((t) => t.tier), nx.scoring.tierFloor];
   const cutoff = order.indexOf(minTier) < 0 ? order.length - 1 : order.indexOf(minTier);
   const ranked = dedup(nx, all).sort((a, b) => b.score - a.score);
-  const keep = ranked.filter((i) => order.indexOf(i.tier) <= cutoff);
+  // A row clears either the global tier bar or its own source's floor.
+  const keep = ranked.filter((i) =>
+    order.indexOf(i.tier) <= cutoff || (typeof i.floor === "number" && i.score >= i.floor));
 
   if (!dryRun && keep.length) {
     const now = new Date().toISOString();
     await rest("role_signals?on_conflict=fingerprint", {
       method: "POST",
       headers: { Prefer: "resolution=merge-duplicates,return=minimal" },
-      body: JSON.stringify(keep.map((k) => ({ ...k, last_seen: now }))),
+      body: JSON.stringify(keep.map(({ floor: _floor, ...k }) => ({ ...k, last_seen: now }))),
     });
   }
   return { kept: keep.length, seen: all.length, sources: report, samples, top: ranked.slice(0, 5).map((k) => `${k.score} ${k.title}`) };
