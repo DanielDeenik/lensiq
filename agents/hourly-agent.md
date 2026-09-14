@@ -22,7 +22,7 @@ If the row has an asker_email, create a Gmail draft to that address with the ans
 Rows whose question DOES contain 'FULL SPEC:' are handled in Part 2, so just mark them: update qa_log set status = 'ok', answer = 'Handled as an application.', notified_at = now() where id = <id>;
 
 === PART 2: a new spec becomes a draft in his Gmail, in one pass ===
-select id, created_at, recruiter_email, recruiter_name, company, role_title, spec_text, action_token from applications where status = 'new' order by id;
+select id, created_at, recruiter_email, recruiter_name, company, role_title, spec_text from applications where status = 'new' order by id;
 
 For each one:
 
@@ -67,19 +67,20 @@ Send this only if something changed: a draft is newly ready, a call is newly hel
 
 ONE Gmail to console_owner_email, sent not drafted, this is his own address. Subject 'Ready to send: <n>' or 'Waiting on you: <n>'. HTML, and keep it under 300 words.
 
+Decision links are minted, never hand built. A query string does not survive an email client: an ampersand turned into &amp; silently strips every parameter after the first, and Dan gets an error instead of a decision. So for each decision call:
+  select public.mint_action_link('<app or call>', <id>, '<action>', '<short label>');
+and build the link as <console_public_url>/a/<the returned token>. One path segment, nothing to mangle, good for one use.
+
 For each application now in draft_ready:
 - the role and company, the fit score, the three or four requirements that decide it, and what he does not have
 - one line: the draft is in your Gmail, addressed to <recruiter email>, review it and press send
-- a reject link that bins it without opening anything:
-  <console_public_url>/act?kind=app&id=<id>&do=reject&t=<action_token>
+- a reject link from mint_action_link('app', <id>, 'reject')
 
 For each application in no_match: the role, why it is not a match in one sentence, and that a short reply has been drafted rather than a CV.
 
-For each call in held: the time in Amsterdam, who asked, and two links:
-  confirm: <console_public_url>/act?kind=call&id=<id>&do=confirm&t=<action_token>
-  decline: <console_public_url>/act?kind=call&id=<id>&do=decline&t=<action_token>
+For each call in held: the time in Amsterdam, who asked, and two links, from mint_action_link('call', <id>, 'confirm') and mint_action_link('call', <id>, 'decline').
 
-Select action_token alongside the other columns so you can build those links. Put the console link once at the bottom for anything he wants to read in full. Never put the console master token next to the action links.
+Put the console link once at the bottom for anything he wants to read in full. Never put the console master token next to the decision links.
 
 === PART 6: log ===
 insert into agent_runs (kind, ok, items, detail) values ('hourly_agent', true, <total rows handled>, '<json summary>'::jsonb);

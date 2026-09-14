@@ -329,6 +329,46 @@ async function observedByMonth(months: string[]) {
 
 // ---------- Routing ----------
 
+async function applyDecision(kind: string, id: string, act: string, cfg: Record<string, string>):
+  Promise<{ ok: boolean; headline: string; detail: string }> {
+  const table = kind === "call" ? "call_requests" : kind === "app" ? "applications" : "";
+  if (!table || !/^\d+$/.test(id)) return { ok: false, headline: "That link is incomplete", detail: "Open the console and decide there." };
+
+  const look = await rest(`${table}?select=*&id=eq.${id}`);
+  const rows = look.ok ? await look.json() : [];
+  const row = rows[0];
+  if (!row) return { ok: false, headline: "That item is gone", detail: "It was removed. Nothing changed." };
+
+  const patch: Record<string, unknown> = {};
+  let headline = "";
+  if (table === "applications") {
+    if (row.status !== "pending_approval" && row.status !== "draft_ready" && row.status !== "new") {
+      return { ok: false, headline: "Already decided", detail: `This one is already marked ${String(row.status).replace(/_/g, " ")}. Nothing changed.` };
+    }
+    if (act === "approve_draft") { patch.status = "approved"; patch.delivery = "draft"; patch.approved_at = new Date().toISOString(); headline = "Approved. The draft goes to your Gmail."; }
+    else if (act === "approve_send") { patch.status = "approved"; patch.delivery = "send"; patch.approved_at = new Date().toISOString(); headline = "Approved and queued to send."; }
+    else if (act === "reject") { patch.status = "rejected"; headline = "Rejected. Nothing goes out, and the draft can be binned."; }
+    else return { ok: false, headline: "Unknown action", detail: "Open the console and decide there." };
+  } else {
+    if (row.status !== "held") {
+      return { ok: false, headline: "Already decided", detail: `This call is already ${String(row.status)}. Nothing changed.` };
+    }
+    if (act === "confirm") { patch.status = "confirmed"; patch.confirmed_at = new Date().toISOString(); headline = "Confirmed. The invite and the meeting link go out on the next pass, within the hour."; }
+    else if (act === "decline") { patch.status = "declined"; headline = "Declined. They get a short note and the booking page."; }
+    else return { ok: false, headline: "Unknown action", detail: "Open the console and decide there." };
+  }
+
+  const res = await rest(`${table}?id=eq.${id}`, {
+    method: "PATCH", headers: { Prefer: "return=minimal" }, body: JSON.stringify(patch),
+  });
+  if (!res.ok) return { ok: false, headline: "That did not save", detail: "Open the console and try there." };
+
+  const detail = table === "applications"
+    ? `${row.role_title ?? "the role"}${row.company ? " at " + row.company : ""}`
+    : `${row.requester_name ?? row.requester_email ?? "the caller"}, ${new Date(row.slot_start).toLocaleString("en-GB", { timeZone: cfg["call_timezone"] ?? "UTC", weekday: "long", day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}`;
+  return { ok: true, headline, detail };
+}
+
 function actPage(headline: string, detail: string, cfg: Record<string, string>): Response {
   const base = cfg["console_public_url"] ?? cfg["console_base_url"] ?? "";
   const link = base ? `${base}/?k=${encodeURIComponent(cfg["console_token"] ?? "")}` : "";
@@ -360,6 +400,29 @@ Deno.serve(async (req: Request) => {
   // One click approval from the email Dan gets. The link carries a token that is
   // scoped to a single row, never the console master token, so forwarding an
   // email cannot hand anyone the console.
+  // One opaque path segment. No query string, so an email client that turns an
+  // ampersand into &amp; cannot silently strip half the decision.
+  if (path === "/a" || path.startsWith("/a/")) {
+    const token = decodeURIComponent(path.replace(/^\/a\/?/, "")).trim().replace(/[^a-f0-9]/gi, "").toLowerCase();
+    if (!token) return actPage("That link is incomplete", "It was probably cut short on the way here. Open the console and decide there.", cfg);
+
+    const linkRes = await rest(`action_links?select=*&token=eq.${encodeURIComponent(token)}`);
+    const links = linkRes.ok ? await linkRes.json() : [];
+    const link = links[0];
+    if (!link) return actPage("That link is not one of ours", "Open the console and decide there.", cfg);
+    if (link.used_at) return actPage("Already done", "You used this link already. Nothing changed just now.", cfg);
+    if (new Date(link.expires_at).getTime() < Date.now()) return actPage("That link has expired", "Open the console and decide there.", cfg);
+
+    const outcome = await applyDecision(link.kind, String(link.row_id), link.action, cfg);
+    if (outcome.ok) {
+      await rest(`action_links?token=eq.${encodeURIComponent(token)}`, {
+        method: "PATCH", headers: { Prefer: "return=minimal" },
+        body: JSON.stringify({ used_at: new Date().toISOString() }),
+      });
+    }
+    return actPage(outcome.headline, outcome.detail, cfg);
+  }
+
   if (path === "/act") {
     const kind = url.searchParams.get("kind") ?? "";
     const id = url.searchParams.get("id") ?? "";

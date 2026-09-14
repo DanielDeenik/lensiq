@@ -12,10 +12,11 @@ const HTML = fs.readFileSync(path.resolve(__dirname, '..', 'src', 'console.html'
 
 const FIXTURE = {
   applications: [{
-    id: 1, status: 'pending_approval', created_at: new Date().toISOString(),
+    id: 1, status: 'draft_ready', created_at: new Date().toISOString(),
     recruiter_name: 'Fixture', recruiter_email: 'someone@example.com',
     company: 'Fixture Asset Management', role_title: 'Interim SimCorp Front Office Consultant',
     fit_score: 82, spec_text: 'spec', fit_report_md: 'report', cv_md: 'cv', cover_letter_md: 'letter',
+    gmail_draft_id: 'r-fixture-draft',
   }],
   calls: [{
     id: 1, status: 'held', requester_name: 'Fixture', requester_email: 'someone@example.com',
@@ -85,6 +86,8 @@ const FIXTURE = {
   const seen = await page.evaluate(() => ({
     apps: document.querySelectorAll('#apps .card').length,
     appButtons: Array.from(document.querySelectorAll('#apps button')).map(b => b.textContent),
+    appLinks: Array.from(document.querySelectorAll('#apps a')).map(a => ({ text: a.textContent, href: a.getAttribute('href') })),
+    appHint: (document.querySelector('#apps .status') || {}).textContent || '',
     calls: document.querySelectorAll('#calls .card').length,
     callButtons: Array.from(document.querySelectorAll('#calls button')).map(b => b.textContent),
     roles: document.querySelectorAll('#roles .role').length,
@@ -96,9 +99,13 @@ const FIXTURE = {
 
   add('applications render', seen.apps >= (state.applications || []).filter(a => a.status === 'pending_approval' || a.status === 'new').length,
     'cards=' + seen.apps);
-  add('approval controls present', seen.appButtons.some(b => /Approve, prepare draft/.test(b)) &&
-    seen.appButtons.some(b => /Approve and send now/.test(b)) && seen.appButtons.some(b => /Reject/.test(b)),
-    seen.appButtons.join(' | ').slice(0, 80));
+  // Pressing send in Gmail is the approval, so the console must point at the
+  // draft and say so, not offer an approve button that would be a second truth.
+  add('console points at the Gmail draft', seen.appLinks.some(a => /Open the draft in Gmail/.test(a.text) && /mail\.google\.com/.test(a.href || '')),
+    seen.appLinks.map(a => a.text).join(' | ').slice(0, 70));
+  add('console says send is the approval', /send in Gmail is the approval/i.test(seen.appHint), seen.appHint.slice(0, 70));
+  add('reject stays available, approve does not', seen.appButtons.some(b => /^Reject$/.test(b)) &&
+    !seen.appButtons.some(b => /Approve/.test(b)), seen.appButtons.join(' | ').slice(0, 70));
   add('call requests render with confirm and decline', seen.calls > 0 &&
     seen.callButtons.some(b => /Confirm and invite/.test(b)) && seen.callButtons.some(b => /Decline/.test(b)),
     'cards=' + seen.calls + ' ' + seen.callButtons.join(' | ').slice(0, 60));

@@ -133,26 +133,36 @@ function appCard(a, decided){
   }
   if (!decided){
     const save = el("button","act sec","Save edits"); save.type="button"; save.addEventListener("click", function(){ if(!panes[active].ro) a[panes[active].k] = ta.value; act("save"); });
-    const apD = el("button","act","Approve, prepare draft"); apD.type="button"; apD.addEventListener("click", function(){ act("approve","draft"); });
-    const apS = el("button","act","Approve and send now"); apS.type="button"; apS.addEventListener("click", function(){ if(confirm("Send this CV and cover letter to " + (a.recruiter_email || "the recruiter") + "?")) act("approve","send"); });
+    if (a.gmail_draft_id){
+      const open = el("a","act","Open the draft in Gmail");
+      open.href = "https://mail.google.com/mail/u/0/#drafts";
+      open.target = "_blank"; open.rel = "noopener noreferrer";
+      open.style.textDecoration = "none";
+      row.appendChild(open);
+      const hint = el("span","status","Pressing send in Gmail is the approval. Nothing goes out from here.");
+      row.append(save, hint);
+    } else {
+      row.append(save, el("span","status","The draft is still being written. It lands in your Gmail on the next pass."));
+    }
     const rej = el("button","act warn","Reject"); rej.type="button"; rej.addEventListener("click", function(){ act("reject"); });
-    row.append(save, apD, apS, rej, status);
+    row.append(rej, status);
   } else {
     const re = el("button","act sec","Reopen"); re.type="button"; re.addEventListener("click", function(){ act("reopen"); });
     row.append(re, status);
-    if (a.sent_at) row.appendChild(el("span","pill","sent " + fmt(a.sent_at)));
-    else if (a.gmail_draft_id) row.appendChild(el("span","pill","draft ready in Gmail"));
+    if (a.sent_at) row.appendChild(el("span","pill","you sent it " + fmt(a.sent_at)));
+    else if (a.gmail_draft_id) row.appendChild(el("span","pill","draft in Gmail"));
   }
   card.appendChild(row);
   return card;
 }
 
 function renderApps(){
-  const pending = STATE.applications.filter(a => a.status === "pending_approval");
+  const pending = STATE.applications.filter(a => a.status === "pending_approval" || a.status === "draft_ready" || a.status === "no_match");
   const preparing = STATE.applications.filter(a => a.status === "new");
-  const decided = STATE.applications.filter(a => a.status !== "pending_approval" && a.status !== "new").slice(0, 8);
+  const held = ["pending_approval", "draft_ready", "no_match", "new"];
+  const decided = STATE.applications.filter(a => held.indexOf(a.status) < 0).slice(0, 8);
   const ap = document.getElementById("apps"); ap.textContent = "";
-  if (!pending.length && !preparing.length) ap.appendChild(el("div","empty","Nothing waiting. Specs pasted on the site land here once the agent has tailored the CV."));
+  if (!pending.length && !preparing.length) ap.appendChild(el("div","empty","Nothing waiting. A spec pasted on the site becomes a draft in your Gmail within the hour, and shows here too."));
   pending.forEach(a => ap.appendChild(appCard(a, false)));
   preparing.forEach(a => {
     const card = el("div","card");
