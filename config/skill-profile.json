@@ -527,5 +527,17 @@
     "achmea": "2020 to 2021",
     "fis": "2015 to 2020",
     "gtc": "2013 to 2015"
+  },
+  "no_match": {
+    "threshold": 45,
+    "headline": "On paper this is not a logical match.",
+    "body": "The weight of this spec sits outside what Dan is hired to lead. Sending a tailored CV for it would waste your time and his. If the brief is broader than the spec reads, or the client has a second role closer to front office, IBOR, integrations or data management, fifteen minutes will settle it faster than a CV will.",
+    "cta": "Book fifteen minutes",
+    "cta_href": "#call"
+  },
+  "match_cta": {
+    "body": "If you want to move quickly, a fifteen minute call will tell you more than a CV will.",
+    "cta": "Book fifteen minutes",
+    "cta_href": "#call"
   }
 }

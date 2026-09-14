@@ -29,8 +29,11 @@ src/site.master.html   the page, single source, artifact skeleton format
 src/head.html          the html head the build wraps around it
 src/ask.js             the hosted ask box, swapped in at build time
 src/console.html       Dan's private console markup
+config/skill-profile.json  how a spec is weighed against what Dan actually does
+scripts/embed_profile.py   inject that profile into the master, one source
 scripts/build.py       src to index.html and dist/index.html, deterministic
-scripts/smoke.js       19 checks in a real browser, plus one live endpoint check
+scripts/smoke.js       28 checks in a real browser, plus one live endpoint check
+scripts/console_smoke.js  8 checks on the console, live state merged with a fixture
 scripts/cfg.py         push a file or value into app_config through the console
 scripts/sync_supabase.py  publish index.html to app_config.page_html
 supabase/functions/site     public edge function: page, ask, spec, slots, book
@@ -45,10 +48,16 @@ wrangler.toml          Cloudflare Workers static assets config
 ## Commands
 
 ```
-python3 scripts/build.py            rebuild index.html and dist/index.html
-python3 scripts/build.py --check    fail if either is stale
-node scripts/smoke.js               19 browser checks plus the live slots endpoint
+python3 scripts/embed_profile.py          write the skill profile into the master
+python3 scripts/embed_profile.py --check  fail if the embedded profile is stale
+python3 scripts/build.py                  rebuild index.html and dist/index.html
+python3 scripts/build.py --check          fail if either is stale
+node scripts/smoke.js                     28 browser checks plus the live slots endpoint
+node scripts/console_smoke.js             8 checks on Dan's console control surface
 ```
+
+Run `embed_profile.py` before `build.py`. The profile is the input; the master is
+the artifact that carries it.
 
 The build refuses to emit if the fit check is not before the analytics section, if a
 required element id is missing, or if the offline FACTS block leaks into the hosted page.
@@ -92,6 +101,7 @@ Everything that can change lives in `app_config`. The important keys:
 | `fact_base`, `sharing_rules` | what the agent may say about Dan |
 | `cv_master_md` | the CV every tailored version is derived from |
 | `cv_tailoring_rules` | the rules the agent must follow when rewriting it |
+| `skill_profile` | the tiered judgement: what Dan leads on, what supports him, what sits beside him |
 | `nexus_agent_config` | feed sources, keyword scores, seasonality model, from nexus_live |
 | `nexus_profile_industry`, `nexus_profile_location` | which seasonality curve applies |
 | `nexus_roles_min_tier`, `nexus_roles_keep_days` | what is worth keeping |
@@ -116,9 +126,32 @@ scan. That is how a credential turns on coverage without a code change.
 The role monitor runs in the database on purpose. It does not depend on an agent
 session being alive, so a silent day means no roles, not a broken monitor.
 
+## How a spec is judged
+
+`config/skill-profile.json` is the judgement, and it is deliberately not code. Every
+area carries a tier: **primary** is what Dan is hired for, **strong** is delivered
+repeatedly, **working** supports his delivery but is not the seat he takes,
+**adjacent** sits next to his work, **not_a_fit** is outside it. Scoring is weighted
+coverage, so a spec whose centre of gravity is a working or adjacent area scores low
+even when many terms are recognised.
+
+That matters because the old scoring counted recognised terms against unrecognised
+ones, and anything Dan had ever touched counted as a full match. A brief built on the
+Communication Server and Axioma risk modelling scored the same as a front office
+brief. It no longer does: on the two reference specs asserted in the smoke suite,
+core scores 96 and Communication Server plus Axioma scores 32.
+
+The same file is pushed to `app_config.skill_profile`, so the page, the fit report,
+the tailored CV and the cover letter all apply one judgement. Each area carries a
+`line` written in Dan's own framing of his work; nothing rewrites those into
+something stronger or weaker than he said.
+
 ## Definition of done
 
-1. `python3 scripts/build.py --check` passes.
-2. `node scripts/smoke.js` is green, all 19.
-3. The commit is pushed to `main` and Cloudflare has deployed it.
-4. `app_config.page_html` matches `index.html` byte for byte.
+1. `python3 scripts/embed_profile.py --check` passes.
+2. `python3 scripts/build.py --check` passes.
+3. `node scripts/smoke.js` is green, all 28.
+4. `node scripts/console_smoke.js` is green, all 8.
+5. The commit is pushed to `main` and Cloudflare has deployed it.
+6. `app_config.page_html` matches `index.html` byte for byte, and
+   `app_config.console_html` matches `src/console.html`.

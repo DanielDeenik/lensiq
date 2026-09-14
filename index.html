@@ -104,6 +104,23 @@ section{margin-bottom:60px}
 .fit-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:center}
 .fit-btn{padding:10px 18px;border-radius:8px;background:var(--lemon);color:var(--ink);font-weight:700;font-size:14px;cursor:pointer;font-family:inherit;border:1px solid var(--ink)}
 .fit-btn:disabled{opacity:0.6;cursor:wait}
+.pulse{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:16px}
+.pulse .pc{background:var(--paper);border:1px solid var(--line);border-top:4px solid var(--lemon);border-radius:12px;padding:14px 16px}
+.pulse .pn{font-family:'IBM Plex Mono',monospace;font-size:26px;font-weight:600;color:var(--ink);line-height:1.1;display:block}
+.pulse .pl{font-size:12.5px;color:var(--muted);display:block;margin-top:5px;line-height:1.35}
+.pulse .pc.live .pn{font-size:17px}
+.autoline{font-size:12.5px;color:var(--accent-ink);font-weight:600;margin:12px 0 0}
+.howgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-top:18px}
+.howgrid .hc{border-left:3px solid var(--lemon);padding:2px 0 2px 14px}
+.howgrid .hc h4{margin:0 0 5px;font-size:14.5px;color:var(--ink);font-weight:800}
+.howgrid .hc p{margin:0;font-size:13.5px;color:var(--body);line-height:1.5}
+#fitcta{margin-top:12px;border:1px solid var(--ink);border-left-width:4px;border-radius:10px;padding:14px 16px;background:var(--paper)}
+#fitcta.nomatch{border-left-color:var(--ink);background:#fbfaf5}
+#fitcta.ok{border-left-color:var(--lemon)}
+#fitcta h4{margin:0 0 6px;font-size:15px;color:var(--ink);font-weight:800}
+#fitcta p{margin:0 0 10px;font-size:14px;color:var(--body)}
+#fitcta a{display:inline-block;padding:9px 16px;border-radius:8px;background:var(--lemon);border:1px solid var(--ink);color:var(--ink);font-weight:700;font-size:14px;text-decoration:none}
+#fitcta a:hover{background:var(--ink);color:var(--paper)}
 .skillgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:8px;margin-top:10px}
 .sg{text-align:left;font-family:inherit;cursor:pointer;border-radius:10px;padding:9px 11px;border:1px solid var(--line);background:var(--paper);color:var(--body)}
 .sg .sgl{font-size:12.5px;font-weight:700;color:var(--ink);line-height:1.25;display:block}
@@ -249,6 +266,7 @@ footer strong{color:#FFFFFF}
     <a href="#graphsec">Experience</a>
     <a href="#writing">Writing</a>
     <a href="#faq">Ask</a>
+    <a href="#auto">How it runs</a>
     <a href="#call">Book a call</a>
     <a href="#contact">Contact</a>
   </nav>
@@ -308,6 +326,7 @@ footer strong{color:#FFFFFF}
     </div>
     <div id="fitres" hidden>
       <div class="fit-score"><span class="n" id="fitpct"></span><span class="s" id="fitsum"></span></div>
+      <div id="fitcta" hidden></div>
       <div class="chart-card" style="margin-top:10px">
         <h3>Spec emphasis vs Dan's depth</h3>
         <div class="radar-wrap arcwrap" id="fitradar"></div>
@@ -542,6 +561,23 @@ footer strong{color:#FFFFFF}
       </div>
       <p class="note">Answers come only from Dan's published profile. Rates, client project internals and personal data are not discussed here; those questions go to Dan directly. If the assistant is offline, your question is logged and answered by email within one business day when you leave an address.</p>
     </div>
+  </div>
+</section>
+
+<section id="auto">
+  <p class="eyebrow">How it runs</p>
+  <h2>This page is not a brochure. It is a running system.</h2>
+  <div class="ll"></div>
+  <p style="max-width:760px;font-size:15.5px">Dan's work is automating the operational middle of investment firms. The honest way to show that is to let the thing he built do the work in front of you. Every number below is read live from the system that answers questions here, weighs job specs against his real depth, writes the tailored CV, watches the market for roles in his niche, and holds a slot in his calendar. It updates itself daily. Nobody types these numbers in.</p>
+  <div class="pulse" id="pulse">
+    <div class="pc"><span class="pn">...</span><span class="pl">Loading live counters</span></div>
+  </div>
+  <p class="autoline" id="pulseline"></p>
+  <div class="howgrid">
+    <div class="hc"><h4>It reads</h4><p>A pasted job spec is scored against a tiered model of what Dan actually leads on, not against whichever word matched first. The verdict says where the spec's weight sits and where it does not.</p></div>
+    <div class="hc"><h4>It writes</h4><p>Within the hour it produces the fit report, a CV rewritten against that spec and a cover letter, all traced to a fixed fact base so nothing is invented.</p></div>
+    <div class="hc"><h4>It waits</h4><p>Nothing reaches you until Dan has read and approved it. The same holds for a booked call: the slot is held, never written into his calendar, until he confirms it himself.</p></div>
+    <div class="hc"><h4>It watches</h4><p>Twice a day it scans the market for roles in his niche and scores them, and it tracks the seasonality of consulting demand so the pipeline is worked when the demand is actually there.</p></div>
   </div>
 </section>
 
@@ -1382,7 +1418,7 @@ const G = (function(){
   // What Dan actually does, tiered. A spec is weighed against depth, not against
   // whichever term happened to match first. Generated from config/skill-profile.json
   // by scripts/embed_profile.py, never typed twice.
-  const SKILL_PROFILE = /*PROFILE_START*/{"version":"2026-09-14","note":"How a job spec is weighed against what Dan actually does, not against whatever matched first. Tiers carry the judgement; terms are only the detector.","tiers":{"primary":{"weight":1.0,"label":"Core discipline"},"strong":{"weight":0.8,"label":"Delivered repeatedly"},"working":{"weight":0.45,"label":"Supports his delivery"},"adjacent":{"weight":0.15,"label":"Next to his work, not inside it"},"not_a_fit":{"weight":0.0,"label":"Not his discipline"}},"groups":["Front office and IBOR","Risk and compliance","Alternatives","Data management","Integrations","Regulatory and ESG","Delivery and BA","Engineering and AI"],"areas":[{"id":"simcorp","tier":"primary","group":"Front office and IBOR","label":"SimCorp Dimension","line":"SimCorp Dimension is the platform Dan is certified on and has delivered in since 2020, including two years inside SimCorp itself.","terms":["simcorp","simcorp dimension","dimension","scd","sd platform"],"short":"SimCorp","nodes":["scd"]},{"id":"front_office","tier":"primary","group":"Front office and IBOR","label":"Front office and order management","line":"Front office order, execution and trading workflow is the discipline Dan is hired for.","terms":["front office","order manager","order management","oms","trading workflow","trade capture","execution management","dealing desk","asset manager module","portfolio construction","rebalancing"],"short":"Front office","nodes":["fo"]},{"id":"ibor","tier":"primary","group":"Front office and IBOR","label":"IBOR and position keeping","line":"IBOR and position keeping run through almost every engagement on his CV.","terms":["ibor","abor","investment book of record","position keeping","positions","holdings","book of record"],"short":"IBOR","nodes":["ibor"]},{"id":"risk_mgmt","tier":"primary","group":"Risk and compliance","label":"Risk management in the platform","line":"Risk in the platform sense: Risk Analysis Manager, credit limits, exposure and limit monitoring.","terms":["risk analysis manager","credit risk","credit limit","counterparty risk","exposure","limit monitoring","risk reporting","value at risk"],"short":"Risk","nodes":["credit"]},{"id":"compliance","tier":"primary","group":"Risk and compliance","label":"Compliance","line":"Compliance Manager, online compliance rules, mandate and guideline monitoring.","terms":["compliance manager","compliance rules","pre-trade compliance","post-trade compliance","investment guidelines","mandate monitoring","breach","compliance"],"short":"Compliance","nodes":[],"via":"simcorp"},{"id":"alternatives","tier":"primary","group":"Alternatives","label":"Alternative investments","line":"Alternative Investment Manager, private debt and fund decomposition, currently live at Nicola Wealth.","terms":["alternative investment","alternative investments","alternatives","private debt","private equity","unlisted","real assets","infrastructure fund","efront","fund of funds","capital call","drawdown"],"short":"Alternatives","nodes":["alts"]},{"id":"data_management","tier":"primary","group":"Data management","label":"Valuations, security setup and data","line":"Security and static setup, valuations and pricing precedence, data imports and their date handling, corporate actions and validation.","terms":["market data","static data","reference data","security master","security setup","instrument setup","valuation","valuations","pricing","price precedence","data import","data load","corporate action","corporate actions","dividend","data validation","data quality","trade date","value date","settlement date"],"short":"Data mgmt","nodes":[],"via":"simcorp"},{"id":"integrations","tier":"strong","group":"Integrations","label":"Interfaces and connectivity","line":"FIX, SWIFT, STP and API integration across listed and OTC flow, including Bloomberg TSOX and FXGO and a custom FIX build via Adroit EMS.","terms":["fix","fix protocol","swift","stp","straight through processing","interface","interfaces","integration","integrations","api","bloomberg","tsox","fxgo","adroit","ems","connectivity","message","feed"],"short":"Interfaces","nodes":["fix","bbg"]},{"id":"regulatory","tier":"strong","group":"Regulatory and ESG","label":"Regulatory reporting and ESG","line":"Regulatory reporting, SFDR, EU Taxonomy, CSRD and Pillar III, with the CFA ESG certificate behind it.","terms":["regulatory reporting","regulatory","sfdr","eu taxonomy","taxonomy","csrd","esg","sustainable finance","pillar iii","emir","mifid","aifmd","ucits","dora","solvency","physical climate risk"],"short":"Reg and ESG","nodes":["esg"]},{"id":"delivery","tier":"strong","group":"Delivery and BA","label":"Business analysis and delivery","line":"Business analyst, project manager, QA manager and scrum master across a decade of implementations.","terms":["business analyst","business analysis","project manager","project management","scrum","scrum master","agile","workshop","workshops","test management","qa","uat","requirements","stakeholder","delivery lead"],"short":"BA delivery","nodes":["fo"]},{"id":"data_engineering","tier":"strong","group":"Data management","label":"Extraction, SQL and Python","line":"Data Extractor Suite, DEX validation, Oracle and Postgres SQL, Python extensions and automated testing.","terms":["sql","python","oracle","postgres","snowflake","data extractor","extraction","extractions","dex","etl","dashboard","dashboards","reporting layer","automated testing"],"short":"SQL and Python","nodes":["py"]},{"id":"platforms_other","tier":"strong","group":"Front office and IBOR","label":"Aladdin and Front Arena","line":"BlackRock Aladdin and Front Arena delivery alongside SimCorp, including Treasury on Front Arena at BNG Bank.","terms":["aladdin","blackrock","front arena","frontarena","treasury"],"short":"Aladdin, Arena","nodes":["aladdin","arena"]},{"id":"ai_ml","tier":"strong","group":"Engineering and AI","label":"AI and machine learning in finance","line":"Multi agent pipelines, RAG, LLM tooling and scheduled agents, built as his own products rather than talked about.","terms":["machine learning","artificial intelligence","llm","genai","gen ai","rag","multi agent","automation","data science"],"short":"AI and ML","nodes":["agentstack","socialarb"]},{"id":"comm_server","tier":"working","group":"Integrations","label":"Communication Server","line":"Dan has a strong background using the Communication Server, as part of data integration work. It supports what he delivers; it is not the discipline he leads on, and a role built around it is a weaker match than one built around front office, IBOR or integrations.","terms":["communication server","comm server","auxiliary job","auxiliary jobs","batch job","batch jobs","job scheduling","scheduler"],"short":"Comm Server","nodes":[],"via":"integrations"},{"id":"middle_back_office","tier":"working","group":"Data management","label":"Middle and back office","line":"Reconciliation, collateral, settlement and performance are part of his delivery rather than the seat he is hired into.","terms":["middle office","back office","reconciliation","collateral","settlement","custody","custodian","performance measurement","iap","attribution","nav","fund accounting"],"short":"Middle office","nodes":[],"via":"simcorp"},{"id":"quant_modelling","tier":"adjacent","group":"Risk and compliance","label":"Axioma and quantitative risk modelling","line":"Dan integrated the Axioma API at BNP Paribas. Building, calibrating or validating the risk models themselves is a different job, and a spec centred on that wants a consultant with hands on Axioma modelling experience.","terms":["axioma","risk model","risk models","factor model","quantitative model","model validation","model calibration","stochastic","monte carlo","quant","quantitative analyst","barra","msci risk"],"short":"Quant modelling","nodes":[]},{"id":"software_engineering","tier":"adjacent","group":"Engineering and AI","label":"Core software engineering","line":"Dan writes Python and SQL to deliver, but a software engineering seat is not what he is hired for.","terms":["software engineer","software developer","full stack","backend developer","frontend developer","devops engineer","kubernetes","docker","microservices","ci/cd"],"short":"Software eng","nodes":[]},{"id":"other_platforms","tier":"not_a_fit","group":"Front office and IBOR","label":"Platforms outside the profile","line":"These platforms are not on Dan's CV. Adjacent experience often transfers, but he will say so rather than claim them.","terms":["murex","calypso","temenos","charles river","avaloq","t24","geneva","investran","broadridge","ss&c","sap","tableau","power bi","qlik","matlab","java","c#",".net","kotlin","scala","cobol","abap","salesforce","dynamics 365","kyc","aml","transfer agency","actuarial"],"short":"Other platforms","nodes":[]},{"id":"permanent","tier":"not_a_fit","group":"Delivery and BA","label":"Permanent employment","line":"Dan works freelance and contract only.","terms":["permanent position","permanent role","perm only","permanent contract","fte only"],"short":"Permanent","nodes":[]}],"verdicts":[{"min":80,"text":"Strong fit. This spec sits inside what Dan does day to day."},{"min":62,"text":"Good fit. The centre of this spec is his territory, with some parts that support rather than lead his work."},{"min":45,"text":"Partial fit. Real overlap, but the weight of this spec sits beside his core rather than on it."},{"min":0,"text":"Weak fit. What this spec is mainly asking for is not the seat Dan is hired into."}],"engagement_dates":{"nicola":"2026 to now","bnp":"2024 to 2026","bng":"2021 to 2024","athora":"2021 to 2024","asr":"2021 to 2022","pggm":"2020 to 2021","shell":"2020 to 2021","caceis":"2020 to 2021","achmea":"2020 to 2021","fis":"2015 to 2020","gtc":"2013 to 2015"}}/*PROFILE_END*/;
+  const SKILL_PROFILE = /*PROFILE_START*/{"version":"2026-09-14","note":"How a job spec is weighed against what Dan actually does, not against whatever matched first. Tiers carry the judgement; terms are only the detector.","tiers":{"primary":{"weight":1.0,"label":"Core discipline"},"strong":{"weight":0.8,"label":"Delivered repeatedly"},"working":{"weight":0.45,"label":"Supports his delivery"},"adjacent":{"weight":0.15,"label":"Next to his work, not inside it"},"not_a_fit":{"weight":0.0,"label":"Not his discipline"}},"groups":["Front office and IBOR","Risk and compliance","Alternatives","Data management","Integrations","Regulatory and ESG","Delivery and BA","Engineering and AI"],"areas":[{"id":"simcorp","tier":"primary","group":"Front office and IBOR","label":"SimCorp Dimension","line":"SimCorp Dimension is the platform Dan is certified on and has delivered in since 2020, including two years inside SimCorp itself.","terms":["simcorp","simcorp dimension","dimension","scd","sd platform"],"short":"SimCorp","nodes":["scd"]},{"id":"front_office","tier":"primary","group":"Front office and IBOR","label":"Front office and order management","line":"Front office order, execution and trading workflow is the discipline Dan is hired for.","terms":["front office","order manager","order management","oms","trading workflow","trade capture","execution management","dealing desk","asset manager module","portfolio construction","rebalancing"],"short":"Front office","nodes":["fo"]},{"id":"ibor","tier":"primary","group":"Front office and IBOR","label":"IBOR and position keeping","line":"IBOR and position keeping run through almost every engagement on his CV.","terms":["ibor","abor","investment book of record","position keeping","positions","holdings","book of record"],"short":"IBOR","nodes":["ibor"]},{"id":"risk_mgmt","tier":"primary","group":"Risk and compliance","label":"Risk management in the platform","line":"Risk in the platform sense: Risk Analysis Manager, credit limits, exposure and limit monitoring.","terms":["risk analysis manager","credit risk","credit limit","counterparty risk","exposure","limit monitoring","risk reporting","value at risk"],"short":"Risk","nodes":["credit"]},{"id":"compliance","tier":"primary","group":"Risk and compliance","label":"Compliance","line":"Compliance Manager, online compliance rules, mandate and guideline monitoring.","terms":["compliance manager","compliance rules","pre-trade compliance","post-trade compliance","investment guidelines","mandate monitoring","breach","compliance"],"short":"Compliance","nodes":[],"via":"simcorp"},{"id":"alternatives","tier":"primary","group":"Alternatives","label":"Alternative investments","line":"Alternative Investment Manager, private debt and fund decomposition, currently live at Nicola Wealth.","terms":["alternative investment","alternative investments","alternatives","private debt","private equity","unlisted","real assets","infrastructure fund","efront","fund of funds","capital call","drawdown"],"short":"Alternatives","nodes":["alts"]},{"id":"data_management","tier":"primary","group":"Data management","label":"Valuations, security setup and data","line":"Security and static setup, valuations and pricing precedence, data imports and their date handling, corporate actions and validation.","terms":["market data","static data","reference data","security master","security setup","instrument setup","valuation","valuations","pricing","price precedence","data import","data load","corporate action","corporate actions","dividend","data validation","data quality","trade date","value date","settlement date"],"short":"Data mgmt","nodes":[],"via":"simcorp"},{"id":"integrations","tier":"strong","group":"Integrations","label":"Interfaces and connectivity","line":"FIX, SWIFT, STP and API integration across listed and OTC flow, including Bloomberg TSOX and FXGO and a custom FIX build via Adroit EMS.","terms":["fix","fix protocol","swift","stp","straight through processing","interface","interfaces","integration","integrations","api","bloomberg","tsox","fxgo","adroit","ems","connectivity","message","feed"],"short":"Interfaces","nodes":["fix","bbg"]},{"id":"regulatory","tier":"strong","group":"Regulatory and ESG","label":"Regulatory reporting and ESG","line":"Regulatory reporting, SFDR, EU Taxonomy, CSRD and Pillar III, with the CFA ESG certificate behind it.","terms":["regulatory reporting","regulatory","sfdr","eu taxonomy","taxonomy","csrd","esg","sustainable finance","pillar iii","emir","mifid","aifmd","ucits","dora","solvency","physical climate risk"],"short":"Reg and ESG","nodes":["esg"]},{"id":"delivery","tier":"strong","group":"Delivery and BA","label":"Business analysis and delivery","line":"Business analyst, project manager, QA manager and scrum master across a decade of implementations.","terms":["business analyst","business analysis","project manager","project management","scrum","scrum master","agile","workshop","workshops","test management","qa","uat","requirements","stakeholder","delivery lead"],"short":"BA delivery","nodes":["fo"]},{"id":"data_engineering","tier":"strong","group":"Data management","label":"Extraction, SQL and Python","line":"Data Extractor Suite, DEX validation, Oracle and Postgres SQL, Python extensions and automated testing.","terms":["sql","python","oracle","postgres","snowflake","data extractor","extraction","extractions","dex","etl","dashboard","dashboards","reporting layer","automated testing"],"short":"SQL and Python","nodes":["py"]},{"id":"platforms_other","tier":"strong","group":"Front office and IBOR","label":"Aladdin and Front Arena","line":"BlackRock Aladdin and Front Arena delivery alongside SimCorp, including Treasury on Front Arena at BNG Bank.","terms":["aladdin","blackrock","front arena","frontarena","treasury"],"short":"Aladdin, Arena","nodes":["aladdin","arena"]},{"id":"ai_ml","tier":"strong","group":"Engineering and AI","label":"AI and machine learning in finance","line":"Multi agent pipelines, RAG, LLM tooling and scheduled agents, built as his own products rather than talked about.","terms":["machine learning","artificial intelligence","llm","genai","gen ai","rag","multi agent","automation","data science"],"short":"AI and ML","nodes":["agentstack","socialarb"]},{"id":"comm_server","tier":"working","group":"Integrations","label":"Communication Server","line":"Dan has a strong background using the Communication Server, as part of data integration work. It supports what he delivers; it is not the discipline he leads on, and a role built around it is a weaker match than one built around front office, IBOR or integrations.","terms":["communication server","comm server","auxiliary job","auxiliary jobs","batch job","batch jobs","job scheduling","scheduler"],"short":"Comm Server","nodes":[],"via":"integrations"},{"id":"middle_back_office","tier":"working","group":"Data management","label":"Middle and back office","line":"Reconciliation, collateral, settlement and performance are part of his delivery rather than the seat he is hired into.","terms":["middle office","back office","reconciliation","collateral","settlement","custody","custodian","performance measurement","iap","attribution","nav","fund accounting"],"short":"Middle office","nodes":[],"via":"simcorp"},{"id":"quant_modelling","tier":"adjacent","group":"Risk and compliance","label":"Axioma and quantitative risk modelling","line":"Dan integrated the Axioma API at BNP Paribas. Building, calibrating or validating the risk models themselves is a different job, and a spec centred on that wants a consultant with hands on Axioma modelling experience.","terms":["axioma","risk model","risk models","factor model","quantitative model","model validation","model calibration","stochastic","monte carlo","quant","quantitative analyst","barra","msci risk"],"short":"Quant modelling","nodes":[]},{"id":"software_engineering","tier":"adjacent","group":"Engineering and AI","label":"Core software engineering","line":"Dan writes Python and SQL to deliver, but a software engineering seat is not what he is hired for.","terms":["software engineer","software developer","full stack","backend developer","frontend developer","devops engineer","kubernetes","docker","microservices","ci/cd"],"short":"Software eng","nodes":[]},{"id":"other_platforms","tier":"not_a_fit","group":"Front office and IBOR","label":"Platforms outside the profile","line":"These platforms are not on Dan's CV. Adjacent experience often transfers, but he will say so rather than claim them.","terms":["murex","calypso","temenos","charles river","avaloq","t24","geneva","investran","broadridge","ss&c","sap","tableau","power bi","qlik","matlab","java","c#",".net","kotlin","scala","cobol","abap","salesforce","dynamics 365","kyc","aml","transfer agency","actuarial"],"short":"Other platforms","nodes":[]},{"id":"permanent","tier":"not_a_fit","group":"Delivery and BA","label":"Permanent employment","line":"Dan works freelance and contract only.","terms":["permanent position","permanent role","perm only","permanent contract","fte only"],"short":"Permanent","nodes":[]}],"verdicts":[{"min":80,"text":"Strong fit. This spec sits inside what Dan does day to day."},{"min":62,"text":"Good fit. The centre of this spec is his territory, with some parts that support rather than lead his work."},{"min":45,"text":"Partial fit. Real overlap, but the weight of this spec sits beside his core rather than on it."},{"min":0,"text":"Weak fit. What this spec is mainly asking for is not the seat Dan is hired into."}],"engagement_dates":{"nicola":"2026 to now","bnp":"2024 to 2026","bng":"2021 to 2024","athora":"2021 to 2024","asr":"2021 to 2022","pggm":"2020 to 2021","shell":"2020 to 2021","caceis":"2020 to 2021","achmea":"2020 to 2021","fis":"2015 to 2020","gtc":"2013 to 2015"},"no_match":{"threshold":45,"headline":"On paper this is not a logical match.","body":"The weight of this spec sits outside what Dan is hired to lead. Sending a tailored CV for it would waste your time and his. If the brief is broader than the spec reads, or the client has a second role closer to front office, IBOR, integrations or data management, fifteen minutes will settle it faster than a CV will.","cta":"Book fifteen minutes","cta_href":"#call"},"match_cta":{"body":"If you want to move quickly, a fifteen minute call will tell you more than a CV will.","cta":"Book fifteen minutes","cta_href":"#call"}}/*PROFILE_END*/;
   const rxCache = {};
   function termRx(term){
     if (!rxCache[term]){
@@ -1522,6 +1558,29 @@ const G = (function(){
       (weak.length ? "It also asks for " + weak.map(a => a.label.toLowerCase()).join(" and ") + ", which is where the match thins out. " : "") +
       (support.length && !weak.length ? "Parts of it sit in work that supports his delivery rather than leads it. " : "") +
       "The breakdown below says which is which.";
+
+    // No logical match is a result, not a failure. Say it, and point at the one
+    // thing that resolves it faster than a CV would.
+    const nm = SKILL_PROFILE.no_match || {}, mc = SKILL_PROFILE.match_cta || {};
+    const coreHit = hitAreas.some(a => a.tier === "primary" || a.tier === "strong");
+    const noMatch = score < (nm.threshold || 45) || !coreHit ||
+      (hitAreas[0] && (hitAreas[0].tier === "adjacent" || hitAreas[0].tier === "not_a_fit"));
+    const cta = document.getElementById("fitcta");
+    if (cta){
+      cta.innerHTML = "";
+      cta.className = noMatch ? "nomatch" : "ok";
+      const src = noMatch ? nm : mc;
+      if (src.body){
+        if (noMatch && nm.headline){ const h = document.createElement("h4"); h.textContent = nm.headline; cta.appendChild(h); }
+        const p = document.createElement("p"); p.textContent = src.body; cta.appendChild(p);
+        const a = document.createElement("a"); a.href = src.cta_href || "#call"; a.textContent = src.cta || "Book a call";
+        cta.appendChild(a);
+        cta.hidden = false;
+      } else {
+        cta.hidden = true;
+      }
+    }
+    window.__fitNoMatch = noMatch;
 
     // Spider, one axis per skill area: what this spec pushes on, against how
     // deep Dan actually is there.
@@ -1692,7 +1751,7 @@ const G = (function(){
     if (!spec) return;
     send.disabled = true;
     sent.textContent = "Sending...";
-    const q = ("Job spec fit check" + (typeof window.__fitScore === "number" ? " (" + window.__fitScore + "% instant coverage)" : "")).slice(0, 295);
+    const q = ("Job spec fit check" + (typeof window.__fitScore === "number" ? " (" + window.__fitScore + "% weighted depth" + (window.__fitNoMatch ? ", no logical match on paper" : "") + ")" : "")).slice(0, 295);
     fetch("https://hvitxwhfdhsdwhgllaqf.supabase.co/functions/v1/site", {
       method: "POST",
       headers: {"Content-Type": "application/json"},
@@ -1706,6 +1765,48 @@ const G = (function(){
       sent.textContent = "Sending is not available in this view. Email the spec to deenikdaniel@gmail.com and Dan will reply directly.";
       send.disabled = false;
     });
+  });
+})();
+
+// ---------- Live counters: proof the system runs itself ----------
+(function(){
+  const box = document.getElementById("pulse");
+  const lineEl = document.getElementById("pulseline");
+  if (!box) return;
+  const API = "https://hvitxwhfdhsdwhgllaqf.supabase.co/functions/v1/site";
+  function ago(iso){
+    if (!iso) return null;
+    const mins = Math.round((Date.now() - new Date(iso).getTime()) / 60000);
+    if (!isFinite(mins)) return null;
+    if (mins < 60) return mins <= 1 ? "just now" : mins + " minutes ago";
+    const hrs = Math.round(mins / 60);
+    if (hrs < 48) return hrs + (hrs === 1 ? " hour ago" : " hours ago");
+    return Math.round(hrs / 24) + " days ago";
+  }
+  function card(value, label, live){
+    const c = document.createElement("div"); c.className = "pc" + (live ? " live" : "");
+    const n = document.createElement("span"); n.className = "pn"; n.textContent = value;
+    const l = document.createElement("span"); l.className = "pl"; l.textContent = label;
+    c.append(n, l); return c;
+  }
+  fetch(API + "/pulse").then(r => r.json()).then(function(d){
+    box.textContent = "";
+    const cards = [
+      [String(d.specs_assessed || 0), "job specs read and scored"],
+      [String(d.calls_booked || 0), "calls booked through this page"],
+      [String(d.roles_scanned || 0), "market roles scanned and scored"],
+      [String(d.sources_live || 0), "job sources polled every scan"]
+    ];
+    cards.forEach(function(c){ box.appendChild(card(c[0], c[1])); });
+    const last = ago(d.last_agent_run);
+    if (last) box.appendChild(card(last, "last time the agents ran", true));
+    if (lineEl){
+      lineEl.textContent = "Read live from the system a moment ago" +
+        (d.running_since ? ", which has been running since " + new Date(d.running_since).toLocaleDateString(undefined, {day: "numeric", month: "long", year: "numeric"}) + "." : ".");
+    }
+  }).catch(function(){
+    box.textContent = "";
+    box.appendChild(card("offline", "live counters are not reachable from this view", true));
   });
 })();
 

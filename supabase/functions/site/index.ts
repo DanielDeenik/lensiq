@@ -175,6 +175,51 @@ Deno.serve(async (req: Request) => {
 
   const path = new URL(req.url).pathname.replace(/^\/site/, "").replace(/\/$/, "") || "/";
 
+  // Public proof that the machine runs. Counts only: no names, no role titles,
+  // no recruiter data, nothing from Dan's private market monitor.
+  if (req.method === "GET" && path === "/pulse") {
+    async function countOf(table: string, filter = ""): Promise<number> {
+      const res = await rest(`${table}?select=id${filter ? "&" + filter : ""}`, {
+        method: "HEAD", headers: { Prefer: "count=exact" },
+      });
+      return parseInt((res.headers.get("content-range") ?? "*/0").split("/")[1] || "0", 10) || 0;
+    }
+    async function latest(table: string, column: string): Promise<string | null> {
+      const res = await rest(`${table}?select=${column}&order=${column}.desc&limit=1`);
+      if (!res.ok) return null;
+      const rows = await res.json();
+      return rows[0]?.[column] ?? null;
+    }
+    const [specs, calls, roles, answered, lastRun, lastScan, firstRun] = await Promise.all([
+      countOf("applications"),
+      countOf("call_requests", "status=in.(held,confirmed)"),
+      countOf("role_signals"),
+      countOf("qa_log", "status=eq.ok"),
+      latest("agent_runs", "ran_at"),
+      latest("role_signals", "last_seen"),
+      (async () => {
+        const res = await rest("agent_runs?select=ran_at&order=ran_at.asc&limit=1");
+        if (!res.ok) return null;
+        const rows = await res.json();
+        return rows[0]?.ran_at ?? null;
+      })(),
+    ]);
+    let scanned = 0, sourcesLive = 0;
+    const runRes = await rest("agent_runs?select=items,detail&kind=eq.roles_refresh&order=ran_at.desc&limit=60");
+    if (runRes.ok) {
+      const runs: { items: number; detail: Record<string, unknown> | null }[] = await runRes.json();
+      for (const r of runs) scanned += Number((r.detail as { seen?: number })?.seen ?? 0);
+      const srcs = (runs[0]?.detail as { sources?: Record<string, string> })?.sources ?? {};
+      sourcesLive = Object.values(srcs).filter((v) => String(v).startsWith("ok_")).length;
+    }
+    return new Response(JSON.stringify({
+      specs_assessed: specs, calls_booked: calls, roles_tracked: roles,
+      roles_scanned: scanned, sources_live: sourcesLive, questions_answered: answered,
+      last_agent_run: lastRun, last_role_scan: lastScan, running_since: firstRun,
+      generated_at: new Date().toISOString(),
+    }), { headers: { "Content-Type": "application/json", "Cache-Control": "public, max-age=900", ...CORS } });
+  }
+
   if (req.method === "GET" && path === "/slots") {
     let cfg: Record<string, string>;
     try {

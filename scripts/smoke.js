@@ -13,6 +13,12 @@ const FILE = 'file://' + path.resolve(__dirname, '..', 'index.html');
   // The booking widget reads live slots from the edge function. The headless
   // browser has no route to it, so the widget is exercised against a fixture
   // here and the real endpoint is checked over the network further down.
+  await page.route('**/functions/v1/site/pulse', route => route.fulfill({
+    status: 200, contentType: 'application/json',
+    body: JSON.stringify({ specs_assessed: 3, calls_booked: 2, roles_tracked: 0, roles_scanned: 1072,
+      sources_live: 6, questions_answered: 4, last_agent_run: new Date(Date.now() - 900000).toISOString(),
+      last_role_scan: null, running_since: '2026-09-14T10:40:16.578Z' }),
+  }));
   await page.route('**/functions/v1/site/slots', route => route.fulfill({
     status: 200,
     contentType: 'application/json',
@@ -115,6 +121,17 @@ const FILE = 'file://' + path.resolve(__dirname, '..', 'index.html');
   }));
   await page.evaluate(() => { const p = document.getElementById('popout'); if (p) p.hidden = true; });
 
+  const ctaPeriph = await page.evaluate(() => {
+    const c = document.getElementById('fitcta');
+    return { hidden: !c || c.hidden, cls: c ? c.className : '', text: c ? c.textContent : '' };
+  });
+  add('no logical match is stated plainly', !ctaPeriph.hidden && /nomatch/.test(ctaPeriph.cls) &&
+    /not a logical match/i.test(ctaPeriph.text), ctaPeriph.text.slice(0, 70));
+  add('no match steers to a call', /#call/.test(await page.evaluate(() => {
+    const a = document.querySelector('#fitcta a');
+    return a ? a.getAttribute('href') : '';
+  })));
+
   add('comm server is shown as support, not headline', periph.headings.some(h => /Supports his delivery/i.test(h)) || /communication server/i.test(periph.summary),
     periph.headings.join(' | ').slice(0, 90));
   await page.fill('#specin', 'SimCorp Dimension consultant, ESG and SFDR, IBOR, FIX connectivity, Python, front office order management.');
@@ -122,6 +139,19 @@ const FILE = 'file://' + path.resolve(__dirname, '..', 'index.html');
   await page.waitForTimeout(300);
 
   // Booking widget: the section, the live slot grid and the form fields.
+  const pulse = await page.evaluate(() => ({
+    cards: document.querySelectorAll('#pulse .pc').length,
+    nums: Array.from(document.querySelectorAll('#pulse .pn')).map(e => e.textContent),
+    line: (document.getElementById('pulseline') || {}).textContent || '',
+    how: document.querySelectorAll('.howgrid .hc').length,
+  }));
+  add('live counters render', pulse.cards >= 5 && pulse.nums.indexOf('1072') >= 0,
+    'cards=' + pulse.cards + ' ' + pulse.nums.join(' | '));
+  add('counters say when the agents last ran', /ran/.test(pulse.nums.join(' ')) === false && /minutes ago|hour/.test(pulse.nums.join(' ')),
+    pulse.nums.join(' | '));
+  add('counters state they are read live', /Read live from the system/.test(pulse.line), pulse.line.slice(0, 70));
+  add('how it runs explains the loop', pulse.how === 4, 'blocks=' + pulse.how);
+
   add('book a call section present', await page.evaluate(() =>
     !!document.getElementById('call') && !!document.getElementById('slotdays')));
   add('recruiter fields on the fit form', await page.evaluate(() =>
