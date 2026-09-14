@@ -329,12 +329,79 @@ async function observedByMonth(months: string[]) {
 
 // ---------- Routing ----------
 
+function actPage(headline: string, detail: string, cfg: Record<string, string>): Response {
+  const base = cfg["console_public_url"] ?? cfg["console_base_url"] ?? "";
+  const link = base ? `${base}/?k=${encodeURIComponent(cfg["console_token"] ?? "")}` : "";
+  const esc = (v: string) => v.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]!));
+  const html = `<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex">
+<title>LensIQ</title><style>
+:root{--bg:#f6f5f1;--paper:#fff;--ink:#15171b;--body:#2c3038;--muted:#6b7280;--line:#e3e1da;--lemon:#e8f04a}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);color:var(--body);
+font-family:system-ui,-apple-system,'Segoe UI',sans-serif;padding:24px}
+.c{background:var(--paper);border:1px solid var(--line);border-top:4px solid var(--lemon);border-radius:14px;
+padding:28px 30px;max-width:520px;box-shadow:0 10px 30px rgba(21,23,27,.08)}
+h1{margin:0 0 10px;font-size:20px;color:var(--ink);line-height:1.3}
+p{margin:0 0 18px;font-size:15px;line-height:1.55}
+a{display:inline-block;padding:10px 18px;border-radius:9px;background:var(--lemon);border:1px solid var(--ink);
+color:var(--ink);font-weight:700;text-decoration:none;font-size:14px}
+</style></head><body><div class="c"><h1>${esc(headline)}</h1><p>${esc(detail)}</p>
+${link ? `<a href="${esc(link)}">Open the console</a>` : ""}</div></body></html>`;
+  return new Response(html, { status: 200, headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" } });
+}
+
 Deno.serve(async (req: Request) => {
   const url = new URL(req.url);
   const path = url.pathname.replace(/^\/console/, "").replace(/\/$/, "") || "/";
   const cfg = await config();
   const expected = cfg["console_token"] ?? "";
   if (!expected) return json({ error: "console_not_configured" }, 503);
+
+  // One click approval from the email Dan gets. The link carries a token that is
+  // scoped to a single row, never the console master token, so forwarding an
+  // email cannot hand anyone the console.
+  if (path === "/act") {
+    const kind = url.searchParams.get("kind") ?? "";
+    const id = url.searchParams.get("id") ?? "";
+    const act = url.searchParams.get("do") ?? "";
+    const tok = url.searchParams.get("t") ?? "";
+    const table = kind === "call" ? "call_requests" : kind === "app" ? "applications" : "";
+    if (!table || !/^\d+$/.test(id) || !tok) return actPage("That link is not complete", "Open the console and act there instead.", cfg);
+
+    const look = await rest(`${table}?select=*&id=eq.${id}&action_token=eq.${encodeURIComponent(tok)}`);
+    const rows = look.ok ? await look.json() : [];
+    const row = rows[0];
+    if (!row) return actPage("That link is no longer valid", "It may already have been used, or the item was removed. Open the console to see where things stand.", cfg);
+
+    const patch: Record<string, unknown> = {};
+    let headline = "";
+    if (table === "applications") {
+      if (row.status !== "pending_approval") {
+        return actPage("Already decided", `This one is already marked ${String(row.status).replace(/_/g, " ")}. Nothing changed.`, cfg);
+      }
+      if (act === "approve_draft") { patch.status = "approved"; patch.delivery = "draft"; patch.approved_at = new Date().toISOString(); headline = "Approved. The agent will put the pack in your Gmail as a draft."; }
+      else if (act === "approve_send") { patch.status = "approved"; patch.delivery = "send"; patch.approved_at = new Date().toISOString(); headline = "Approved and queued to send. The agent sends it on its next pass."; }
+      else if (act === "reject") { patch.status = "rejected"; headline = "Rejected. Nothing goes out."; }
+      else return actPage("Unknown action", "Open the console and act there instead.", cfg);
+    } else {
+      if (row.status !== "held") {
+        return actPage("Already decided", `This call is already ${String(row.status)}. Nothing changed.`, cfg);
+      }
+      if (act === "confirm") { patch.status = "confirmed"; patch.confirmed_at = new Date().toISOString(); headline = "Confirmed. The agent creates the event and sends the invite on its next pass."; }
+      else if (act === "decline") { patch.status = "declined"; headline = "Declined. They get a short note and the booking page."; }
+      else return actPage("Unknown action", "Open the console and act there instead.", cfg);
+    }
+
+    const res = await rest(`${table}?id=eq.${id}`, {
+      method: "PATCH", headers: { Prefer: "return=minimal" }, body: JSON.stringify(patch),
+    });
+    if (!res.ok) return actPage("That did not save", "Open the console and try there.", cfg);
+    const what = table === "applications"
+      ? `${row.role_title ?? "the role"}${row.company ? " at " + row.company : ""}`
+      : `the call on ${new Date(row.slot_start).toLocaleString("en-GB", { timeZone: cfg["call_timezone"] ?? "UTC", weekday: "long", day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}`;
+    return actPage(headline, what, cfg);
+  }
+
   if (!safeEqual(tokenFrom(req, url), expected)) {
     return new Response("Not found", { status: 404, headers: { "Content-Type": "text/plain" } });
   }
