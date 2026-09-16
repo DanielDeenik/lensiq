@@ -167,6 +167,9 @@ async function openSlots(cfg: Record<string, string>) {
     timezone: tz, window: win, durations, slots,
     location: cfg["call_location"] ?? "Google Meet",
     calendar_synced: busy.length > 0,
+    // When Dan runs a Google appointment schedule, that is the booking system and
+    // this grid steps aside. One config key decides it, no redeploy.
+    booking_url: (cfg["booking_url"] ?? "").trim() || null,
   };
 }
 

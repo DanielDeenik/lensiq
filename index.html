@@ -132,6 +132,13 @@ section{margin-bottom:60px}
 .sg.adjacent{background:var(--bg);border-style:dashed}
 .sg.hit{box-shadow:0 0 0 2px var(--ink) inset}
 .sg:hover{transform:translateY(-1px)}
+.gbook{border:1px solid var(--ink);border-top:4px solid var(--lemon);border-radius:12px;background:var(--paper);padding:20px 22px;margin-top:14px}
+.gbook h3{margin:0 0 6px;font-size:17px;color:var(--ink);font-weight:800}
+.gbook p{margin:0 0 14px;font-size:14.5px;color:var(--body)}
+.gbook a.go{display:inline-block;padding:12px 22px;border-radius:9px;background:var(--lemon);border:1px solid var(--ink);color:var(--ink);font-weight:700;font-size:15px;text-decoration:none}
+.gbook a.go:hover{background:var(--ink);color:var(--paper)}
+.gbook iframe{width:100%;height:620px;border:1px solid var(--line);border-radius:10px;margin-top:16px;background:var(--bg)}
+@media (max-width:620px){.gbook iframe{height:520px}}
 .slotdays{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:12px;margin-top:14px}
 .slotday{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--bg)}
 .slotday h4{margin:0 0 8px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent-ink)}
@@ -1821,7 +1828,37 @@ const G = (function(){
   if (!daysEl || !btn) return;
   let chosen = null, durationId = null;
 
+  function renderGoogle(url, data){
+    const wrap = document.createElement("div");
+    wrap.className = "gbook";
+    const h = document.createElement("h3");
+    h.textContent = "Pick a time straight from Dan's calendar";
+    const p = document.createElement("p");
+    p.textContent = "This is his live Google Calendar availability. Choose a slot and it is booked, with a meeting link, immediately. No waiting on a reply.";
+    const a = document.createElement("a");
+    a.className = "go"; a.href = url; a.target = "_blank"; a.rel = "noopener noreferrer";
+    a.textContent = "Open the booking page";
+    wrap.append(h, p, a);
+    const frame = document.createElement("iframe");
+    frame.src = url;
+    frame.title = "Book a call with Dan Deenik";
+    frame.loading = "lazy";
+    wrap.appendChild(frame);
+    daysEl.textContent = "";
+    daysEl.appendChild(wrap);
+    if (metaEl) metaEl.textContent = data && data.durations && data.durations[0]
+      ? data.durations[0].label + ", " + (data.location || "online") + "." : "";
+    const form = document.getElementById("callbook");
+    if (form) form.closest(".fit-row").hidden = true;
+    ["callname","callemail","callcompany","callrole","callnote"].forEach(function(id){
+      const el2 = document.getElementById(id);
+      if (el2 && el2.parentElement) el2.parentElement.hidden = true;
+    });
+    if (pickEl) pickEl.hidden = true;
+  }
+
   function render(data){
+    if (data && data.booking_url){ renderGoogle(data.booking_url, data); return; }
     durationId = data.durations && data.durations[0] ? data.durations[0].id : null;
     const label = data.durations && data.durations[0] ? data.durations[0].label : "call";
     metaEl.textContent = label + ", " + (data.location || "online") + ", " + data.timezone.replace("_", " ") + ".";

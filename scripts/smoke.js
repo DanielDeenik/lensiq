@@ -172,6 +172,34 @@ const FILE = 'file://' + path.resolve(__dirname, '..', 'index.html');
     return !p.hidden && /Chosen:/.test(p.textContent);
   }));
 
+  // When a Google appointment schedule is configured, that page IS the booking
+  // system and the built in grid must step aside entirely.
+  await page.unroute('**/functions/v1/site/slots');
+  await page.route('**/functions/v1/site/slots', route => route.fulfill({
+    status: 200, contentType: 'application/json',
+    body: JSON.stringify({ timezone: 'Europe/Amsterdam', durations: [{ id: 'qualifier', minutes: 15, label: '15 minute quick qualifier' }],
+      location: 'Google Meet', calendar_synced: true, slots: [],
+      booking_url: 'https://calendar.app.google/exampleBookingPage' }),
+  }));
+  await page.reload({ waitUntil: 'domcontentloaded' });
+  await page.waitForTimeout(1500);
+  const g = await page.evaluate(() => {
+    const f = document.querySelector('.gbook iframe');
+    const a = document.querySelector('.gbook a.go');
+    return {
+      panel: !!document.querySelector('.gbook'),
+      iframeSrc: f ? f.getAttribute('src') : '',
+      linkHref: a ? a.getAttribute('href') : '',
+      gridButtons: document.querySelectorAll('#slotdays .slotbtn').length,
+      bookBtnHidden: (() => { const b = document.getElementById('callbook'); return b ? b.closest('.fit-row').hidden : null; })(),
+    };
+  });
+  add('google booking page takes over when configured', g.panel && /calendar\.app\.google/.test(g.linkHref) && /calendar\.app\.google/.test(g.iframeSrc),
+    'link=' + g.linkHref);
+  add('built in grid steps aside', g.gridButtons === 0 && g.bookBtnHidden === true,
+    'gridButtons=' + g.gridButtons + ' formHidden=' + g.bookBtnHidden);
+
+
   await page.setViewportSize({ width: 400, height: 800 });
   await page.waitForTimeout(400);
   const overflow = await page.evaluate(() =>
