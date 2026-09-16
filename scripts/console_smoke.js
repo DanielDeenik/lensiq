@@ -18,11 +18,6 @@ const FIXTURE = {
     fit_score: 82, spec_text: 'spec', fit_report_md: 'report', cv_md: 'cv', cover_letter_md: 'letter',
     gmail_draft_id: 'r-fixture-draft',
   }],
-  calls: [{
-    id: 1, status: 'held', requester_name: 'Fixture', requester_email: 'someone@example.com',
-    company: 'Fixture', role_title: 'Interim role', note: 'note',
-    slot_start: new Date(Date.now() + 172800000).toISOString(), duration_minutes: 15,
-  }],
   roles: [{ id: 1, title: 'Fixture role', link: 'https://example.com', jurisdiction: 'NL',
     source_ids: ['a', 'b'], score: 61, tier: 'WARM', last_seen: new Date().toISOString(), seen_by_dan: false }],
   runs: [{ ran_at: new Date().toISOString(), kind: 'roles_refresh', ok: true, items: 0 }],
@@ -51,7 +46,6 @@ const FIXTURE = {
         // asserted, whatever happens to be sitting in the real queues.
         state = Object.assign({}, live, {
           applications: FIXTURE.applications.concat(live.applications || []),
-          calls: FIXTURE.calls.concat(live.calls || []),
           roles: (live.roles && live.roles.length) ? live.roles : FIXTURE.roles,
           runs: (live.runs && live.runs.length) ? live.runs : FIXTURE.runs,
           season: live.season || FIXTURE.season,
@@ -88,8 +82,6 @@ const FIXTURE = {
     appButtons: Array.from(document.querySelectorAll('#apps button')).map(b => b.textContent),
     appLinks: Array.from(document.querySelectorAll('#apps a')).map(a => ({ text: a.textContent, href: a.getAttribute('href') })),
     appHint: (document.querySelector('#apps .status') || {}).textContent || '',
-    calls: document.querySelectorAll('#calls .card').length,
-    callButtons: Array.from(document.querySelectorAll('#calls button')).map(b => b.textContent),
     roles: document.querySelectorAll('#roles .role').length,
     srcstat: (document.getElementById('srcstat') || {}).textContent || '',
     seasonBars: document.querySelectorAll('#season .bars .b').length,
@@ -106,9 +98,6 @@ const FIXTURE = {
   add('console says send is the approval', /send in Gmail is the approval/i.test(seen.appHint), seen.appHint.slice(0, 70));
   add('reject stays available, approve does not', seen.appButtons.some(b => /^Reject$/.test(b)) &&
     !seen.appButtons.some(b => /Approve/.test(b)), seen.appButtons.join(' | ').slice(0, 70));
-  add('call requests render with confirm and decline', seen.calls > 0 &&
-    seen.callButtons.some(b => /Confirm and invite/.test(b)) && seen.callButtons.some(b => /Decline/.test(b)),
-    'cards=' + seen.calls + ' ' + seen.callButtons.join(' | ').slice(0, 60));
   add('role monitor section renders', seen.roles >= 0 && /sources live|dormant/.test(seen.srcstat), seen.srcstat.slice(0, 90));
   add('seasonality chart draws twelve months', seen.seasonBars === 24, 'bars=' + seen.seasonBars);
   add('credential arming is available', seen.arm);

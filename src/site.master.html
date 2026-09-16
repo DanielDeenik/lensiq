@@ -119,22 +119,6 @@ section{margin-bottom:60px}
 .sg.adjacent{background:var(--bg);border-style:dashed}
 .sg.hit{box-shadow:0 0 0 2px var(--ink) inset}
 .sg:hover{transform:translateY(-1px)}
-.gbook{border:1px solid var(--ink);border-top:4px solid var(--lemon);border-radius:12px;background:var(--paper);padding:20px 22px;margin-top:14px}
-.gbook h3{margin:0 0 6px;font-size:17px;color:var(--ink);font-weight:800}
-.gbook p{margin:0 0 14px;font-size:14.5px;color:var(--body)}
-.gbook a.go{display:inline-block;padding:12px 22px;border-radius:9px;background:var(--lemon);border:1px solid var(--ink);color:var(--ink);font-weight:700;font-size:15px;text-decoration:none}
-.gbook a.go:hover{background:var(--ink);color:var(--paper)}
-.gbook iframe{width:100%;height:620px;border:1px solid var(--line);border-radius:10px;margin-top:16px;background:var(--bg)}
-@media (max-width:620px){.gbook iframe{height:520px}}
-.slotdays{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:12px;margin-top:14px}
-.slotday{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--bg)}
-.slotday h4{margin:0 0 8px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent-ink)}
-.slottimes{display:flex;flex-wrap:wrap;gap:6px}
-.slotbtn{font-family:inherit;font-size:13px;font-weight:600;padding:6px 11px;border-radius:8px;border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer}
-.slotbtn:hover{background:var(--lemon);border-color:var(--ink)}
-.slotbtn[aria-pressed="true"]{background:var(--lemon);border-color:var(--ink)}
-.slotpick{font-size:14px;font-weight:700;color:var(--ink);margin:14px 0 0}
-.slotnote{font-size:13px;color:var(--muted);margin:4px 0 0}
 .fit-email{flex:1;min-width:220px;padding:10px 14px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit;font-size:14px}
 #specfile{font-size:12.5px;color:var(--muted);max-width:100%}
 #fitres[hidden]{display:none}
@@ -261,7 +245,7 @@ footer strong{color:#FFFFFF}
     <a href="#writing">Writing</a>
     <a href="#faq">Ask</a>
     <a href="#auto">How it runs</a>
-    <a href="#call">Book a call</a>
+    <a href="#call">Talk to Dan</a>
     <a href="#contact">Contact</a>
   </nav>
 </div>
@@ -342,6 +326,9 @@ footer strong{color:#FFFFFF}
       <div class="fit-row" style="margin-top:8px">
         <input class="fit-email" id="fitrole" type="text" maxlength="200" placeholder="Role title">
         <input class="fit-email" id="fitemail" type="email" maxlength="200" placeholder="Your email for Dan's reply">
+      </div>
+      <div class="fit-row" style="margin-top:8px">
+        <input class="fit-email" id="fitwhen" type="text" maxlength="300" placeholder="When suits you for a call, optional">
         <button class="fit-btn" id="fitsend" type="button">Send to Dan</button>
       </div>
       <p class="note" id="fitsent"></p>
@@ -573,25 +560,22 @@ footer strong{color:#FFFFFF}
 </section>
 
 <section id="call">
-  <p class="eyebrow">Book a call</p>
-  <h2>Fifteen minutes, mornings, Amsterdam time.</h2>
+  <p class="eyebrow">Talk to Dan</p>
+  <h2>Ask for fifteen minutes. The invite comes from his calendar.</h2>
   <div class="ll"></div>
   <div class="ask">
-    <p style="margin:0 0 6px;font-size:15px">Pick a slot that suits you. It is held immediately, Dan confirms it personally, and the calendar invite with the meeting link follows. Times below are shown in Amsterdam time.</p>
-    <p class="slotnote" id="slotmeta"></p>
-    <div class="slotdays" id="slotdays"><p class="slotnote">Loading open times.</p></div>
-    <p class="slotpick" id="slotpick" hidden></p>
+    <p style="margin:0 0 10px;font-size:15px">Say roughly when suits you. Dan's agent reads his real calendar, picks a time inside your window, and once he accepts it Google sends you the invitation with a meeting link. Mornings, Monday to Friday, Amsterdam time.</p>
     <div class="fit-row" style="margin-top:12px">
       <input class="fit-email" id="callname" type="text" maxlength="120" placeholder="Your name">
-      <input class="fit-email" id="callemail" type="email" maxlength="200" placeholder="Your email">
+      <input class="fit-email" id="callemail" type="email" maxlength="200" placeholder="Your email, where the invite goes">
     </div>
     <div class="fit-row" style="margin-top:8px">
       <input class="fit-email" id="callcompany" type="text" maxlength="160" placeholder="Company or agency">
       <input class="fit-email" id="callrole" type="text" maxlength="200" placeholder="Role you want to discuss">
     </div>
     <div class="fit-row" style="margin-top:8px">
-      <input class="fit-email" id="callnote" type="text" maxlength="300" placeholder="Anything Dan should read first (optional)">
-      <button class="fit-btn" id="callbook" type="button">Hold this slot</button>
+      <input class="fit-email" id="callwhen" type="text" maxlength="300" placeholder="When suits you, in your own words. Tuesday or Wednesday morning, say">
+      <button class="fit-btn" id="callbook" type="button">Ask for a slot</button>
     </div>
     <p class="note" id="callsent"></p>
   </div>
@@ -1746,7 +1730,9 @@ const G = (function(){
     fetch("https://hvitxwhfdhsdwhgllaqf.supabase.co/functions/v1/site", {
       method: "POST",
       headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({question: q, email: email, name: name, company: company, role: role, spec: spec.slice(0, 8000)})
+      body: JSON.stringify({question: q, email: email, name: name, company: company, role: role,
+        call_preference: (document.getElementById("fitwhen") || {value: ""}).value.trim(),
+        spec: spec.slice(0, 8000)})
     }).then(function(r){
       sent.textContent = (r.ok || r.status === 202)
         ? (email ? "Sent. Dan's agent writes the assessment and a CV focused on this spec, Dan reads and approves it himself, then it comes back to you. Normally same day." : "Sent to Dan's review agent. Add your email above and send again so the assessment can reach you.")
@@ -1801,123 +1787,43 @@ const G = (function(){
   });
 })();
 
-// ---------- Call booking ----------
+// ---------- Call request. Google Calendar does the booking, this only asks ----------
 (function(){
   const API = "https://hvitxwhfdhsdwhgllaqf.supabase.co/functions/v1/site";
-  const daysEl = document.getElementById("slotdays");
-  const metaEl = document.getElementById("slotmeta");
-  const pickEl = document.getElementById("slotpick");
-  const sentEl = document.getElementById("callsent");
   const btn = document.getElementById("callbook");
-  if (!daysEl || !btn) return;
-  let chosen = null, durationId = null;
-
-  function renderGoogle(url, data){
-    const wrap = document.createElement("div");
-    wrap.className = "gbook";
-    const h = document.createElement("h3");
-    h.textContent = "Pick a time straight from Dan's calendar";
-    const p = document.createElement("p");
-    p.textContent = "This is his live Google Calendar availability. Choose a slot and it is booked, with a meeting link, immediately. No waiting on a reply.";
-    const a = document.createElement("a");
-    a.className = "go"; a.href = url; a.target = "_blank"; a.rel = "noopener noreferrer";
-    a.textContent = "Open the booking page";
-    wrap.append(h, p, a);
-    const frame = document.createElement("iframe");
-    frame.src = url;
-    frame.title = "Book a call with Dan Deenik";
-    frame.loading = "lazy";
-    wrap.appendChild(frame);
-    daysEl.textContent = "";
-    daysEl.appendChild(wrap);
-    if (metaEl) metaEl.textContent = data && data.durations && data.durations[0]
-      ? data.durations[0].label + ", " + (data.location || "online") + "." : "";
-    const form = document.getElementById("callbook");
-    if (form) form.closest(".fit-row").hidden = true;
-    ["callname","callemail","callcompany","callrole","callnote"].forEach(function(id){
-      const el2 = document.getElementById(id);
-      if (el2 && el2.parentElement) el2.parentElement.hidden = true;
-    });
-    if (pickEl) pickEl.hidden = true;
-  }
-
-  function render(data){
-    if (data && data.booking_url){ renderGoogle(data.booking_url, data); return; }
-    durationId = data.durations && data.durations[0] ? data.durations[0].id : null;
-    const label = data.durations && data.durations[0] ? data.durations[0].label : "call";
-    metaEl.textContent = label + ", " + (data.location || "online") + ", " + data.timezone.replace("_", " ") + ".";
-    daysEl.textContent = "";
-    if (!data.slots || !data.slots.length){
-      const p = document.createElement("p"); p.className = "slotnote";
-      p.textContent = "No open slots in the next two weeks. Email deenikdaniel@gmail.com and Dan will find a time.";
-      daysEl.appendChild(p); return;
-    }
-    const byDay = {};
-    data.slots.forEach(function(s){ (byDay[s.day] = byDay[s.day] || []).push(s); });
-    Object.keys(byDay).forEach(function(day){
-      const box = document.createElement("div"); box.className = "slotday";
-      const h = document.createElement("h4"); h.textContent = day; box.appendChild(h);
-      const times = document.createElement("div"); times.className = "slottimes";
-      byDay[day].forEach(function(s){
-        const b = document.createElement("button");
-        b.type = "button"; b.className = "slotbtn"; b.textContent = s.time;
-        b.setAttribute("aria-pressed", "false");
-        b.addEventListener("click", function(){
-          chosen = s;
-          daysEl.querySelectorAll(".slotbtn").forEach(function(x){ x.setAttribute("aria-pressed", "false"); });
-          b.setAttribute("aria-pressed", "true");
-          pickEl.hidden = false;
-          pickEl.textContent = "Chosen: " + s.day + " at " + s.time + ", " + data.timezone.split("/")[1].replace("_", " ") + " time.";
-        });
-        times.appendChild(b);
-      });
-      box.appendChild(times); daysEl.appendChild(box);
-    });
-  }
-
-  function load(){
-    fetch(API + "/slots").then(function(r){ return r.json(); }).then(render).catch(function(){
-      daysEl.textContent = "";
-      const p = document.createElement("p"); p.className = "slotnote";
-      p.textContent = "Open times are not loading right now. Email deenikdaniel@gmail.com and Dan will find a time.";
-      daysEl.appendChild(p);
-    });
-  }
-
+  const sent = document.getElementById("callsent");
+  if (!btn) return;
   btn.addEventListener("click", function(){
     const email = document.getElementById("callemail").value.trim();
-    if (!chosen){ sentEl.textContent = "Pick a time above first."; return; }
-    if (!email){ sentEl.textContent = "Add your email so Dan can send the invite."; return; }
-    btn.disabled = true; sentEl.textContent = "Holding the slot...";
-    fetch(API + "/book", {
+    const when = document.getElementById("callwhen").value.trim();
+    if (!email){ sent.textContent = "Add your email so the invitation can reach you."; return; }
+    if (!when){ sent.textContent = "Say roughly when suits you."; return; }
+    btn.disabled = true; sent.textContent = "Sending...";
+    const role = document.getElementById("callrole").value.trim();
+    fetch(API, {
       method: "POST", headers: {"Content-Type": "application/json"},
       body: JSON.stringify({
-        slot_start: chosen.start, duration_id: durationId,
-        name: document.getElementById("callname").value.trim(),
+        question: ("Call request" + (role ? ": " + role : "")).slice(0, 295),
         email: email,
+        name: document.getElementById("callname").value.trim(),
         company: document.getElementById("callcompany").value.trim(),
-        role: document.getElementById("callrole").value.trim(),
-        note: document.getElementById("callnote").value.trim()
+        role: role,
+        call_preference: when
       })
     }).then(function(r){ return r.json().then(function(j){ return {ok: r.ok, status: r.status, j: j}; }); })
     .then(function(res){
       btn.disabled = false;
-      if (res.j && res.j.held){
-        sentEl.textContent = "Held for " + res.j.when + ", " + res.j.timezone.split("/")[1].replace("_", " ") + " time. Dan confirms it personally and the invite follows by email.";
-        pickEl.hidden = true; chosen = null; load();
-      } else if (res.status === 409){
-        sentEl.textContent = "That slot was taken while you were typing. The times below are refreshed, pick another.";
-        load();
+      if (res.j && (res.j.requested || res.status === 202)){
+        sent.textContent = "Asked. Dan reads it, and Google sends you the invitation with a meeting link once he accepts. Normally same day.";
+        document.getElementById("callwhen").value = "";
       } else {
-        sentEl.textContent = "Could not hold that slot. Email deenikdaniel@gmail.com and Dan will find a time.";
+        sent.textContent = "Could not send that. Email deenikdaniel@gmail.com and Dan will find a time.";
       }
     }).catch(function(){
       btn.disabled = false;
-      sentEl.textContent = "Booking is not available in this view. Email deenikdaniel@gmail.com and Dan will find a time.";
+      sent.textContent = "Sending is not available in this view. Email deenikdaniel@gmail.com and Dan will find a time.";
     });
   });
-
-  load();
 })();
 
 // ---------- Q&A ----------

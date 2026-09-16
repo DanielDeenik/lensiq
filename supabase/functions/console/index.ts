@@ -329,67 +329,6 @@ async function observedByMonth(months: string[]) {
 
 // ---------- Routing ----------
 
-async function applyDecision(kind: string, id: string, act: string, cfg: Record<string, string>):
-  Promise<{ ok: boolean; headline: string; detail: string }> {
-  const table = kind === "call" ? "call_requests" : kind === "app" ? "applications" : "";
-  if (!table || !/^\d+$/.test(id)) return { ok: false, headline: "That link is incomplete", detail: "Open the console and decide there." };
-
-  const look = await rest(`${table}?select=*&id=eq.${id}`);
-  const rows = look.ok ? await look.json() : [];
-  const row = rows[0];
-  if (!row) return { ok: false, headline: "That item is gone", detail: "It was removed. Nothing changed." };
-
-  const patch: Record<string, unknown> = {};
-  let headline = "";
-  if (table === "applications") {
-    if (row.status !== "pending_approval" && row.status !== "draft_ready" && row.status !== "new") {
-      return { ok: false, headline: "Already decided", detail: `This one is already marked ${String(row.status).replace(/_/g, " ")}. Nothing changed.` };
-    }
-    if (act === "approve_draft") { patch.status = "approved"; patch.delivery = "draft"; patch.approved_at = new Date().toISOString(); headline = "Approved. The draft goes to your Gmail."; }
-    else if (act === "approve_send") { patch.status = "approved"; patch.delivery = "send"; patch.approved_at = new Date().toISOString(); headline = "Approved and queued to send."; }
-    else if (act === "reject") { patch.status = "rejected"; headline = "Rejected. Nothing goes out, and the draft can be binned."; }
-    else return { ok: false, headline: "Unknown action", detail: "Open the console and decide there." };
-  } else {
-    if (row.status !== "held") {
-      return { ok: false, headline: "Already decided", detail: `This call is already ${String(row.status)}. Nothing changed.` };
-    }
-    if (act === "confirm") { patch.status = "confirmed"; patch.confirmed_at = new Date().toISOString(); headline = "Confirmed. The invite and the meeting link go out on the next pass, within the hour."; }
-    else if (act === "decline") { patch.status = "declined"; headline = "Declined. They get a short note and the booking page."; }
-    else return { ok: false, headline: "Unknown action", detail: "Open the console and decide there." };
-  }
-
-  const res = await rest(`${table}?id=eq.${id}`, {
-    method: "PATCH", headers: { Prefer: "return=minimal" }, body: JSON.stringify(patch),
-  });
-  if (!res.ok) return { ok: false, headline: "That did not save", detail: "Open the console and try there." };
-
-  const detail = table === "applications"
-    ? `${row.role_title ?? "the role"}${row.company ? " at " + row.company : ""}`
-    : `${row.requester_name ?? row.requester_email ?? "the caller"}, ${new Date(row.slot_start).toLocaleString("en-GB", { timeZone: cfg["call_timezone"] ?? "UTC", weekday: "long", day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}`;
-  return { ok: true, headline, detail };
-}
-
-function actPage(headline: string, detail: string, cfg: Record<string, string>): Response {
-  const base = cfg["console_public_url"] ?? cfg["console_base_url"] ?? "";
-  const link = base ? `${base}/?k=${encodeURIComponent(cfg["console_token"] ?? "")}` : "";
-  const esc = (v: string) => v.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]!));
-  const html = `<!doctype html><html lang="en"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex">
-<title>LensIQ</title><style>
-:root{--bg:#f6f5f1;--paper:#fff;--ink:#15171b;--body:#2c3038;--muted:#6b7280;--line:#e3e1da;--lemon:#e8f04a}
-body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);color:var(--body);
-font-family:system-ui,-apple-system,'Segoe UI',sans-serif;padding:24px}
-.c{background:var(--paper);border:1px solid var(--line);border-top:4px solid var(--lemon);border-radius:14px;
-padding:28px 30px;max-width:520px;box-shadow:0 10px 30px rgba(21,23,27,.08)}
-h1{margin:0 0 10px;font-size:20px;color:var(--ink);line-height:1.3}
-p{margin:0 0 18px;font-size:15px;line-height:1.55}
-a{display:inline-block;padding:10px 18px;border-radius:9px;background:var(--lemon);border:1px solid var(--ink);
-color:var(--ink);font-weight:700;text-decoration:none;font-size:14px}
-</style></head><body><div class="c"><h1>${esc(headline)}</h1><p>${esc(detail)}</p>
-${link ? `<a href="${esc(link)}">Open the console</a>` : ""}</div></body></html>`;
-  return new Response(html, { status: 200, headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" } });
-}
-
 Deno.serve(async (req: Request) => {
   const url = new URL(req.url);
   const path = url.pathname.replace(/^\/console/, "").replace(/\/$/, "") || "/";
@@ -400,75 +339,6 @@ Deno.serve(async (req: Request) => {
   // One click approval from the email Dan gets. The link carries a token that is
   // scoped to a single row, never the console master token, so forwarding an
   // email cannot hand anyone the console.
-  // One opaque path segment. No query string, so an email client that turns an
-  // ampersand into &amp; cannot silently strip half the decision.
-  if (path === "/a" || path.startsWith("/a/")) {
-    const token = decodeURIComponent(path.replace(/^\/a\/?/, "")).trim().replace(/[^a-f0-9]/gi, "").toLowerCase();
-    if (!token) return actPage("That link is incomplete", "It was probably cut short on the way here. Open the console and decide there.", cfg);
-
-    const linkRes = await rest(`action_links?select=*&token=eq.${encodeURIComponent(token)}`);
-    const links = linkRes.ok ? await linkRes.json() : [];
-    const link = links[0];
-    if (!link) return actPage("That link is not one of ours", "Open the console and decide there.", cfg);
-    if (link.used_at) return actPage("Already done", "You used this link already. Nothing changed just now.", cfg);
-    if (new Date(link.expires_at).getTime() < Date.now()) return actPage("That link has expired", "Open the console and decide there.", cfg);
-
-    const outcome = await applyDecision(link.kind, String(link.row_id), link.action, cfg);
-    if (outcome.ok) {
-      await rest(`action_links?token=eq.${encodeURIComponent(token)}`, {
-        method: "PATCH", headers: { Prefer: "return=minimal" },
-        body: JSON.stringify({ used_at: new Date().toISOString() }),
-      });
-    }
-    return actPage(outcome.headline, outcome.detail, cfg);
-  }
-
-  if (path === "/act") {
-    const kind = url.searchParams.get("kind") ?? "";
-    const id = url.searchParams.get("id") ?? "";
-    const act = url.searchParams.get("do") ?? "";
-    const tok = url.searchParams.get("t") ?? "";
-    const table = kind === "call" ? "call_requests" : kind === "app" ? "applications" : "";
-    if (!table || !/^\d+$/.test(id) || !tok) return actPage("That link is not complete", "Open the console and act there instead.", cfg);
-
-    const look = await rest(`${table}?select=*&id=eq.${id}&action_token=eq.${encodeURIComponent(tok)}`);
-    const rows = look.ok ? await look.json() : [];
-    const row = rows[0];
-    if (!row) return actPage("That link is no longer valid", "It may already have been used, or the item was removed. Open the console to see where things stand.", cfg);
-
-    const patch: Record<string, unknown> = {};
-    let headline = "";
-    if (table === "applications") {
-      if (row.status !== "pending_approval") {
-        return actPage("Already decided", `This one is already marked ${String(row.status).replace(/_/g, " ")}. Nothing changed.`, cfg);
-      }
-      if (act === "approve_draft") { patch.status = "approved"; patch.delivery = "draft"; patch.approved_at = new Date().toISOString(); headline = "Approved. The agent will put the pack in your Gmail as a draft."; }
-      else if (act === "approve_send") { patch.status = "approved"; patch.delivery = "send"; patch.approved_at = new Date().toISOString(); headline = "Approved and queued to send. The agent sends it on its next pass."; }
-      else if (act === "reject") { patch.status = "rejected"; headline = "Rejected. Nothing goes out."; }
-      else return actPage("Unknown action", "Open the console and act there instead.", cfg);
-    } else {
-      if (row.status !== "held") {
-        return actPage("Already decided", `This call is already ${String(row.status)}. Nothing changed.`, cfg);
-      }
-      if (act === "confirm") { patch.status = "confirmed"; patch.confirmed_at = new Date().toISOString(); headline = "Confirmed. The agent creates the event and sends the invite on its next pass."; }
-      else if (act === "decline") { patch.status = "declined"; headline = "Declined. They get a short note and the booking page."; }
-      else return actPage("Unknown action", "Open the console and act there instead.", cfg);
-    }
-
-    const res = await rest(`${table}?id=eq.${id}`, {
-      method: "PATCH", headers: { Prefer: "return=minimal" }, body: JSON.stringify(patch),
-    });
-    if (!res.ok) return actPage("That did not save", "Open the console and try there.", cfg);
-    const what = table === "applications"
-      ? `${row.role_title ?? "the role"}${row.company ? " at " + row.company : ""}`
-      : `the call on ${new Date(row.slot_start).toLocaleString("en-GB", { timeZone: cfg["call_timezone"] ?? "UTC", weekday: "long", day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}`;
-    return actPage(headline, what, cfg);
-  }
-
-  if (!safeEqual(tokenFrom(req, url), expected)) {
-    return new Response("Not found", { status: 404, headers: { "Content-Type": "text/plain" } });
-  }
-
   const setCookie = url.searchParams.get("k")
     ? { "Set-Cookie": `${COOKIE}=${encodeURIComponent(expected)}; Path=/console; HttpOnly; Secure; SameSite=Lax; Max-Age=7776000` }
     : {};
@@ -480,23 +350,21 @@ Deno.serve(async (req: Request) => {
   }
 
   if (path === "/api/state" && req.method === "GET") {
-    const [appsRes, rolesRes, runsRes, callsRes] = await Promise.all([
+    const [appsRes, rolesRes, runsRes] = await Promise.all([
       rest("applications?select=*&order=created_at.desc&limit=60"),
       rest("role_signals?select=*&order=score.desc,last_seen.desc&limit=120"),
       rest("agent_runs?select=*&order=ran_at.desc&limit=12"),
-      rest("call_requests?select=*&order=slot_start.asc&limit=60"),
     ]);
     const applications = appsRes.ok ? await appsRes.json() : [];
     const roles = rolesRes.ok ? await rolesRes.json() : [];
     const runs = runsRes.ok ? await runsRes.json() : [];
-    const calls = callsRes.ok ? await callsRes.json() : [];
     let season = null, observed = null, sources = null;
     if (nexus) {
       season = await seasonality(nexus, cfg["nexus_profile_industry"] ?? "default", cfg["nexus_profile_location"] ?? "NL", parseInt(cfg["nexus_seasonality_ttl_hours"] || "168", 10));
       observed = await observedByMonth(nexus.seasonality.months);
       sources = sourceStatus(nexus, cfg);
     }
-    return json({ applications, roles, runs, calls, season, observed, sources, nexus_configured: Boolean(nexus), defaults: { delivery: cfg["default_delivery_mode"] ?? "draft", call_timezone: cfg["call_timezone"] ?? "UTC" } }, 200, setCookie);
+    return json({ applications, roles, runs, season, observed, sources, nexus_configured: Boolean(nexus), defaults: { delivery: cfg["default_delivery_mode"] ?? "draft", call_timezone: cfg["call_timezone"] ?? "UTC" } }, 200, setCookie);
   }
 
   if (path === "/api/application" && req.method === "POST") {
@@ -517,21 +385,6 @@ Deno.serve(async (req: Request) => {
     if (!res.ok) return json({ error: "update_failed", detail: await res.text() }, 500);
     const rows = await res.json();
     return json({ ok: true, application: rows[0] ?? null }, 200, setCookie);
-  }
-
-  if (path === "/api/call" && req.method === "POST") {
-    const body = await req.json().catch(() => null);
-    if (!body || !body.id) return json({ error: "bad_request" }, 400);
-    const patch: Record<string, unknown> = {};
-    if (body.action === "confirm") { patch.status = "confirmed"; patch.confirmed_at = new Date().toISOString(); }
-    else if (body.action === "decline") { patch.status = "declined"; patch.declined_reason = String(body.reason ?? "").slice(0, 500) || null; }
-    else return json({ error: "bad_action" }, 400);
-    const res = await rest(`call_requests?id=eq.${encodeURIComponent(String(body.id))}`, {
-      method: "PATCH", headers: { Prefer: "return=representation" }, body: JSON.stringify(patch),
-    });
-    if (!res.ok) return json({ error: "update_failed", detail: await res.text() }, 500);
-    const rows = await res.json();
-    return json({ ok: true, call: rows[0] ?? null }, 200, setCookie);
   }
 
   if (path === "/api/roles/seen" && req.method === "POST") {

@@ -1,3 +1,7 @@
+-- SUPERSEDED by 007_retire_custom_booking.sql. Kept as the record of what was
+-- applied, not as live schema. These tables were a parallel booking system and
+-- every user facing failure came from them. Google Calendar does this now.
+
 -- A recruiter picks a slot, it is held, and nothing reaches Dan's calendar
 -- until he confirms it in the console. Same approval shape as the CV pack.
 create table if not exists public.call_requests (

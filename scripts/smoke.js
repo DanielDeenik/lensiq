@@ -9,36 +9,19 @@ const FILE = 'file://' + path.resolve(__dirname, '..', 'index.html');
 (async () => {
   const browser = await chromium.launch();
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  const errors = [];
+  page.on('pageerror', e => errors.push('pageerror: ' + e.message));
+  page.on('console', m => { if (m.type() === 'error' && !/net::ERR/.test(m.text())) errors.push('console: ' + m.text()); });
 
-  // The booking widget reads live slots from the edge function. The headless
-  // browser has no route to it, so the widget is exercised against a fixture
-  // here and the real endpoint is checked over the network further down.
+  // The counters read the live pulse endpoint. The headless browser has no
+  // route to it, so the band is exercised against a fixture here and the real
+  // endpoint is checked over the network further down.
   await page.route('**/functions/v1/site/pulse', route => route.fulfill({
     status: 200, contentType: 'application/json',
     body: JSON.stringify({ specs_assessed: 3, calls_booked: 2, roles_tracked: 0, roles_scanned: 1072,
       sources_live: 6, questions_answered: 4, last_agent_run: new Date(Date.now() - 900000).toISOString(),
       last_role_scan: null, running_since: '2026-09-14T10:40:16.578Z' }),
   }));
-  await page.route('**/functions/v1/site/slots', route => route.fulfill({
-    status: 200,
-    contentType: 'application/json',
-    body: JSON.stringify({
-      timezone: 'Europe/Amsterdam',
-      window: { days: [1, 2, 3, 4, 5], start: '09:00', end: '13:00' },
-      durations: [{ id: 'qualifier', minutes: 15, label: '15 minute quick qualifier' }],
-      location: 'Google Meet',
-      calendar_synced: false,
-      slots: [
-        { start: '2026-09-16T07:00:00.000Z', end: '2026-09-16T07:15:00.000Z', date: '2026-09-16', day: 'Wed 16/09', time: '09:00' },
-        { start: '2026-09-16T07:15:00.000Z', end: '2026-09-16T07:30:00.000Z', date: '2026-09-16', day: 'Wed 16/09', time: '09:15' },
-        { start: '2026-09-17T07:00:00.000Z', end: '2026-09-17T07:15:00.000Z', date: '2026-09-17', day: 'Thu 17/09', time: '09:00' }
-      ]
-    })
-  }));
-  const errors = [];
-  page.on('pageerror', e => errors.push('pageerror: ' + e.message));
-  page.on('console', m => { if (m.type() === 'error' && !/net::ERR/.test(m.text())) errors.push('console: ' + m.text()); });
-
   await page.goto(FILE);
   await page.waitForTimeout(1500);
 
@@ -152,53 +135,24 @@ const FILE = 'file://' + path.resolve(__dirname, '..', 'index.html');
   add('counters state they are read live', /Read live from the system/.test(pulse.line), pulse.line.slice(0, 70));
   add('how it runs explains the loop', pulse.how === 4, 'blocks=' + pulse.how);
 
-  add('book a call section present', await page.evaluate(() =>
-    !!document.getElementById('call') && !!document.getElementById('slotdays')));
+  // Talk to Dan is a request, not a booking system. Google Calendar does the
+  // booking, so the page must collect who and when and nothing else.
+  add('talk to Dan section present', await page.evaluate(() =>
+    !!document.getElementById('call') && !!document.getElementById('callwhen') && !!document.getElementById('callbook')));
   add('recruiter fields on the fit form', await page.evaluate(() =>
-    ['fitname', 'fitcompany', 'fitrole', 'fitemail'].every(id => !!document.getElementById(id))));
-  const slots = await page.evaluate(() => ({
-    buttons: document.querySelectorAll('#slotdays .slotbtn').length,
-    days: document.querySelectorAll('#slotdays .slotday').length,
-    meta: (document.getElementById('slotmeta') || {}).textContent || '',
+    ['fitname', 'fitcompany', 'fitrole', 'fitemail', 'fitwhen'].every(id => !!document.getElementById(id))));
+  add('no booking machinery left on the page', await page.evaluate(() => ({
+    grid: document.querySelectorAll('#slotdays, .slotbtn, .gbook').length,
+    text: /Hold this slot/.test(document.body.textContent) ? 1 : 0,
+  })).then(r => r.grid === 0 && r.text === 0));
+  add('call request validates before sending', await page.evaluate(() => {
+    document.getElementById('callemail').value = '';
+    document.getElementById('callwhen').value = 'Tuesday morning';
+    document.getElementById('callbook').click();
+    return /Add your email/.test(document.getElementById('callsent').textContent);
   }));
-  add('slot grid renders days and times', slots.buttons === 3 && slots.days === 2,
-    'buttons=' + slots.buttons + ' days=' + slots.days);
-  add('slot grid states the call terms', /15 minute/.test(slots.meta) && /Amsterdam/.test(slots.meta), slots.meta.slice(0, 70));
-  add('slot selection updates the choice line', await page.evaluate(() => {
-    const b = document.querySelector('#slotdays .slotbtn');
-    if (!b) return false;
-    b.click();
-    const p = document.getElementById('slotpick');
-    return !p.hidden && /Chosen:/.test(p.textContent);
-  }));
-
-  // When a Google appointment schedule is configured, that page IS the booking
-  // system and the built in grid must step aside entirely.
-  await page.unroute('**/functions/v1/site/slots');
-  await page.route('**/functions/v1/site/slots', route => route.fulfill({
-    status: 200, contentType: 'application/json',
-    body: JSON.stringify({ timezone: 'Europe/Amsterdam', durations: [{ id: 'qualifier', minutes: 15, label: '15 minute quick qualifier' }],
-      location: 'Google Meet', calendar_synced: true, slots: [],
-      booking_url: 'https://calendar.app.google/exampleBookingPage' }),
-  }));
-  await page.reload({ waitUntil: 'domcontentloaded' });
-  await page.waitForTimeout(1500);
-  const g = await page.evaluate(() => {
-    const f = document.querySelector('.gbook iframe');
-    const a = document.querySelector('.gbook a.go');
-    return {
-      panel: !!document.querySelector('.gbook'),
-      iframeSrc: f ? f.getAttribute('src') : '',
-      linkHref: a ? a.getAttribute('href') : '',
-      gridButtons: document.querySelectorAll('#slotdays .slotbtn').length,
-      bookBtnHidden: (() => { const b = document.getElementById('callbook'); return b ? b.closest('.fit-row').hidden : null; })(),
-    };
-  });
-  add('google booking page takes over when configured', g.panel && /calendar\.app\.google/.test(g.linkHref) && /calendar\.app\.google/.test(g.iframeSrc),
-    'link=' + g.linkHref);
-  add('built in grid steps aside', g.gridButtons === 0 && g.bookBtnHidden === true,
-    'gridButtons=' + g.gridButtons + ' formHidden=' + g.bookBtnHidden);
-
+  add('call request asks when, in their words', await page.evaluate(() =>
+    /own words/i.test(document.getElementById('callwhen').getAttribute('placeholder') || '')));
 
   await page.setViewportSize({ width: 400, height: 800 });
   await page.waitForTimeout(400);
@@ -215,16 +169,16 @@ const FILE = 'file://' + path.resolve(__dirname, '..', 'index.html');
   const live = await (async () => {
     const base = process.env.SITE_FN_URL || 'https://hvitxwhfdhsdwhgllaqf.supabase.co/functions/v1/site';
     try {
-      const res = await fetch(base + '/slots');
+      const res = await fetch(base + '/pulse');
       if (!res.ok) return { ok: false, detail: 'http ' + res.status };
-      const data = await res.json();
-      const n = Array.isArray(data.slots) ? data.slots.length : 0;
-      return { ok: n > 0 && !!data.timezone, detail: n + ' open slots, tz ' + data.timezone };
+      const d = await res.json();
+      return { ok: typeof d.specs_assessed === 'number' && !!d.generated_at,
+               detail: d.specs_assessed + ' specs, ' + d.roles_scanned + ' roles scanned' };
     } catch (e) {
       return { ok: false, detail: 'unreachable: ' + e.message };
     }
   })();
-  add('live slots endpoint answers', live.ok, live.detail);
+  add('live pulse endpoint answers', live.ok, live.detail);
 
   let failed = 0;
   for (const c of checks) {

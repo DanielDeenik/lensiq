@@ -57,9 +57,6 @@ button.act[disabled]{opacity:0.45;cursor:default}
   <div id="apps"><div class="empty">Loading.</div></div>
   <h2>Recently decided</h2>
   <div id="done"></div>
-  <h2>Calls waiting for you</h2>
-  <div id="calls"></div>
-
   <h2>New roles in the market</h2>
   <div class="card">
     <div class="row" style="margin-top:0">
@@ -176,42 +173,6 @@ function renderApps(){
   decided.forEach(a => dn.appendChild(appCard(a, true)));
 }
 
-function renderCalls(){
-  const box = document.getElementById("calls"); box.textContent = "";
-  const calls = (STATE.calls || []).filter(c => c.status === "held" || c.status === "confirmed");
-  if (!calls.length){ box.appendChild(el("div","empty","No call requests. Recruiters book a slot on the site and it lands here before it touches your calendar.")); return; }
-  const tz = (STATE.defaults && STATE.defaults.call_timezone) || "Europe/Amsterdam";
-  calls.forEach(c => {
-    const card = el("div","card");
-    const when = new Date(c.slot_start).toLocaleString(undefined, {timeZone: tz, weekday:"long", day:"2-digit", month:"short", hour:"2-digit", minute:"2-digit"});
-    card.appendChild(el("h3", null, when + ", " + c.duration_minutes + " minutes"));
-    card.appendChild(el("div","meta", [c.requester_name, c.company, c.requester_email, c.role_title, c.status].filter(Boolean).join("  \u00b7  ")));
-    if (c.note) card.appendChild(el("div", null, c.note));
-    if (c.meet_link){ const a = el("a", null, "Meet link"); a.href = c.meet_link; a.target = "_blank"; a.rel="noopener noreferrer"; card.appendChild(a); }
-    const row = el("div","row"); const st = el("span","status");
-    async function act(action, reason){
-      st.textContent = "Working.";
-      const res = await api("/api/call", {method:"POST", body: JSON.stringify({id: c.id, action: action, reason: reason})});
-      st.textContent = res.ok ? "Saved. The agent sends the invite on its next pass." : ("Failed: " + (res.error || "unknown"));
-      if (res.ok) load();
-    }
-    if (c.status === "held"){
-      const yes = el("button","act","Confirm and invite"); yes.type="button"; yes.addEventListener("click", function(){ act("confirm"); });
-      const no = el("button","act warn","Decline"); no.type="button"; no.addEventListener("click", function(){
-        const r = prompt("Reason to send back, optional:") ; if (r !== null) act("decline", r);
-      });
-      row.append(yes, no, st);
-    } else {
-      row.appendChild(el("span","pill","confirmed"));
-      row.appendChild(st);
-    }
-    card.appendChild(row);
-    box.appendChild(card);
-  });
-  const held = calls.filter(c => c.status === "held").length;
-  if (held){ const h = document.getElementById("hdr"); h.textContent = held + " call" + (held > 1 ? "s" : "") + " waiting for you"; }
-}
-
 function renderSources(){
   const ss = document.getElementById("srcstat");
   if (!ss || !STATE.sources) return;
@@ -291,7 +252,7 @@ function renderRuns(){
 
 async function load(){
   STATE = await api("/api/state");
-  renderApps(); renderCalls(); renderRoles(); renderSeason(); renderRuns();
+  renderApps(); renderRoles(); renderSeason(); renderRuns();
 }
 document.getElementById("refresh").addEventListener("click", async function(){
   const s = document.getElementById("rolestatus"); s.textContent = "Scanning the job boards.";
