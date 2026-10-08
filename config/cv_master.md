@@ -289,3 +289,21 @@ Front Office Trading Workflows · IBOR · Asset & Wealth Management
 **English** (Native) | **Dutch** (Intermediate) | **Afrikaans** (Advanced)
 
 *References available on request*
+
+## Project management detail (stated by Dan, 8 October 2026)
+
+These facts extend the engagements above and may be used in any tailored CV.
+
+**A.S.R, Project Manager, SFDR and EU Taxonomy (2021 to 2022)**
+- Managed the SFDR and EU Taxonomy implementation and led its data management workstream, taking the project through to successful completion.
+- Led a cross-functional team of around 10 people from Business Intelligence (3 data warehouse specialists), Change Management and Data Management.
+- Delivered the full integration of the SFDR reporting solution: the ESG and SFDR modules in SimCorp Dimension, the ESG and EU Taxonomy reporting requirements, and the data warehouse requirements behind them.
+
+**Athora Netherlands, Project Manager, ESG and Vendor Data Integration (2021 to 2024)**
+- Managed the integration of ESG and vendor data into BlackRock Aladdin Risk following the Aladdin Risk and eFront implementation.
+- Brought data from multiple vendors into Aladdin Risk across private assets, alternative investments and real estate.
+- Owned scope, budget and vendor relationships, and managed the key stakeholders across the programme.
+
+**Shell Asset Management, Project Manager, Compliance Manager Implementation (2020 to 2021, via SimCorp)**
+- Managed the implementation of a custom hierarchical structure in SimCorp Dimension Compliance Manager, so compliance rules could be governed across portfolio groups, portfolios and model portfolios.
+- Owned the project plan, work breakdown structure, budget tracking and workstream coordination.
