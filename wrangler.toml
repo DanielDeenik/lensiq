@@ -1,9 +1,19 @@
-# Cloudflare Workers static-assets deploy for the LensIQ recruiter site.
+# Cloudflare Workers deploy for the LensIQ recruiter site.
 # Workers Builds runs `npx wrangler deploy` on every push to main.
-# Only ./dist is published: no worker script, no repo source, no .git.
+# ./dist is served as static assets. worker/index.js handles only /api/*:
+# the site's forms post there and each submission is emailed into Dan's Gmail.
 name = "lensiq"
+main = "worker/index.js"
 compatibility_date = "2025-06-01"
 
 [assets]
 directory = "./dist"
+binding = "ASSETS"
 not_found_handling = "single-page-application"
+run_worker_first = ["/api/*"]
+
+# Requires Email Routing enabled on lensiq.company with deenikdaniel@gmail.com
+# added and verified as a destination address.
+[[send_email]]
+name = "INTAKE"
+destination_address = "deenikdaniel@gmail.com"

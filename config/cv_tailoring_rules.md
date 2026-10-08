@@ -1,10 +1,10 @@
 # CV tailoring and cover letter rules
 
 These rules govern every CV and cover letter the agent produces from a pasted job spec.
-The output is a draft for Dan. Nothing reaches the sender until Dan approves it in the console.
+The output is a draft for Dan. Nothing reaches the sender until Dan approves it by pressing Send on the Gmail draft.
 
 ## Absolute limits
-- Every claim must trace to `cv_master_md` or `fact_base` in app_config. If the spec asks for something Dan has not done, the CV does not claim it. Gaps are handled by leading with the nearest real experience, never by inventing.
+- Every claim must trace to `config/cv_master.md` or `config/fact_base.md`. If the spec asks for something Dan has not done, the CV does not claim it. Gaps are handled by leading with the nearest real experience, never by inventing.
 - Never invent employers, dates, tools, certifications, metrics or outcomes. Never round a duration up.
 - Never state a rate, a salary, a notice period or an availability date. Those are Dan's to say.
 - Never include client project internals beyond what the master CV already states.
@@ -13,7 +13,7 @@ The output is a draft for Dan. Nothing reaches the sender until Dan approves it 
 
 ## Weigh the spec against depth, never against the first match
 
-`skill_profile` in app_config is the judgement. Every area carries a tier, and the tier
+`config/skill-profile.json` is the judgement. Every area carries a tier, and the tier
 decides what a match is worth:
 
 - **primary**: what Dan is hired for. Front office and order management, IBOR and position

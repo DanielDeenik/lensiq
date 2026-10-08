@@ -9,7 +9,7 @@ async function ask() {
   busy = true; btn.disabled = true;
   answerEl.hidden = false; answerEl.textContent = 'Thinking...';
   try {
-    const res = await fetch('https://hvitxwhfdhsdwhgllaqf.supabase.co/functions/v1/site', {
+    const res = await fetch('https://lensiq.company/api/site', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ question: q, email: emailInput.value.trim() })

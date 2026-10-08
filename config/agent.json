@@ -1,0 +1,13 @@
+{
+  "owner_email": "deenikdaniel@gmail.com",
+  "intake_from": "intake@lensiq.company",
+  "gmail_done_label": "LensIQ/Done",
+  "call_timezone": "Europe/Amsterdam",
+  "call_window": { "days": ["Mon", "Tue", "Wed", "Thu", "Fri"], "start": "09:00", "end": "13:00" },
+  "call_minutes": 15,
+  "call_lead_hours": 24,
+  "call_horizon_days": 14,
+  "call_max_per_day": 3,
+  "call_organizer_calendar": "Networking",
+  "no_match_threshold": 45
+}

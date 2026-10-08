@@ -1727,7 +1727,7 @@ const G = (function(){
     send.disabled = true;
     sent.textContent = "Sending...";
     const q = ("Job spec fit check" + (typeof window.__fitScore === "number" ? " (" + window.__fitScore + "% weighted depth" + (window.__fitNoMatch ? ", no logical match on paper" : "") + ")" : "")).slice(0, 295);
-    fetch("https://hvitxwhfdhsdwhgllaqf.supabase.co/functions/v1/site", {
+    fetch("https://lensiq.company/api/site", {
       method: "POST",
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify({question: q, email: email, name: name, company: company, role: role,
@@ -1750,7 +1750,7 @@ const G = (function(){
   const box = document.getElementById("pulse");
   const lineEl = document.getElementById("pulseline");
   if (!box) return;
-  const API = "https://hvitxwhfdhsdwhgllaqf.supabase.co/functions/v1/site";
+  const API = "https://lensiq.company/api/site";
   function ago(iso){
     if (!iso) return null;
     const mins = Math.round((Date.now() - new Date(iso).getTime()) / 60000);
@@ -1766,7 +1766,7 @@ const G = (function(){
     const l = document.createElement("span"); l.className = "pl"; l.textContent = label;
     c.append(n, l); return c;
   }
-  fetch(API + "/pulse").then(r => r.json()).then(function(d){
+  fetch(API + "/pulse").then(function(r){ if (!r.ok) throw new Error("no pulse"); return r.json(); }).then(function(d){
     box.textContent = "";
     const cards = [
       [String(d.specs_assessed || 0), "job specs read and scored"],
@@ -1782,14 +1782,14 @@ const G = (function(){
         (d.running_since ? ", which has been running since " + new Date(d.running_since).toLocaleDateString(undefined, {day: "numeric", month: "long", year: "numeric"}) + "." : ".");
     }
   }).catch(function(){
-    box.textContent = "";
-    box.appendChild(card("offline", "live counters are not reachable from this view", true));
+    box.hidden = true;
+    if (lineEl) lineEl.hidden = true;
   });
 })();
 
 // ---------- Call request. Google Calendar does the booking, this only asks ----------
 (function(){
-  const API = "https://hvitxwhfdhsdwhgllaqf.supabase.co/functions/v1/site";
+  const API = "https://lensiq.company/api/site";
   const btn = document.getElementById("callbook");
   const sent = document.getElementById("callsent");
   if (!btn) return;
